@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Šiandien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --fg-dim: rgba(255,255,255,0.38);
+    --fg-mid: rgba(255,255,255,0.65);
+    --red: #e53935;
+    --red-dim: rgba(229,57,53,0.15);
+    --green-dim: rgba(255,255,255,0.08);
+    --radius: 14px;
+    --font: 'Sora', sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font);
+  }
+
+  /* ─── APP WRAPPER ─── */
+  #app {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1);
+    transform: translateY(18px);
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+  .screen.exit {
+    opacity: 0;
+    transform: translateY(-18px);
+    pointer-events: none;
+  }
+
+  /* ─── TYPOGRAPHY ─── */
+  .headline {
+    font-size: clamp(2.6rem, 10vw, 4rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .subline {
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+    font-weight: 300;
+    color: var(--fg-mid);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 52px;
+  }
+  .confirm-text {
+    font-size: clamp(1rem, 3.8vw, 1.25rem);
+    font-weight: 400;
+    color: var(--fg-mid);
+    text-align: center;
+    margin-bottom: 64px;
+    line-height: 1.6;
+  }
+  .moment-sentence {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 32px 0 48px;
+  }
+  .finish-text {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 48px;
+  }
+  .days-text {
+    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+    font-weight: 300;
+    color: var(--fg-dim);
+    text-align: center;
+    margin-top: 24px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;
+    padding: 22px 32px;
+    border-radius: var(--radius);
+    font-family: var(--font);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: opacity 0.18s, transform 0.18s;
+    user-select: none;
+  }
+  .btn:active {
+    transform: scale(0.97);
+    opacity: 0.82;
+  }
+  .btn-primary {
+    background: #ffffff;
+    color: #000000;
+  }
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(229,57,53,0.3);
+  }
+  .btn-ghost {
+    background: var(--green-dim);
+    color: var(--fg-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .btn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    align-items: center;
+  }
+
+  /* ─── TIMER ─── */
+  #timer-display {
+    font-size: clamp(4.5rem, 18vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--fg);
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  #timer-label {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--fg-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 56px;
+  }
+  .timer-ring-wrap {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .timer-ring-wrap svg {
+    position: absolute;
+    inset: 0;
+    transform: rotate(-90deg);
+  }
+  .ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.07);
+    stroke-width: 2.5;
+  }
+  .ring-progress {
+    fill: none;
+    stroke: rgba(255,255,255,0.85);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
+  .timer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    pointer-events: none;
+    z-index: 999;
+    animation: grain 0.8s steps(2) infinite;
+  }
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-1%, 1%); }
+    50% { transform: translate(1%, -1%); }
+    75% { transform: translate(-1%, -1%); }
+    100% { transform: translate(1%, 1%); }
+  }
+
+  /* ─── AUDIO/VIDEO MOCK ─── */
+  .media-container {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .audio-player {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+  }
+  .audio-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .audio-icon:active { background: rgba(255,255,255,0.15); }
+  .audio-icon svg { width: 14px; height: 14px; fill: #fff; }
+  .audio-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .audio-label {
+    font-size: 0.72rem;
+    color: var(--fg-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .audio-progress {
+    height: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .audio-fill {
+    height: 100%;
+    background: rgba(255,255,255,0.6);
+    width: 0%;
+    border-radius: 2px;
+    transition: width 0.5s linear;
+  }
+  .video-mock {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: rgba(255,255,255,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-mock::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+  }
+  .play-btn-large {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .play-btn-large svg { width: 18px; height: 18px; fill: #fff; margin-left: 3px; }
+
+  /* ─── CHECKMARK ANIM ─── */
+  @keyframes popIn {
+    0% { transform: scale(0.4); opacity: 0; }
+    70% { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .check-mark {
+    font-size: 2.8rem;
+    margin-bottom: 28px;
+    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    display: block;
+  }
+
+  /* ─── PULSE DOT (open screen) ─── */
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    margin: 0 auto 48px;
+    animation: pulseDot 3s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.4); }
+  }
+
+  /* ─── DAYS TAG ─── */
+  .days-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    letter-spacing: 0.06em;
+    margin-bottom: 52px;
+  }
+
+  /* ─── WAVEFORM (decorative) ─── */
+  .waveform {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 22px;
+  }
+  .wave-bar {
+    width: 2px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.3);
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  .wave-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+  .wave-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+  .wave-bar:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+  .wave-bar:nth-child(4) { height: 10px; animation-delay: 0.3s; }
+  .wave-bar:nth-child(5) { height: 16px; animation-delay: 0.15s; }
+  .wave-bar:nth-child(6) { height: 8px; animation-delay: 0.25s; }
+  .wave-bar:nth-child(7) { height: 12px; animation-delay: 0.05s; }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
+    50% { transform: scaleY(1); opacity: 0.7; }
+  }
+  .waveform.paused .wave-bar {
+    animation-play-state: paused;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ SCREEN 1: OPEN ═══ -->
+  <div class="screen active" id="screen-open">
+    <div class="pulse-dot"></div>
+    <h1 class="headline">Šiandien<br>negeriu.</h1>
+    <button class="btn btn-primary" onclick="goTo('screen-confirm')">Patvirtinu</button>
+  </div>
+
+  <!-- ═══ SCREEN 2: CONFIRMATION ═══ -->
+  <div class="screen" id="screen-confirm">
+    <span class="check-mark">✔</span>
+    <p class="confirm-text">Šiandien pasirinkai negerti.</p>
+    <div class="btn-stack">
+      <button class="btn btn-danger" onclick="goTo('screen-hard')">🔴 &nbsp;Man dabar sunku</button>
+      <button class="btn btn-ghost" onclick="goTo('screen-day')">○ &nbsp;Tęsti dieną</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 3: CRITICAL MOMENT ═══ -->
+  <div class="screen" id="screen-hard">
+
+    <!-- Audio mock -->
+    <div class="media-container">
+      <div class="audio-player">
+        <div class="audio-icon" id="audio-toggle" onclick="toggleAudio()">
+          <svg id="audio-icon-svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="audio-bar">
+          <span class="audio-label">Balso žinutė &nbsp;·&nbsp; 47s</span>
+          <div class="audio-progress"><div class="audio-fill" id="audio-fill"></div></div>
+        </div>
+        <div class="waveform paused" id="waveform">
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video mock -->
+    <div class="media-container">
+      <div class="video-mock" onclick="toggleVideo(this)">
+        <div class="play-btn-large">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <p class="moment-sentence">Praeis.<br>Palauk 10 min.</p>
+
+    <button class="btn btn-outline" onclick="goTo('screen-timer')">Palaukti 10 min</button>
+  </div>
+
+  <!-- ═══ SCREEN 4: TIMER ═══ -->
+  <div class="screen" id="screen-timer">
+    <div class="timer-ring-wrap">
+      <svg viewBox="0 0 220 220">
+        <circle class="ring-bg" cx="110" cy="110" r="100"/>
+        <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="100"
+          stroke-dasharray="628.3"
+          stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-inner">
+        <div id="timer-display">10:00</div>
+      </div>
+    </div>
+    <div id="timer-label">minutės</div>
+    <button class="btn btn-outline" id="timer-btn" onclick="startTimer()">Pradėti</button>
+  </div>
+
+  <!-- ═══ SCREEN 5: HELD ═══ -->
+  <div class="screen" id="screen-held">
+    <p class="finish-text">Vis dar laikaisi.<br>Šiandien dar tavo.</p>
+    <div class="days-badge" id="days-badge">— dienos —</div>
+    <p class="days-text" id="days-text"></p>
+    <button class="btn btn-ghost" onclick="goTo('screen-day')" style="margin-top:12px;">Grįžti</button>
+  </div>
+
+  <!-- ═══ SCREEN 6: CONTINUE DAY ═══ -->
+  <div class="screen" id="screen-day">
+    <p class="finish-text" style="font-weight:300; font-size:clamp(1.2rem,5vw,1.7rem); color:var(--fg-mid); margin-bottom:48px;">Tu pasirinkai<br>šiandien.</p>
+    <button class="btn btn-primary" onclick="resetApp()">Naujas rytas</button>
+  </div>
+
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────
+const state = {
+  days: parseInt(localStorage.getItem('siandien_days') || '0'),
+  lastDate: localStorage.getItem('siandien_last_date') || '',
+  audioPlaying: false,
+  audioTimer: null,
+  audioProgress: 0,
+  timerInterval: null,
+  timerSeconds: 600,
+  timerRunning: false,
+};
+
+// ─── INIT ────────────────────────────────────────
+function init() {
+  const today = new Date().toDateString();
+  if (state.lastDate !== today) {
+    if (state.lastDate) {
+      const lastD = new Date(state.lastDate);
+      const diff = Math.round((new Date(today) - lastD) / 86400000);
+      if (diff === 1) {
+        state.days += 1;
+      } else {
+        state.days = 0;
+      }
+    }
+    state.lastDate = today;
+    localStorage.setItem('siandien_days', state.days);
+    localStorage.setItem('siandien_last_date', today);
+  }
+  updateDaysBadge();
+}
+
+function updateDaysBadge() {
+  const d = state.days;
+  const badge = document.getElementById('days-badge');
+  const txt = document.getElementById('days-text');
+  if (d >= 2) {
+    badge.textContent = d + ' dienos';
+    txt.textContent = 'Visos prasidėjo nuo šiandien.';
+  } else if (d === 1) {
+    badge.textContent = '1 diena';
+    txt.textContent = 'Vakar taip pat pasirinkau.';
+  } else {
+    badge.textContent = 'Šiandien pirma diena';
+    txt.textContent = '';
+  }
+}
+
+// ─── NAVIGATION ──────────────────────────────────
+let current = 'screen-open';
+
+function goTo(id) {
+  const from = document.getElementById(current);
+  const to = document.getElementById(id);
+  from.classList.add('exit');
+  setTimeout(() => {
+    from.classList.remove('active', 'exit');
+    to.classList.add('active');
+    current = id;
+    if (id === 'screen-hard') onEnterHard();
+    if (id === 'screen-timer') onEnterTimer();
+  }, 300);
+}
+
+function resetApp() {
+  const screens = document.querySelectorAll('.screen');
+  screens.forEach(s => s.classList.remove('active', 'exit'));
+  document.getElementById('screen-open').classList.add('active');
+  current = 'screen-open';
+  stopAudio();
+  resetTimer();
+}
+
+// ─── AUDIO MOCK ──────────────────────────────────
+const AUDIO_DURATION = 47;
+
+function onEnterHard() {
+  stopAudio();
+  state.audioProgress = 0;
+  document.getElementById('audio-fill').style.width = '0%';
+  // Auto-start audio after brief delay
+  setTimeout(() => startAudio(), 600);
+}
+
+function startAudio() {
+  if (state.audioPlaying) return;
+  state.audioPlaying = true;
+  document.getElementById('audio-icon-svg').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  document.getElementById('waveform').classList.remove('paused');
+
+  const fill = document.getElementById('audio-fill');
+  const step = 100 / (AUDIO_DURATION * 10);
+  state.audioTimer = setInterval(() => {
+    state.audioProgress += step;
+    fill.style.width = Math.min(state.audioProgress, 100) + '%';
+    if (state.audioProgress >= 100) {
+      stopAudio();
+    }
+  }, 100);
+}
+
+function stopAudio() {
+  state.audioPlaying = false;
+  clearInterval(state.audioTimer);
+  document.getElementById('audio-icon-svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  document.getElementById('waveform').classList.add('paused');
+}
+
+function toggleAudio() {
+  if (state.audioPlaying) stopAudio();
+  else startAudio();
+}
+
+function toggleVideo(el) {
+  const playBtn = el.querySelector('.play-btn-large');
+  if (playBtn) {
+    playBtn.style.opacity = playBtn.style.opacity === '0' ? '1' : '0';
+  }
+}
+
+// ─── TIMER ───────────────────────────────────────
+const TOTAL = 600; // 10 min
+const CIRCUMFERENCE = 628.3;
+
+function onEnterTimer() {
+  resetTimer();
+}
+
+function resetTimer() {
+  clearInterval(state.timerInterval);
+  state.timerRunning = false;
+  state.timerSeconds = TOTAL;
+  updateTimerDisplay(TOTAL);
+  const btn = document.getElementById('timer-btn');
+  if (btn) btn.textContent = 'Pradėti';
+}
+
+function startTimer() {
+  if (state.timerRunning) return;
+  state.timerRunning = true;
+  document.getElementById('timer-btn').textContent = '...';
+
+  state.timerInterval = setInterval(() => {
+    state.timerSeconds--;
+    updateTimerDisplay(state.timerSeconds);
+    if (state.timerSeconds <= 0) {
+      clearInterval(state.timerInterval);
+      state.timerRunning = false;
+      onTimerDone();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  document.getElementById('timer-display').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+
+  const progress = secs / TOTAL;
+  const offset = CIRCUMFERENCE * (1 - progress);
+  document.getElementById('ring-progress').style.strokeDashoffset = offset;
+}
+
+function onTimerDone() {
+  // Increment days on first completion of the day
+  const today = new Date().toDateString();
+  state.days = parseInt(localStorage.getItem('siandien_days') || '0');
+  if (state.lastDate !== today || state.days === 0) {
+    state.days = Math.max(state.days, 1);
+    localStorage.setItem('siandien_days', state.days);
+    localStorage.setItem('siandien_last_date', today);
+    state.lastDate = today;
+  }
+  updateDaysBadge();
+  goTo('screen-held');
+}
+
+// ─── BOOT ────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
