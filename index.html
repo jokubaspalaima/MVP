@@ -7,422 +7,171 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-  }
-
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
   :root {
-    --bg: #000000;
-    --fg: #ffffff;
-    --fg-dim: rgba(255,255,255,0.38);
-    --fg-mid: rgba(255,255,255,0.65);
-    --red: #e53935;
-    --red-dim: rgba(229,57,53,0.15);
-    --green-dim: rgba(255,255,255,0.08);
-    --radius: 14px;
-    --font: 'Sora', sans-serif;
+    --bg:#000; --fg:#fff;
+    --fg-dim:rgba(255,255,255,0.38); --fg-mid:rgba(255,255,255,0.65);
+    --red:#e53935; --red-dim:rgba(229,57,53,0.15);
+    --green-dim:rgba(255,255,255,0.08);
+    --radius:14px; --font:'Sora',sans-serif;
   }
+  html,body { height:100%; width:100%; overflow:hidden; background:var(--bg); color:var(--fg); font-family:var(--font); }
+  #app { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; }
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--font);
-  }
-
-  /* ─── APP WRAPPER ─── */
-  #app {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 32px;
-  }
-
-  /* ─── SCREENS ─── */
+  /* SCREENS */
   .screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 32px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1);
-    transform: translateY(18px);
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; padding:48px 32px;
+    opacity:0; pointer-events:none;
+    transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
+    transform:translateY(18px);
   }
-  .screen.active {
-    opacity: 1;
-    pointer-events: all;
-    transform: translateY(0);
-  }
-  .screen.exit {
-    opacity: 0;
-    transform: translateY(-18px);
-    pointer-events: none;
-  }
+  .screen.active { opacity:1; pointer-events:all; transform:translateY(0); }
+  .screen.exit   { opacity:0; transform:translateY(-18px); pointer-events:none; }
 
-  /* ─── TYPOGRAPHY ─── */
-  .headline {
-    font-size: clamp(2.6rem, 10vw, 4rem);
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    text-align: center;
-    margin-bottom: 56px;
-  }
-  .subline {
-    font-size: clamp(1.1rem, 4vw, 1.4rem);
-    font-weight: 300;
-    color: var(--fg-mid);
-    text-align: center;
-    line-height: 1.5;
-    margin-bottom: 52px;
-  }
-  .confirm-text {
-    font-size: clamp(1rem, 3.8vw, 1.25rem);
-    font-weight: 400;
-    color: var(--fg-mid);
-    text-align: center;
-    margin-bottom: 64px;
-    line-height: 1.6;
-  }
-  .moment-sentence {
-    font-size: clamp(1.6rem, 7vw, 2.4rem);
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    margin: 32px 0 48px;
-  }
-  .finish-text {
-    font-size: clamp(1.4rem, 6vw, 2rem);
-    font-weight: 600;
-    text-align: center;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
-    margin-bottom: 48px;
-  }
-  .days-text {
-    font-size: clamp(1.1rem, 4.5vw, 1.5rem);
-    font-weight: 300;
-    color: var(--fg-dim);
-    text-align: center;
-    margin-top: 24px;
-    letter-spacing: 0.01em;
-  }
+  /* TYPOGRAPHY */
+  .headline       { font-size:clamp(2.6rem,10vw,4rem); font-weight:700; line-height:1.05; letter-spacing:-.03em; text-align:center; margin-bottom:56px; }
+  .confirm-text   { font-size:clamp(1rem,3.8vw,1.25rem); font-weight:400; color:var(--fg-mid); text-align:center; margin-bottom:64px; line-height:1.6; }
+  .moment-sentence{ font-size:clamp(1.6rem,7vw,2.4rem); font-weight:600; text-align:center; letter-spacing:-.02em; line-height:1.2; margin:32px 0 48px; }
+  .finish-text    { font-size:clamp(1.4rem,6vw,2rem); font-weight:600; text-align:center; letter-spacing:-.02em; line-height:1.3; margin-bottom:48px; }
+  .days-text      { font-size:clamp(1.1rem,4.5vw,1.5rem); font-weight:300; color:var(--fg-dim); text-align:center; margin-top:24px; }
 
-  /* ─── BUTTONS ─── */
-  .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    max-width: 320px;
-    padding: 22px 32px;
-    border-radius: var(--radius);
-    font-family: var(--font);
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    cursor: pointer;
-    border: none;
-    outline: none;
-    transition: opacity 0.18s, transform 0.18s;
-    user-select: none;
-  }
-  .btn:active {
-    transform: scale(0.97);
-    opacity: 0.82;
-  }
-  .btn-primary {
-    background: #ffffff;
-    color: #000000;
-  }
-  .btn-danger {
-    background: var(--red-dim);
-    color: var(--red);
-    border: 1px solid rgba(229,57,53,0.3);
-  }
-  .btn-ghost {
-    background: var(--green-dim);
-    color: var(--fg-mid);
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--fg);
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .btn-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-    align-items: center;
-  }
+  /* BUTTONS */
+  .btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; max-width:320px; padding:22px 32px; border-radius:var(--radius); font-family:var(--font); font-size:1.05rem; font-weight:600; letter-spacing:.01em; cursor:pointer; border:none; outline:none; transition:opacity .18s,transform .18s; user-select:none; }
+  .btn:active      { transform:scale(.97); opacity:.82; }
+  .btn-primary     { background:#fff; color:#000; }
+  .btn-danger      { background:var(--red-dim); color:var(--red); border:1px solid rgba(229,57,53,.3); }
+  .btn-ghost       { background:var(--green-dim); color:var(--fg-mid); border:1px solid rgba(255,255,255,.1); }
+  .btn-outline     { background:transparent; color:var(--fg); border:1px solid rgba(255,255,255,.2); }
+  .btn-stack       { display:flex; flex-direction:column; gap:14px; width:100%; align-items:center; }
 
-  /* ─── TIMER ─── */
-  #timer-display {
-    font-size: clamp(4.5rem, 18vw, 7rem);
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    color: var(--fg);
-    margin-bottom: 8px;
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-  }
-  #timer-label {
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--fg-dim);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 56px;
-  }
-  .timer-ring-wrap {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    margin: 0 auto 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .timer-ring-wrap svg {
-    position: absolute;
-    inset: 0;
-    transform: rotate(-90deg);
-  }
-  .ring-bg {
-    fill: none;
-    stroke: rgba(255,255,255,0.07);
-    stroke-width: 2.5;
-  }
-  .ring-progress {
-    fill: none;
-    stroke: rgba(255,255,255,0.85);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1s linear;
-  }
-  .timer-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
-  }
+  /* TIMER */
+  #timer-display   { font-size:clamp(4.5rem,18vw,7rem); font-weight:700; letter-spacing:-.04em; color:var(--fg); margin-bottom:8px; font-variant-numeric:tabular-nums; line-height:1; }
+  #timer-label     { font-size:.85rem; color:var(--fg-dim); letter-spacing:.12em; text-transform:uppercase; margin-bottom:56px; }
+  .timer-ring-wrap { position:relative; width:220px; height:220px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; }
+  .timer-ring-wrap svg { position:absolute; inset:0; transform:rotate(-90deg); }
+  .ring-bg         { fill:none; stroke:rgba(255,255,255,.07); stroke-width:2.5; }
+  .ring-progress   { fill:none; stroke:rgba(255,255,255,.85); stroke-width:2.5; stroke-linecap:round; transition:stroke-dashoffset 1s linear; }
+  .timer-inner     { display:flex; flex-direction:column; align-items:center; z-index:1; }
 
-  /* ─── GRAIN OVERLAY ─── */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    opacity: 0.028;
-    pointer-events: none;
-    z-index: 999;
-    animation: grain 0.8s steps(2) infinite;
-  }
-  @keyframes grain {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-1%, 1%); }
-    50% { transform: translate(1%, -1%); }
-    75% { transform: translate(-1%, -1%); }
-    100% { transform: translate(1%, 1%); }
-  }
+  /* GRAIN */
+  body::after { content:''; position:fixed; inset:-50%; width:200%; height:200%; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity:.028; pointer-events:none; z-index:999; animation:grain .8s steps(2) infinite; }
+  @keyframes grain { 0%{transform:translate(0,0)} 25%{transform:translate(-1%,1%)} 50%{transform:translate(1%,-1%)} 75%{transform:translate(-1%,-1%)} 100%{transform:translate(1%,1%)} }
 
-  /* ─── AUDIO/VIDEO MOCK ─── */
-  .media-container {
-    width: 100%;
-    max-width: 320px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 28px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .audio-player {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 20px;
-  }
-  .audio-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .audio-icon:active { background: rgba(255,255,255,0.15); }
-  .audio-icon svg { width: 14px; height: 14px; fill: #fff; }
-  .audio-bar {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .audio-label {
-    font-size: 0.72rem;
-    color: var(--fg-dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .audio-progress {
-    height: 2px;
-    background: rgba(255,255,255,0.12);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .audio-fill {
-    height: 100%;
-    background: rgba(255,255,255,0.6);
-    width: 0%;
-    border-radius: 2px;
-    transition: width 0.5s linear;
-  }
-  .video-mock {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: rgba(255,255,255,0.03);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .video-mock::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
-  }
-  .play-btn-large {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .play-btn-large svg { width: 18px; height: 18px; fill: #fff; margin-left: 3px; }
+  /* AUDIO/VIDEO */
+  .media-container { width:100%; max-width:320px; border-radius:10px; overflow:hidden; margin-bottom:28px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+  .audio-player    { display:flex; align-items:center; gap:14px; padding:18px 20px; }
+  .audio-icon      { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; transition:background .15s; }
+  .audio-icon:active { background:rgba(255,255,255,.15); }
+  .audio-icon svg  { width:14px; height:14px; fill:#fff; }
+  .audio-bar       { flex:1; display:flex; flex-direction:column; gap:6px; }
+  .audio-label     { font-size:.72rem; color:var(--fg-dim); letter-spacing:.08em; text-transform:uppercase; }
+  .audio-progress  { height:2px; background:rgba(255,255,255,.12); border-radius:2px; overflow:hidden; }
+  .audio-fill      { height:100%; background:rgba(255,255,255,.6); width:0%; border-radius:2px; transition:width .5s linear; }
+  .video-mock      { width:100%; aspect-ratio:16/9; background:rgba(255,255,255,.03); display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; overflow:hidden; }
+  .video-mock::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 60%); }
+  .play-btn-large  { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; }
+  .play-btn-large svg { width:18px; height:18px; fill:#fff; margin-left:3px; }
 
-  /* ─── CHECKMARK ANIM ─── */
-  @keyframes popIn {
-    0% { transform: scale(0.4); opacity: 0; }
-    70% { transform: scale(1.12); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .check-mark {
-    font-size: 2.8rem;
-    margin-bottom: 28px;
-    animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
-    display: block;
-  }
+  /* MISC */
+  @keyframes popIn { 0%{transform:scale(.4);opacity:0} 70%{transform:scale(1.12)} 100%{transform:scale(1);opacity:1} }
+  .check-mark  { font-size:2.8rem; margin-bottom:28px; animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both; display:block; }
+  .pulse-dot   { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.25); margin:0 auto 48px; animation:pulseDot 3s ease-in-out infinite; }
+  @keyframes pulseDot { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:.6;transform:scale(1.4)} }
+  .days-badge  { display:inline-flex; align-items:center; gap:8px; padding:6px 16px; border-radius:100px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); font-size:.8rem; color:var(--fg-dim); letter-spacing:.06em; margin-bottom:52px; }
+  .waveform    { display:flex; align-items:center; gap:3px; height:22px; }
+  .wave-bar    { width:2px; border-radius:2px; background:rgba(255,255,255,.3); animation:wave 1.2s ease-in-out infinite; }
+  .wave-bar:nth-child(1){height:6px;animation-delay:0s} .wave-bar:nth-child(2){height:14px;animation-delay:.1s}
+  .wave-bar:nth-child(3){height:20px;animation-delay:.2s} .wave-bar:nth-child(4){height:10px;animation-delay:.3s}
+  .wave-bar:nth-child(5){height:16px;animation-delay:.15s} .wave-bar:nth-child(6){height:8px;animation-delay:.25s}
+  .wave-bar:nth-child(7){height:12px;animation-delay:.05s}
+  @keyframes wave { 0%,100%{transform:scaleY(.4);opacity:.3} 50%{transform:scaleY(1);opacity:.7} }
+  .waveform.paused .wave-bar { animation-play-state:paused; }
 
-  /* ─── PULSE DOT (open screen) ─── */
-  .pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.25);
-    margin: 0 auto 48px;
-    animation: pulseDot 3s ease-in-out infinite;
-  }
-  @keyframes pulseDot {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.4); }
-  }
+  /* ══════════════════════════════════════════
+     NEARBY — TIME-AWARE
+  ══════════════════════════════════════════ */
+  .btn-lifeline { background:transparent; border:none; font-family:var(--font); font-size:.8rem; font-weight:400; color:var(--fg-dim); letter-spacing:.05em; padding:14px 0 0; cursor:pointer; text-decoration:underline; text-underline-offset:4px; text-decoration-color:rgba(255,255,255,.15); transition:color .2s; width:100%; max-width:320px; text-align:center; }
+  .btn-lifeline:active { color:var(--fg); }
 
-  /* ─── DAYS TAG ─── */
-  .days-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    font-size: 0.8rem;
-    color: var(--fg-dim);
-    letter-spacing: 0.06em;
-    margin-bottom: 52px;
-  }
+  #screen-nearby { justify-content:flex-start; padding-top:52px; padding-bottom:52px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .nearby-back   { cursor:pointer; background:none; border:none; font-family:var(--font); color:var(--fg-dim); font-size:.78rem; letter-spacing:.06em; padding:0 0 22px; width:100%; max-width:320px; text-align:left; display:flex; align-items:center; gap:8px; }
+  .nearby-back:active { opacity:.5; }
+  .nearby-header { width:100%; max-width:320px; margin-bottom:24px; }
+  .nearby-title  { font-size:clamp(1.3rem,5vw,1.7rem); font-weight:600; letter-spacing:-.02em; margin-bottom:5px; }
+  .nearby-sub    { font-size:.78rem; color:var(--fg-dim); }
 
-  /* ─── WAVEFORM (decorative) ─── */
-  .waveform {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    height: 22px;
-  }
-  .wave-bar {
-    width: 2px;
-    border-radius: 2px;
-    background: rgba(255,255,255,0.3);
-    animation: wave 1.2s ease-in-out infinite;
-  }
-  .wave-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
-  .wave-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
-  .wave-bar:nth-child(3) { height: 20px; animation-delay: 0.2s; }
-  .wave-bar:nth-child(4) { height: 10px; animation-delay: 0.3s; }
-  .wave-bar:nth-child(5) { height: 16px; animation-delay: 0.15s; }
-  .wave-bar:nth-child(6) { height: 8px; animation-delay: 0.25s; }
-  .wave-bar:nth-child(7) { height: 12px; animation-delay: 0.05s; }
-  @keyframes wave {
-    0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
-    50% { transform: scaleY(1); opacity: 0.7; }
-  }
-  .waveform.paused .wave-bar {
-    animation-play-state: paused;
-  }
+  .nearby-state      { width:100%; max-width:320px; display:flex; flex-direction:column; align-items:center; gap:20px; }
+  .nearby-state-text { font-size:1rem; color:var(--fg-mid); text-align:center; line-height:1.65; }
+  .spinner           { width:26px; height:26px; border:2px solid rgba(255,255,255,.1); border-top-color:rgba(255,255,255,.55); border-radius:50%; animation:spin .75s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text      { font-size:.82rem; color:var(--fg-dim); letter-spacing:.04em; }
+
+  /* cards */
+  .places-list { width:100%; max-width:320px; display:flex; flex-direction:column; gap:10px; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .place-card       { border-radius:12px; padding:15px 17px; display:flex; flex-direction:column; animation:fadeUp .38s cubic-bezier(.4,0,.2,1) both; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+  .place-card.is-now   { background:rgba(229,57,53,.07); border-color:rgba(229,57,53,.28); }
+  .place-card.is-today { background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14); }
+
+  .place-top  { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:3px; }
+  .place-name { font-size:.9rem; font-weight:600; line-height:1.3; flex:1; }
+  .place-dist { font-size:.7rem; color:var(--fg-dim); white-space:nowrap; padding-top:2px; flex-shrink:0; }
+  .place-type { font-size:.66rem; letter-spacing:.09em; text-transform:uppercase; color:var(--fg-dim); margin-bottom:10px; }
+
+  /* STATUS — hero element */
+  .place-status  { display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border-radius:5px; margin-bottom:10px; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; align-self:flex-start; }
+  .status-now    { background:rgba(229,57,53,.18); color:var(--red); border:1px solid rgba(229,57,53,.3); }
+  .status-today  { background:rgba(255,255,255,.07); color:rgba(255,255,255,.82); border:1px solid rgba(255,255,255,.14); }
+  .status-future { background:transparent; color:var(--fg-dim); border:1px solid rgba(255,255,255,.08); }
+  .status-dot    { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+  .status-now   .status-dot { background:var(--red); animation:pulseDot 1.3s ease-in-out infinite; }
+  .status-today .status-dot { background:rgba(255,255,255,.7); }
+  .status-future .status-dot{ background:rgba(255,255,255,.22); }
+
+  .place-meta    { font-size:.72rem; color:var(--fg-dim); margin-bottom:4px; }
+  .place-cost    { font-size:.72rem; color:var(--fg-dim); margin-bottom:11px; }
+
+  .place-actions { display:flex; gap:7px; margin-top:4px; }
+  .place-btn     { flex:1; display:flex; align-items:center; justify-content:center; gap:5px; padding:10px 8px; border-radius:8px; font-family:var(--font); font-size:.78rem; font-weight:600; letter-spacing:.03em; cursor:pointer; text-decoration:none; transition:opacity .15s; border:none; }
+  .place-btn:active  { opacity:.7; }
+  .place-btn-call    { background:var(--red); color:#fff; }
+  .place-btn-map     { background:rgba(255,255,255,.08); color:var(--fg-mid); border:1px solid rgba(255,255,255,.1); }
+  .place-btn-web     { background:rgba(255,255,255,.05); color:var(--fg-dim); border:1px solid rgba(255,255,255,.08); }
+
+  /* helplines */
+  .helpline-section  { width:100%; max-width:320px; margin-top:18px; }
+  .helpline-divider  { font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--fg-dim); margin-bottom:12px; text-align:center; }
+  .helpline-card     { padding:15px 17px; border-radius:12px; background:rgba(229,57,53,.07); border:1px solid rgba(229,57,53,.22); display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+  .helpline-badge    { font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--red); }
+  .helpline-name     { font-size:.9rem; font-weight:600; }
+  .helpline-desc     { font-size:.74rem; color:var(--fg-dim); line-height:1.45; margin-bottom:4px; }
+  .helpline-call     { display:flex; align-items:center; justify-content:center; gap:6px; padding:11px; border-radius:8px; background:var(--red); color:#fff; font-family:var(--font); font-size:.82rem; font-weight:700; letter-spacing:.04em; text-decoration:none; transition:opacity .15s; }
+  .helpline-call:active { opacity:.8; }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ═══ SCREEN 1: OPEN ═══ -->
+  <!-- 1: OPEN -->
   <div class="screen active" id="screen-open">
     <div class="pulse-dot"></div>
     <h1 class="headline">Šiandien<br>negeriu.</h1>
     <button class="btn btn-primary" onclick="goTo('screen-confirm')">Patvirtinu</button>
   </div>
 
-  <!-- ═══ SCREEN 2: CONFIRMATION ═══ -->
+  <!-- 2: CONFIRMATION -->
   <div class="screen" id="screen-confirm">
     <span class="check-mark">✔</span>
     <p class="confirm-text">Šiandien pasirinkai negerti.</p>
     <div class="btn-stack">
       <button class="btn btn-danger" onclick="goTo('screen-hard')">🔴 &nbsp;Man dabar sunku</button>
-      <button class="btn btn-ghost" onclick="goTo('screen-day')">○ &nbsp;Tęsti dieną</button>
+      <button class="btn btn-ghost"  onclick="goTo('screen-day')">○ &nbsp;Tęsti dieną</button>
     </div>
   </div>
 
-  <!-- ═══ SCREEN 3: CRITICAL MOMENT ═══ -->
+  <!-- 3: CRITICAL MOMENT -->
   <div class="screen" id="screen-hard">
-
-    <!-- Audio mock -->
     <div class="media-container">
       <div class="audio-player">
         <div class="audio-icon" id="audio-toggle" onclick="toggleAudio()">
@@ -433,46 +182,36 @@
           <div class="audio-progress"><div class="audio-fill" id="audio-fill"></div></div>
         </div>
         <div class="waveform paused" id="waveform">
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
-          <div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
           <div class="wave-bar"></div>
         </div>
       </div>
     </div>
-
-    <!-- Video mock -->
     <div class="media-container">
       <div class="video-mock" onclick="toggleVideo(this)">
-        <div class="play-btn-large">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </div>
+        <div class="play-btn-large"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
       </div>
     </div>
-
     <p class="moment-sentence">Praeis.<br>Palauk 10 min.</p>
-
     <button class="btn btn-outline" onclick="goTo('screen-timer')">Palaukti 10 min</button>
+    <button class="btn-lifeline"   onclick="goTo('screen-nearby')">📍 Rasti pagalbą šalia</button>
   </div>
 
-  <!-- ═══ SCREEN 4: TIMER ═══ -->
+  <!-- 4: TIMER -->
   <div class="screen" id="screen-timer">
     <div class="timer-ring-wrap">
       <svg viewBox="0 0 220 220">
-        <circle class="ring-bg" cx="110" cy="110" r="100"/>
-        <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="100"
-          stroke-dasharray="628.3"
-          stroke-dashoffset="0"/>
+        <circle class="ring-bg"       cx="110" cy="110" r="100"/>
+        <circle class="ring-progress" cx="110" cy="110" r="100" id="ring-progress" stroke-dasharray="628.3" stroke-dashoffset="0"/>
       </svg>
-      <div class="timer-inner">
-        <div id="timer-display">10:00</div>
-      </div>
+      <div class="timer-inner"><div id="timer-display">10:00</div></div>
     </div>
     <div id="timer-label">minutės</div>
     <button class="btn btn-outline" id="timer-btn" onclick="startTimer()">Pradėti</button>
   </div>
 
-  <!-- ═══ SCREEN 5: HELD ═══ -->
+  <!-- 5: HELD -->
   <div class="screen" id="screen-held">
     <p class="finish-text">Vis dar laikaisi.<br>Šiandien dar tavo.</p>
     <div class="days-badge" id="days-badge">— dienos —</div>
@@ -480,39 +219,49 @@
     <button class="btn btn-ghost" onclick="goTo('screen-day')" style="margin-top:12px;">Grįžti</button>
   </div>
 
-  <!-- ═══ SCREEN 6: CONTINUE DAY ═══ -->
+  <!-- 6: DAY -->
   <div class="screen" id="screen-day">
-    <p class="finish-text" style="font-weight:300; font-size:clamp(1.2rem,5vw,1.7rem); color:var(--fg-mid); margin-bottom:48px;">Tu pasirinkai<br>šiandien.</p>
+    <p class="finish-text" style="font-weight:300;font-size:clamp(1.2rem,5vw,1.7rem);color:var(--fg-mid);margin-bottom:48px;">Tu pasirinkai<br>šiandien.</p>
     <button class="btn btn-primary" onclick="resetApp()">Naujas rytas</button>
   </div>
 
-</div>
+  <!-- 7: NEARBY -->
+  <div class="screen" id="screen-nearby">
+    <button class="nearby-back" onclick="goTo('screen-hard')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Atgal
+    </button>
+    <div class="nearby-header">
+      <div class="nearby-title">Pagalba šiandien</div>
+      <div class="nearby-sub">Tu ne vienas šią akimirką.</div>
+    </div>
+    <div id="nearby-content" class="nearby-state">
+      <p class="nearby-state-text">Leisti naudoti tavo vietą,<br>kad rastume pagalbą šalia?</p>
+      <button class="btn btn-outline" style="max-width:320px;" onclick="requestLocation()">Leisti</button>
+    </div>
+  </div>
 
+</div><!-- #app -->
 <script>
-// ─── STATE ───────────────────────────────────────
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
 const state = {
-  days: parseInt(localStorage.getItem('siandien_days') || '0'),
-  lastDate: localStorage.getItem('siandien_last_date') || '',
-  audioPlaying: false,
-  audioTimer: null,
-  audioProgress: 0,
-  timerInterval: null,
-  timerSeconds: 600,
-  timerRunning: false,
+  days:         parseInt(localStorage.getItem('siandien_days') || '0'),
+  lastDate:     localStorage.getItem('siandien_last_date') || '',
+  audioPlaying: false, audioTimer: null, audioProgress: 0,
+  timerInterval:null,  timerSeconds: 600, timerRunning: false,
 };
 
-// ─── INIT ────────────────────────────────────────
+// ══════════════════════════════════════════
+// INIT / DAYS
+// ══════════════════════════════════════════
 function init() {
   const today = new Date().toDateString();
   if (state.lastDate !== today) {
     if (state.lastDate) {
-      const lastD = new Date(state.lastDate);
-      const diff = Math.round((new Date(today) - lastD) / 86400000);
-      if (diff === 1) {
-        state.days += 1;
-      } else {
-        state.days = 0;
-      }
+      const diff = Math.round((new Date(today) - new Date(state.lastDate)) / 86400000);
+      state.days = diff === 1 ? state.days + 1 : 0;
     }
     state.lastDate = today;
     localStorage.setItem('siandien_days', state.days);
@@ -520,154 +269,302 @@ function init() {
   }
   updateDaysBadge();
 }
-
 function updateDaysBadge() {
   const d = state.days;
-  const badge = document.getElementById('days-badge');
-  const txt = document.getElementById('days-text');
-  if (d >= 2) {
-    badge.textContent = d + ' dienos';
-    txt.textContent = 'Visos prasidėjo nuo šiandien.';
-  } else if (d === 1) {
-    badge.textContent = '1 diena';
-    txt.textContent = 'Vakar taip pat pasirinkau.';
-  } else {
-    badge.textContent = 'Šiandien pirma diena';
-    txt.textContent = '';
-  }
+  document.getElementById('days-badge').textContent =
+    d >= 2 ? d + ' dienos' : d === 1 ? '1 diena' : 'Šiandien pirma diena';
+  document.getElementById('days-text').textContent =
+    d >= 2 ? 'Visos prasidėjo nuo šiandien.' : d === 1 ? 'Vakar taip pat pasirinkau.' : '';
 }
 
-// ─── NAVIGATION ──────────────────────────────────
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
 let current = 'screen-open';
-
 function goTo(id) {
+  if (current === 'screen-nearby' && id !== 'screen-nearby') setTimeout(resetNearbyScreen, 600);
   const from = document.getElementById(current);
-  const to = document.getElementById(id);
+  const to   = document.getElementById(id);
   from.classList.add('exit');
   setTimeout(() => {
-    from.classList.remove('active', 'exit');
+    from.classList.remove('active','exit');
     to.classList.add('active');
     current = id;
-    if (id === 'screen-hard') onEnterHard();
+    if (id === 'screen-hard')  onEnterHard();
     if (id === 'screen-timer') onEnterTimer();
   }, 300);
 }
-
 function resetApp() {
-  const screens = document.querySelectorAll('.screen');
-  screens.forEach(s => s.classList.remove('active', 'exit'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active','exit'));
   document.getElementById('screen-open').classList.add('active');
-  current = 'screen-open';
-  stopAudio();
-  resetTimer();
+  current = 'screen-open'; stopAudio(); resetTimer();
 }
 
-// ─── AUDIO MOCK ──────────────────────────────────
+// ══════════════════════════════════════════
+// AUDIO
+// ══════════════════════════════════════════
 const AUDIO_DURATION = 47;
-
 function onEnterHard() {
-  stopAudio();
-  state.audioProgress = 0;
+  stopAudio(); state.audioProgress = 0;
   document.getElementById('audio-fill').style.width = '0%';
-  // Auto-start audio after brief delay
-  setTimeout(() => startAudio(), 600);
+  setTimeout(startAudio, 600);
 }
-
 function startAudio() {
   if (state.audioPlaying) return;
   state.audioPlaying = true;
   document.getElementById('audio-icon-svg').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
   document.getElementById('waveform').classList.remove('paused');
-
   const fill = document.getElementById('audio-fill');
   const step = 100 / (AUDIO_DURATION * 10);
   state.audioTimer = setInterval(() => {
     state.audioProgress += step;
     fill.style.width = Math.min(state.audioProgress, 100) + '%';
-    if (state.audioProgress >= 100) {
-      stopAudio();
-    }
+    if (state.audioProgress >= 100) stopAudio();
   }, 100);
 }
-
 function stopAudio() {
-  state.audioPlaying = false;
-  clearInterval(state.audioTimer);
+  state.audioPlaying = false; clearInterval(state.audioTimer);
   document.getElementById('audio-icon-svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
   document.getElementById('waveform').classList.add('paused');
 }
-
-function toggleAudio() {
-  if (state.audioPlaying) stopAudio();
-  else startAudio();
-}
-
+function toggleAudio() { state.audioPlaying ? stopAudio() : startAudio(); }
 function toggleVideo(el) {
-  const playBtn = el.querySelector('.play-btn-large');
-  if (playBtn) {
-    playBtn.style.opacity = playBtn.style.opacity === '0' ? '1' : '0';
-  }
+  const b = el.querySelector('.play-btn-large');
+  if (b) b.style.opacity = b.style.opacity === '0' ? '1' : '0';
 }
 
-// ─── TIMER ───────────────────────────────────────
-const TOTAL = 600; // 10 min
-const CIRCUMFERENCE = 628.3;
-
-function onEnterTimer() {
-  resetTimer();
-}
-
+// ══════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════
+const TOTAL = 600, CIRC = 628.3;
+function onEnterTimer() { resetTimer(); }
 function resetTimer() {
-  clearInterval(state.timerInterval);
-  state.timerRunning = false;
-  state.timerSeconds = TOTAL;
+  clearInterval(state.timerInterval); state.timerRunning = false; state.timerSeconds = TOTAL;
   updateTimerDisplay(TOTAL);
-  const btn = document.getElementById('timer-btn');
-  if (btn) btn.textContent = 'Pradėti';
+  const b = document.getElementById('timer-btn'); if (b) b.textContent = 'Pradėti';
 }
-
 function startTimer() {
-  if (state.timerRunning) return;
-  state.timerRunning = true;
+  if (state.timerRunning) return; state.timerRunning = true;
   document.getElementById('timer-btn').textContent = '...';
-
   state.timerInterval = setInterval(() => {
-    state.timerSeconds--;
-    updateTimerDisplay(state.timerSeconds);
-    if (state.timerSeconds <= 0) {
-      clearInterval(state.timerInterval);
-      state.timerRunning = false;
-      onTimerDone();
-    }
+    state.timerSeconds--; updateTimerDisplay(state.timerSeconds);
+    if (state.timerSeconds <= 0) { clearInterval(state.timerInterval); state.timerRunning = false; onTimerDone(); }
   }, 1000);
 }
-
 function updateTimerDisplay(secs) {
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  document.getElementById('timer-display').textContent =
-    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-
-  const progress = secs / TOTAL;
-  const offset = CIRCUMFERENCE * (1 - progress);
-  document.getElementById('ring-progress').style.strokeDashoffset = offset;
+  const m = Math.floor(secs/60), s = secs%60;
+  document.getElementById('timer-display').textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  document.getElementById('ring-progress').style.strokeDashoffset = CIRC*(1-secs/TOTAL);
 }
-
 function onTimerDone() {
-  // Increment days on first completion of the day
   const today = new Date().toDateString();
-  state.days = parseInt(localStorage.getItem('siandien_days') || '0');
+  state.days = parseInt(localStorage.getItem('siandien_days')||'0');
   if (state.lastDate !== today || state.days === 0) {
-    state.days = Math.max(state.days, 1);
+    state.days = Math.max(state.days,1);
     localStorage.setItem('siandien_days', state.days);
     localStorage.setItem('siandien_last_date', today);
     state.lastDate = today;
   }
-  updateDaysBadge();
-  goTo('screen-held');
+  updateDaysBadge(); goTo('screen-held');
 }
 
-// ─── BOOT ────────────────────────────────────────
+// ══════════════════════════════════════════
+// NEARBY — TIME-AWARE
+// ══════════════════════════════════════════
+const TYPE_LABELS = {
+  aa:'Anoniminiai alkoholikai',
+  therapy:'Terapija / Psichologas',
+  crisis:'Pagalbos centras',
+};
+
+// slots: { days:[0-6], start:"HH:MM", end:"HH:MM" }
+// 0=Sun 1=Mon 2=Tue 3=Wed 4=Thu 5=Fri 6=Sat
+const PLACES = [
+  {
+    name:'AA Vilnius — Gedimino grupė', type:'aa',
+    lat:54.6892, lng:25.2798,
+    phone:'+37052345678', cost:'Nemokama',
+    slots:[
+      { days:[1,3], start:'18:00', end:'19:30' },
+      { days:[6],   start:'11:00', end:'12:30' },
+    ],
+  },
+  {
+    name:'AA Vilnius — Užupis grupė', type:'aa',
+    lat:54.6860, lng:25.2910,
+    phone:'+37052345679', cost:'Nemokama',
+    slots:[
+      { days:[2,4], start:'19:00', end:'20:30' },
+      { days:[0],   start:'10:00', end:'11:30' },
+    ],
+  },
+  {
+    name:'Priklausomybių reabilitacijos centras', type:'therapy',
+    lat:54.6820, lng:25.2750,
+    phone:'+37051234567', website:'https://www.prc.lt', cost:'Pagal draudimą',
+    slots:[
+      { days:[1,2,3,4,5], start:'09:00', end:'17:00' },
+    ],
+  },
+  {
+    name:'Psichikos sveikatos centras', type:'crisis',
+    lat:54.6940, lng:25.2690,
+    phone:'+37052345670', cost:'Nemokama',
+    slots:[
+      { days:[0,1,2,3,4,5,6], start:'00:00', end:'23:59' },
+    ],
+  },
+  {
+    name:'Krizių intervencijos centras', type:'crisis',
+    lat:54.6780, lng:25.2820,
+    phone:'1809', cost:'Nemokama',
+    slots:[
+      { days:[0,1,2,3,4,5,6], start:'00:00', end:'23:59' },
+    ],
+  },
+];
+
+const HELPLINES = [
+  { badge:'Emocinė pagalba 24/7', name:'Pagalbos linija', desc:'Anonimiška ir nemokama pagalba bet kada.', phone:'116123' },
+  { badge:'Krizių centras', name:'Jaunimo linija', desc:'Skambink — nereikia aiškinti priežasties.', phone:'880028888' },
+];
+
+// ── time logic ──
+function nowMin() { const n=new Date(); return n.getHours()*60+n.getMinutes(); }
+function toMin(t) { const [h,m]=t.split(':').map(Number); return h*60+m; }
+function is247(slot) { return slot.start==='00:00' && slot.end==='23:59'; }
+
+function getTodayInfo(place) {
+  const todayDay = new Date().getDay();
+  const now      = nowMin();
+  let best = null;
+  for (const slot of place.slots) {
+    if (!slot.days.includes(todayDay)) continue;
+    if (is247(slot)) return { status:'now', slot, minutesUntil:0 };
+    const s = toMin(slot.start), e = toMin(slot.end);
+    if (now >= s && now <= e)  return { status:'now',   slot, minutesUntil:0 };
+    if (now < s) {
+      const until = s - now;
+      if (!best || until < best.minutesUntil) best = { status:'today', slot, minutesUntil:until };
+    }
+  }
+  return best; // null = nothing today
+}
+
+function statusBadge(info) {
+  if (!info) return { cls:'status-future', text:'Rytoj arba vėliau' };
+  if (info.status==='now') {
+    const label = is247(info.slot) ? 'Šiandien · 24/7' : 'Dabar vyksta';
+    return { cls:'status-now', text:label };
+  }
+  const h = Math.floor(info.minutesUntil/60), m = info.minutesUntil%60;
+  const countdown = h>0 ? `už ${h}h ${m}min` : `už ${m} min`;
+  return { cls:'status-today', text:`Šiandien ${info.slot.start} · ${countdown}` };
+}
+
+function sortKey(info) {
+  if (!info)                  return 30000;
+  if (info.status==='now')    return 0;
+  return info.minutesUntil;
+}
+
+function fmtDist(d) { return d==null?'': d<1?Math.round(d*1000)+' m':d.toFixed(1)+' km'; }
+function mapsUrl(name,lat,lng) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&center=${lat},${lng}`; }
+function haversineKm(a,b,c,d) {
+  const R=6371,dL=(c-a)*Math.PI/180,dG=(d-b)*Math.PI/180;
+  const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+
+// ── render ──
+function resetNearbyScreen() {
+  const nc = document.getElementById('nearby-content');
+  if (!nc) return;
+  nc.className = 'nearby-state';
+  nc.innerHTML = `
+    <p class="nearby-state-text">Leisti naudoti tavo vietą,<br>kad rastume pagalbą šalia?</p>
+    <button class="btn btn-outline" style="max-width:320px;" onclick="requestLocation()">Leisti</button>`;
+}
+
+function showLoading() {
+  document.getElementById('nearby-content').innerHTML =
+    `<div class="spinner"></div><p class="loading-text">Ieškome šalia tavęs…</p>`;
+}
+
+function renderPlaces(places) {
+  const nc = document.getElementById('nearby-content');
+  nc.className = ''; nc.style.width = '100%';
+
+  // annotate + sort by urgency then distance
+  const ann = places.map(p => {
+    const info = getTodayInfo(p);
+    return {...p, _info:info, _sort:sortKey(info)};
+  }).sort((a,b) => a._sort!==b._sort ? a._sort-b._sort : (a.dist||9999)-(b.dist||9999));
+
+  const hasLive = ann.some(p => p._sort < 30000);
+
+  let html = '<div class="places-list">';
+  ann.slice(0,5).forEach((p,i) => {
+    const badge = statusBadge(p._info);
+    const cardCls = p._info ? (p._info.status==='now' ? 'is-now' : 'is-today') : '';
+    const dist    = fmtDist(p.dist);
+    const timeRow = p._info && !is247(p._info.slot)
+      ? `<div class="place-meta">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
+    const costRow = p.cost ? `<div class="place-cost">💰 ${p.cost}</div>` : '';
+    const callBtn = p.phone   ? `<a class="place-btn place-btn-call" href="tel:${p.phone}">📞 Skambinti</a>` : '';
+    const webBtn  = !p.phone && p.website ? `<a class="place-btn place-btn-web" href="${p.website}" target="_blank" rel="noopener">🌐 Svetainė</a>` : '';
+    const mapBtn  = `<a class="place-btn place-btn-map" href="${mapsUrl(p.name,p.lat,p.lng)}" target="_blank" rel="noopener">🗺 Eiti</a>`;
+
+    html += `
+    <div class="place-card ${cardCls}" style="animation-delay:${i*.07}s">
+      <div class="place-top">
+        <div class="place-name">${p.name}</div>
+        ${dist?`<div class="place-dist">${dist}</div>`:''}
+      </div>
+      <div class="place-type">${TYPE_LABELS[p.type]||p.type}</div>
+      <div class="place-status ${badge.cls}">
+        <span class="status-dot"></span>${badge.text}
+      </div>
+      ${timeRow}${costRow}
+      <div class="place-actions">${callBtn}${webBtn}${mapBtn}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // always show helplines below
+  const dividerText = hasLive ? 'Taip pat galima skambinti dabar' : 'Skambink dabar — nereikia laukti';
+  html += `<div class="helpline-section"><div class="helpline-divider">${dividerText}</div>`;
+  HELPLINES.forEach(hl => {
+    html += `
+    <div class="helpline-card">
+      <div class="helpline-badge">${hl.badge}</div>
+      <div class="helpline-name">${hl.name}</div>
+      <div class="helpline-desc">${hl.desc}</div>
+      <a class="helpline-call" href="tel:${hl.phone}">📞 ${hl.phone}</a>
+    </div>`;
+  });
+  html += '</div>';
+  nc.innerHTML = html;
+}
+
+function showFallback() { renderPlaces(PLACES.map(p=>({...p,dist:null}))); }
+
+function requestLocation() {
+  showLoading();
+  if (!navigator.geolocation) { showFallback(); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const {latitude:lat,longitude:lng} = pos.coords;
+      renderPlaces(PLACES.map(p=>({...p,dist:haversineKm(lat,lng,p.lat,p.lng)})));
+    },
+    () => showFallback(),
+    { timeout:8000, maximumAge:60000 }
+  );
+}
+
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
 init();
 </script>
 </body>
