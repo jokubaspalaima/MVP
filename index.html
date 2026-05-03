@@ -1578,15 +1578,19 @@ async function fetchFromPipelineAPI(lat, lng, miles=25) {
   } catch(e) { return []; }
 }
 
-// Layer 1b: Meeting Guide API directly from browser (global, no key)
+// Layer 1b: Meeting Guide API via Netlify proxy (no CORS issues)
+// Proxy lives at /.netlify/functions/meetings — same domain as the app
+const PROXY_URL = '/.netlify/functions/meetings';
+
 async function fetchAA(lat, lng) {
   const k=`aa_${lat.toFixed(2)}_${lng.toFixed(2)}`;
   const cached=cacheRead(k); if(cached) return cached;
   try {
     const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),8000);
-    const url=`${MEETING_GUIDE_URL}?lat=${lat}&lng=${lng}&miles=30`;
+    // Use Netlify proxy — avoids CORS block from browser
+    const url=`${PROXY_URL}?lat=${lat}&lng=${lng}&miles=30`;
     const r=await fetch(url,{signal:ctrl.signal});
-    if(!r.ok) throw 0;
+    if(!r.ok) throw new Error(`Proxy ${r.status}`);
     const data=await r.json();
     const raw=Array.isArray(data)?data:(data.meetings||[]);
 
