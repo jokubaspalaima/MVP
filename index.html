@@ -1411,30 +1411,29 @@ const INTL_FALLBACK = {
 };
 
 function getFallbackPlaces(lat, lng) {
-  // US users: filter the full 330-entry seed dataset by proximity (40km radius)
   const US_COUNTRIES = ['US','USA','United States'];
   const isUS = US_COUNTRIES.includes(_countryCode) || _countryCode === '';
 
-  if(isUS || AA_SEED_DATA.length > 0) {
-    const RADIUS_KM = 80; // 50 miles — wide enough to always find something
-    const nearby = AA_SEED_DATA.filter(p => {
-      if(!p.lat || !p.lng) return false;
-      return haversine(lat, lng, p.lat, p.lng) <= RADIUS_KM;
-    });
-    if(nearby.length >= 3) return nearby;
-    // If fewer than 3 within 80km, return closest 5 regardless of distance
-    return [...AA_SEED_DATA]
-      .map(p => ({ ...p, _d: haversine(lat, lng, p.lat, p.lng) }))
-      .sort((a,b) => a._d - b._d)
-      .slice(0, 5);
+  // Non-US: use country-specific INTL_FALLBACK
+  if(!isUS) {
+    const intl = INTL_FALLBACK[_countryCode];
+    if(intl && intl.length) return intl;
+    // No country data — last resort
+    return AA_SEED_DATA.slice(0, 5);
   }
 
-  // International: use country-specific fixed locations
-  const places = INTL_FALLBACK[_countryCode];
-  if(places) return places;
-
-  // Absolute last resort: return first 5 seed entries
-  return AA_SEED_DATA.slice(0, 5);
+  // US: filter seed dataset by 80km radius
+  const RADIUS_KM = 80;
+  const nearby = AA_SEED_DATA.filter(p => {
+    if(!p.lat || !p.lng) return false;
+    return haversine(lat, lng, p.lat, p.lng) <= RADIUS_KM;
+  });
+  if(nearby.length >= 3) return nearby;
+  // Sparse area — return 5 closest
+  return [...AA_SEED_DATA]
+    .map(p => ({ ...p, _d: haversine(lat, lng, p.lat, p.lng) }))
+    .sort((a,b) => a._d - b._d)
+    .slice(0, 5);
 }
 
 function renderHelplines() {
@@ -1699,7 +1698,7 @@ const NEARBY = {
     navigator.geolocation.getCurrentPosition(
       pos => this.fetchAll(pos.coords.latitude, pos.coords.longitude),
       ()  => this.renderLocFail(),
-      {timeout:8000, maximumAge:60000, enableHighAccuracy:false}
+      {timeout:8000, maximumAge:0, enableHighAccuracy:false}
     );
   },
 
