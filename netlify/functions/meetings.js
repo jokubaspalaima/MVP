@@ -1,73 +1,75 @@
 // netlify/functions/meetings.js
-// ─────────────────────────────────────────────────────────────
-// Serverless proxy for the Meeting Guide API.
-// Runs on Netlify's servers — no CORS issues.
-//
-// Called from the app as:
-//   /.netlify/functions/meetings?lat=X&lng=Y&miles=25
-//
-// Returns the exact same JSON the Meeting Guide API returns.
-// ─────────────────────────────────────────────────────────────
+// Proxy for Meeting Guide API using built-in https (no npm needed)
 
-const MG_URL = 'https://api.meetingguide.org/meetings';
+const https = require('https');
+
+function httpsGet(url) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, {
+      headers: {
+        'User-Agent': 'Siandien-App/1.0',
+        'Accept':     'application/json',
+      }
+    }, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body }));
+    });
+    req.on('error', reject);
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('timeout')); });
+  });
+}
 
 exports.handler = async (event) => {
-  // Only allow GET
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const { lat, lng, miles = '25' } = event.queryStringParameters || {};
+  const { lat, lng, miles = '30' } = event.queryStringParameters || {};
 
   if (!lat || !lng) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'lat and lng are required' }),
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'lat and lng required' }),
     };
   }
 
-  // Validate coords are real numbers in sensible range
   const latF = parseFloat(lat);
   const lngF = parseFloat(lng);
-  if (isNaN(latF) || isNaN(lngF) || latF < -90 || latF > 90 || lngF < -180 || lngF > 180) {
+  if (isNaN(latF) || isNaN(lngF)) {
     return {
       statusCode: 400,
+      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: 'Invalid coordinates' }),
     };
   }
 
-  const milesI = Math.min(Math.max(parseInt(miles, 10) || 25, 1), 60);
+  const milesI = Math.min(Math.max(parseInt(miles, 10) || 30, 1), 60);
+  const url = `https://api.meetingguide.org/meetings?lat=${latF}&lng=${lngF}&miles=${milesI}`;
 
   try {
-    const url = `${MG_URL}?lat=${latF}&lng=${lngF}&miles=${milesI}`;
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': 'Siandien-App/1.0',
-        'Accept':     'application/json',
-      },
-    });
+    const { status, body } = await httpsGet(url);
 
-    if (!response.ok) {
-      throw new Error(`Meeting Guide API returned ${response.status}`);
+    if (status !== 200) {
+      throw new Error(`Meeting Guide returned ${status}`);
     }
-
-    const data = await response.text();
 
     return {
       statusCode: 200,
       headers: {
         'Content-Type':                'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control':               'public, max-age=300', // cache 5 min
+        'Cache-Control':               'public, max-age=300',
       },
-      body: data,
+      body,
     };
   } catch (err) {
-    console.error('meetings proxy error:', err.message);
+    console.error('Proxy error:', err.message);
     return {
       statusCode: 502,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'Failed to fetch from Meeting Guide', meetings: [] }),
+      body: JSON.stringify({ error: err.message, meetings: [] }),
     };
   }
 };
