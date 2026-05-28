@@ -1,0 +1,33 @@
+{
+  "name": "Šiandien — Sobriety Support",
+  "short_name": "Šiandien",
+  "description": "Find AA meetings near you. One day at a time.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "lt",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot.png",
+      "sizes": "390x844",
+      "type": "image/png"
+    }
+  ]
+}

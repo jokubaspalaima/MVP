@@ -2,8 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Today</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Šiandien</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Šiandien">
+
+<!-- iOS specific -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Šiandien">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="apple-touch-startup-image" href="/splash.png">
+
+<!-- General -->
+<meta name="description" content="Sobriety support — find AA meetings near you, one day at a time.">
+<link rel="icon" type="image/png" href="/icon-192.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -526,7 +544,7 @@ const LANGS = {
     emptyContacts:'No saved contacts yet.\nAdd someone you can call.',
     toastLocked:'Unlocks after 5 days',toastFill:'Enter name and phone',
     typeAA:'AA Meeting',typeTherapy:'Therapy / Counselor',typeCrisis:'Crisis Center',
-    typeRecovery:'Recovery Center',typeHelpline:'Helpline',costFree:'Free',costIns:'Insurance accepted',
+    typeRecovery:'Recovery Center',typeHelpline:'Helpline',costFree:'Free',costIns:'Insurance accepted',tmrw:'Tomorrow',daySfx:'days',
     dayTitle:'Today\nI won\'t drink.',daySub:'Tomorrow you decide again.',dayStruggle:'🔴  I\'m struggling',
   },
   lt:{
@@ -571,7 +589,7 @@ const LANGS = {
     emptyContacts:'Dar nėra išsaugotų žmonių.\nPridėk žmogų, kuriam gali paskambinti.',
     toastLocked:'Atsirakina po 5 dienų',toastFill:'Įvesk vardą ir telefoną',
     typeAA:'AA susitikimas',typeTherapy:'Terapija / Psichologas',typeCrisis:'Pagalbos centras',
-    typeRecovery:'Reabilitacijos centras',typeHelpline:'Pagalbos linija',costFree:'Nemokama',costIns:'Pagal draudimą',
+    typeRecovery:'Reabilitacijos centras',typeHelpline:'Pagalbos linija',costFree:'Nemokama',costIns:'Pagal draudimą',tmrw:'Rytoj',daySfx:'d.',
     dayTitle:'Šiandien\nnegeriu.',daySub:'Rytoj vėl spręsi.',dayStruggle:'🔴  Man dabar sunku',
   },
   de:{
@@ -616,7 +634,7 @@ const LANGS = {
     emptyContacts:'Noch keine Kontakte.\nFüge jemanden hinzu, den du anrufen kannst.',
     toastLocked:'Wird nach 5 Tagen freigeschaltet',toastFill:'Name und Telefon eingeben',
     typeAA:'AA-Treffen',typeTherapy:'Therapie / Berater',typeCrisis:'Krisenzentrum',
-    typeRecovery:'Rehabilitationszentrum',typeHelpline:'Hilfstelefon',costFree:'Kostenlos',costIns:'Krankenversicherung',
+    typeRecovery:'Rehabilitationszentrum',typeHelpline:'Hilfstelefon',costFree:'Kostenlos',costIns:'Krankenversicherung',tmrw:'Morgen',daySfx:'Tage',
     dayTitle:'Heute\ntrinke ich nicht.',daySub:'Morgen entscheidest du wieder.',dayStruggle:'🔴  Ich kämpfe gerade',
   },
   no:{
@@ -661,7 +679,7 @@ const LANGS = {
     emptyContacts:'Ingen lagrede kontakter ennå.\nLegg til noen du kan ringe.',
     toastLocked:'Låses opp etter 5 dager',toastFill:'Skriv inn navn og telefon',
     typeAA:'AA-møte',typeTherapy:'Terapi / Rådgiver',typeCrisis:'Krisesenter',
-    typeRecovery:'Rehabiliteringssenter',typeHelpline:'Hjelpetelefon',costFree:'Gratis',costIns:'Forsikring',
+    typeRecovery:'Rehabiliteringssenter',typeHelpline:'Hjelpetelefon',costFree:'Gratis',costIns:'Forsikring',tmrw:'I morgen',daySfx:'dager',
     dayTitle:'I dag\ndrikker jeg ikke.',daySub:'I morgen bestemmer du igjen.',dayStruggle:'🔴  Jeg sliter',
   },
   pl:{
@@ -706,7 +724,7 @@ const LANGS = {
     emptyContacts:'Brak zapisanych kontaktów.\nDodaj kogoś, do kogo możesz zadzwonić.',
     toastLocked:'Odblokowanie po 5 dniach',toastFill:'Wpisz imię i telefon',
     typeAA:'Spotkanie AA',typeTherapy:'Terapia / Doradca',typeCrisis:'Centrum Kryzysowe',
-    typeRecovery:'Centrum Rehabilitacji',typeHelpline:'Telefon zaufania',costFree:'Bezpłatne',costIns:'Ubezpieczenie',
+    typeRecovery:'Centrum Rehabilitacji',typeHelpline:'Telefon zaufania',costFree:'Bezpłatne',costIns:'Ubezpieczenie',tmrw:'Jutro',daySfx:'dni',
     dayTitle:'Dziś\nnie piję.',daySub:'Jutro zdecydujesz ponownie.',dayStruggle:'🔴  Walczę',
   },
 };
@@ -1445,8 +1463,8 @@ function getFallbackPlaces(lat, lng) {
     return AA_SEED_DATA.slice(0, 5);
   }
 
-  // US: filter seed dataset by 80km radius
-  const RADIUS_KM = 80;
+  // US: filter seed dataset by 50km radius (~31 miles)
+  const RADIUS_KM = 50;
   const nearby = AA_SEED_DATA.filter(p => {
     if(!p.lat || !p.lng) return false;
     return haversine(lat, lng, p.lat, p.lng) <= RADIUS_KM;
@@ -1493,33 +1511,92 @@ function is247(sl){ return sl&&sl.start==='00:00'&&sl.end==='23:59'; }
 
 function getTimeInfo(place) {
   if(!place.slots||!place.slots.length) return null;
-  const day=new Date().getDay(), now=nowMin();
-  let best=null;
-  for(const sl of place.slots) {
-    if(!sl.days||!sl.days.includes(day)) continue;
-    if(is247(sl)) return {isNow:true,isToday:true,slot:sl,minutesUntil:0};
-    const a=toMin(sl.start), b=toMin(sl.end);
-    if(now>=a&&now<=b) return {isNow:true,isToday:true,slot:sl,minutesUntil:0};
-    if(now<a) {
-      const u=a-now;
-      if(!best||u<best.minutesUntil) best={isNow:false,isToday:true,slot:sl,minutesUntil:u};
+  const now     = new Date();
+  const todayDay = now.getDay();
+  const nowM     = now.getHours()*60 + now.getMinutes();
+  let best = null;
+
+  // Search across all 7 days (today first, then tomorrow, then rest of week)
+  for(let offset=0; offset<7; offset++) {
+    const checkDay = (todayDay + offset) % 7;
+    for(const sl of place.slots) {
+      if(!sl.days||!sl.days.includes(checkDay)) continue;
+
+      if(is247(sl)) {
+        return {isNow:true, isToday:true, slot:sl, minutesUntil:0, daysUntil:0};
+      }
+
+      const startM = toMin(sl.start);
+      const endM   = toMin(sl.end);
+
+      if(offset === 0) {
+        // Today
+        if(nowM >= startM && nowM < endM) {
+          return {isNow:true, isToday:true, slot:sl, minutesUntil:0, daysUntil:0};
+        }
+        if(nowM < startM) {
+          const u = startM - nowM;
+          if(!best || u < best.minutesUntil) {
+            best = {isNow:false, isToday:true, slot:sl, minutesUntil:u, daysUntil:0};
+          }
+        }
+      } else {
+        // Future day — minutes = days*1440 + time from midnight
+        const totalMins = offset*1440 + startM;
+        if(!best || totalMins < best.minutesUntil) {
+          best = {isNow:false, isToday:false, slot:sl, minutesUntil:totalMins, daysUntil:offset};
+        }
+      }
     }
+    // If we already found something today, don't look further
+    if(best && best.daysUntil === 0) break;
   }
   return best;
 }
 
+// Day names for badge — resolved at render time via t()
+const BADGE_DAYS_EN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
 function makeBadge(info) {
-  if(!info) return {cls:'future', text:t('statusFuture')};
-  if(info.isNow) return {cls:'now', text:is247(info.slot)?t('status247'):t('statusNow')};
-  const h=Math.floor(info.minutesUntil/60), m=info.minutesUntil%60;
-  const cd = h>0 ? `${t('inMin')} ${h}${t('hourSfx')} ${m}${t('minSfx')}` : `${t('inMin')} ${m} ${t('minSfx')}`;
-  return {cls:'today', text:`${t('statusToday')} ${info.slot?.start} · ${cd}`};
+  if(!info) return {cls:'future', text: t('statusFuture')};
+
+  // Happening right now
+  if(info.isNow) {
+    return {cls:'now', text: is247(info.slot) ? t('status247') : t('statusNow')};
+  }
+
+  const days = info.daysUntil || 0;
+  const mins = info.minutesUntil || 0;
+  const startTime = info.slot?.start || '';
+
+  if(days === 0) {
+    // Today — show exact countdown
+    const h = Math.floor(mins/60), m = mins%60;
+    let countdown;
+    if(h > 0) {
+      countdown = `${t('inMin')} ${h}${t('hourSfx')} ${m > 0 ? m+t('minSfx') : ''}`.trim();
+    } else {
+      countdown = `${t('inMin')} ${m} ${t('minSfx')}`;
+    }
+    return {cls:'today', text:`${t('statusToday')} ${startTime} · ${countdown}`};
+  }
+
+  if(days === 1) {
+    // Tomorrow
+    return {cls:'future', text:`${t('tmrw')} · ${startTime}`};
+  }
+
+  // 2–6 days away — show day name + time
+  const dayName = BADGE_DAYS_EN[(new Date().getDay() + days) % 7];
+  return {cls:'future', text:`${dayName} · ${startTime} · ${t('inMin')} ${days} ${t('daySfx')}`};
 }
 
 function sortScore(p) {
-  const ts = p.isNow ? 0 : p.isToday ? (p.minutesUntil||0)+1 : 50000;
-  const dr = p.drivingMin||((p.dist||9)*8);
-  return ts*10000+dr;
+  const info = p._info;
+  if(!info) return 9999999;
+  if(info.isNow)   return p.dist || 0;                         // now: sort by distance
+  const mins = info.minutesUntil || 9999;
+  return mins * 100 + (p.dist || 0);                           // future: sort by time then distance
 }
 
 function haversine(a,b,c,d) {
@@ -1797,13 +1874,14 @@ const NEARBY = {
       const dist = haversine(lat, lng, p.lat||lat, p.lng||lng);
       const info = p.slots?.length
         ? getTimeInfo(p)
-        : (p.isNow ? {isNow:true,isToday:true,slot:{start:'',end:''},minutesUntil:0} : null);
+        : (p.isNow ? {isNow:true,isToday:true,slot:{start:'',end:''},minutesUntil:0,daysUntil:0} : null);
       const drivingMin = dist<1 ? 1 : Math.round((dist/48.28)*60);
       return {
         ...p, dist,
-        isNow:       info?.isNow   || false,
-        isToday:     info?.isToday || false,
+        isNow:       info?.isNow    || false,
+        isToday:     info?.isToday  || false,
         minutesUntil:info?.minutesUntil || null,
+        daysUntil:   info?.daysUntil ?? null,
         _info:       info,
         drivingMin,
       };
@@ -1812,10 +1890,11 @@ const NEARBY = {
     // Panic mode: only show meetings happening right now
     if(this.panicMode) places = places.filter(p => p.isNow);
 
-    // Sort: now first → today soonest → distance
+    // Sort: now → soonest today → tomorrow → rest of week → distance
     places.sort((a,b) => sortScore(a) - sortScore(b));
 
-    this.render(places.slice(0, 8), hasReal);
+    // Show up to 20 results (was 8)
+    this.render(places.slice(0, 20), hasReal);
   },
 
   render(places, hasReal) {
@@ -1856,7 +1935,7 @@ const NEARBY = {
       </div>`;
 
       // Other cards
-      places.slice(1,6).forEach((p,i)=>{
+      places.slice(1,20).forEach((p,i)=>{
         const badge=makeBadge(p._info);
         const travel=fmtTravel(p.drivingMin,null,p.dist);
         const cc=p.isNow?'now':p.isToday?'today':'';
@@ -1865,7 +1944,7 @@ const NEARBY = {
         const timeRow = p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
           ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
         const costRow=p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
-        h += `<div class="place-card ${cc}" style="animation-delay:${(i+1)*.07}s">
+        h += `<div class="place-card ${cc}" style="animation-delay:${(i+1)*.05}s">
           <div class="place-top">
             <div class="place-name">${esc(p.name)}</div>
             ${travel?`<div class="place-travel">${esc(travel)}</div>`:''}
@@ -1944,6 +2023,14 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
       {timeout:5000, maximumAge:3600000, enableHighAccuracy:false}
     );
   }
+// ── Service Worker Registration ──────────────────────────────
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(e => console.log('SW failed:', e));
+  });
+}
 })();
 </script>
 </body>
