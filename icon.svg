@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="70%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#c0241f"/>
+    </linearGradient>
+    <clipPath id="rounded">
+      <rect width="512" height="512" rx="115" ry="115"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" rx="115" ry="115" fill="url(#bg)"/>
+  
+  <!-- "not" top row -->
+  <text 
+    x="256" y="226" 
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="188"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="-4"
+  >not</text>
+  
+  <!-- "2day" bottom row -->
+  <text 
+    x="256" y="418" 
+    font-family="'Arial Black', 'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="188"
+    fill="white"
+    text-anchor="middle"
+    letter-spacing="-4"
+  >2day</text>
+</svg>

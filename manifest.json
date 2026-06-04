@@ -1,6 +1,6 @@
 {
-  "name": "Šiandien — Sobriety Support",
-  "short_name": "Šiandien",
+  "name": "not2day \u2014 Sobriety Support",
+  "short_name": "not2day",
   "description": "Find AA meetings near you. One day at a time.",
   "start_url": "/",
   "display": "standalone",
@@ -8,8 +8,13 @@
   "theme_color": "#000000",
   "orientation": "portrait",
   "scope": "/",
-  "lang": "lt",
   "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
@@ -21,13 +26,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot.png",
-      "sizes": "390x844",
-      "type": "image/png"
     }
   ]
 }
