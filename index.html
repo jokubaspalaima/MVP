@@ -117,10 +117,11 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
 .ub-s{font-size:.75rem;color:var(--dim);text-align:center}
 
 /* open screen */
-.headline{font-size:clamp(2.8rem,10vw,4.2rem);font-weight:800;line-height:1.02;
-  letter-spacing:-.04em;text-align:center;margin-bottom:12px;white-space:pre-line;cursor:default}
+.headline{font-size:clamp(3.2rem,14vw,5.5rem);font-weight:800;line-height:1.0;
+  letter-spacing:-.06em;text-align:center;margin-bottom:10px;white-space:pre-line;
+  cursor:default;font-variant-numeric:tabular-nums}
 .subline{font-size:clamp(.9rem,3.5vw,1.1rem);color:var(--dim);text-align:center;
-  margin-bottom:56px;font-weight:300;white-space:pre-line}
+  margin-bottom:56px;font-weight:300;white-space:pre-line;letter-spacing:.01em}
 
 /* panic screen */
 .panic-msg{font-size:clamp(1.3rem,5.5vw,1.9rem);font-weight:600;text-align:center;
@@ -500,7 +501,7 @@ const LS = {
 // ═══════════════════════════════════════════════════
 const LANGS = {
   en:{
-    appTitle:'Today\nI won\'t drink',appSub:'Just today. Just now.',confirm:'I confirm',
+    appTitle:'not2day',appSub:'Just today. Just now.',confirm:'I confirm',
     confirmedText:'Today you chose not to drink.',struggle:'🔴  I\'m really struggling right now',
     continueDay:'○  Continue the day',panicMsg:'It will pass.\nWait 10 minutes.',
     audioLabel:'Voice note · 47s',wait10:'⏱  Wait 10 min',findHelp:'📍  Find help nearby',
@@ -542,10 +543,10 @@ const LANGS = {
     toastLocked:'Unlocks after 5 days',toastFill:'Enter name and phone',
     typeAA:'AA Meeting',typeTherapy:'Therapy / Counselor',typeCrisis:'Crisis Center',
     typeRecovery:'Recovery Center',typeHelpline:'Helpline',costFree:'Free',costIns:'Insurance accepted',tmrw:'Tomorrow',daySfx:'days',
-    dayTitle:'Today\nI won\'t drink.',daySub:'Tomorrow you decide again.',dayStruggle:'🔴  I\'m struggling',
+    dayTitle:'not2day.',daySub:'Tomorrow you decide again.',dayStruggle:'🔴  I\'m struggling',
   },
   lt:{
-    appTitle:'Šiandien\nnegeriu',appSub:'Tik šiandien. Tik dabar.',confirm:'Patvirtinu',
+    appTitle:'not2day',appSub:'Tik šiandien. Tik dabar.',confirm:'Patvirtinu',
     confirmedText:'Šiandien pasirinkai negerti.',struggle:'🔴  Man dabar labai sunku',
     continueDay:'○  Tęsti dieną',panicMsg:'Praeis.\nPalauk 10 min.',
     audioLabel:'Balso žinutė · 47s',wait10:'⏱  Palaukti 10 min',findHelp:'📍  Rasti pagalbą šalia',
@@ -587,10 +588,10 @@ const LANGS = {
     toastLocked:'Atsirakina po 5 dienų',toastFill:'Įvesk vardą ir telefoną',
     typeAA:'AA susitikimas',typeTherapy:'Terapija / Psichologas',typeCrisis:'Pagalbos centras',
     typeRecovery:'Reabilitacijos centras',typeHelpline:'Pagalbos linija',costFree:'Nemokama',costIns:'Pagal draudimą',tmrw:'Rytoj',daySfx:'d.',
-    dayTitle:'Šiandien\nnegeriu.',daySub:'Rytoj vėl spręsi.',dayStruggle:'🔴  Man dabar sunku',
+    dayTitle:'not2day.',daySub:'Rytoj vėl spręsi.',dayStruggle:'🔴  Man dabar sunku',
   },
   de:{
-    appTitle:'Heute\ntrinke ich nicht',appSub:'Nur heute. Nur jetzt.',confirm:'Ich bestätige',
+    appTitle:'not2day',appSub:'Nur heute. Nur jetzt.',confirm:'Ich bestätige',
     confirmedText:'Heute hast du dich entschieden, nicht zu trinken.',struggle:'🔴  Es fällt mir gerade sehr schwer',
     continueDay:'○  Den Tag fortsetzen',panicMsg:'Es geht vorbei.\nWarte 10 Minuten.',
     audioLabel:'Sprachnotiz · 47s',wait10:'⏱  10 Min. warten',findHelp:'📍  Hilfe in der Nähe',
@@ -632,10 +633,10 @@ const LANGS = {
     toastLocked:'Wird nach 5 Tagen freigeschaltet',toastFill:'Name und Telefon eingeben',
     typeAA:'AA-Treffen',typeTherapy:'Therapie / Berater',typeCrisis:'Krisenzentrum',
     typeRecovery:'Rehabilitationszentrum',typeHelpline:'Hilfstelefon',costFree:'Kostenlos',costIns:'Krankenversicherung',tmrw:'Morgen',daySfx:'Tage',
-    dayTitle:'Heute\ntrinke ich nicht.',daySub:'Morgen entscheidest du wieder.',dayStruggle:'🔴  Ich kämpfe gerade',
+    dayTitle:'not2day.',daySub:'Morgen entscheidest du wieder.',dayStruggle:'🔴  Ich kämpfe gerade',
   },
   no:{
-    appTitle:'I dag\ndrikker jeg ikke',appSub:'Bare i dag. Bare nå.',confirm:'Jeg bekrefter',
+    appTitle:'not2day',appSub:'Bare i dag. Bare nå.',confirm:'Jeg bekrefter',
     confirmedText:'I dag valgte du å ikke drikke.',struggle:'🔴  Jeg sliter veldig nå',
     continueDay:'○  Fortsett dagen',panicMsg:'Det går over.\nVent 10 minutter.',
     audioLabel:'Talenotat · 47s',wait10:'⏱  Vent 10 min',findHelp:'📍  Finn hjelp i nærheten',
@@ -677,10 +678,10 @@ const LANGS = {
     toastLocked:'Låses opp etter 5 dager',toastFill:'Skriv inn navn og telefon',
     typeAA:'AA-møte',typeTherapy:'Terapi / Rådgiver',typeCrisis:'Krisesenter',
     typeRecovery:'Rehabiliteringssenter',typeHelpline:'Hjelpetelefon',costFree:'Gratis',costIns:'Forsikring',tmrw:'I morgen',daySfx:'dager',
-    dayTitle:'I dag\ndrikker jeg ikke.',daySub:'I morgen bestemmer du igjen.',dayStruggle:'🔴  Jeg sliter',
+    dayTitle:'not2day.',daySub:'I morgen bestemmer du igjen.',dayStruggle:'🔴  Jeg sliter',
   },
   pl:{
-    appTitle:'Dziś\nnie piję',appSub:'Tylko dziś. Tylko teraz.',confirm:'Potwierdzam',
+    appTitle:'not2day',appSub:'Tylko dziś. Tylko teraz.',confirm:'Potwierdzam',
     confirmedText:'Dziś wybrałeś/aś nie pić.',struggle:'🔴  Teraz bardzo mi ciężko',
     continueDay:'○  Kontynuuj dzień',panicMsg:'To minie.\nPoczekaj 10 minut.',
     audioLabel:'Notatka głosowa · 47s',wait10:'⏱  Poczekaj 10 min',findHelp:'📍  Znajdź pomoc w pobliżu',
@@ -722,7 +723,7 @@ const LANGS = {
     toastLocked:'Odblokowanie po 5 dniach',toastFill:'Wpisz imię i telefon',
     typeAA:'Spotkanie AA',typeTherapy:'Terapia / Doradca',typeCrisis:'Centrum Kryzysowe',
     typeRecovery:'Centrum Rehabilitacji',typeHelpline:'Telefon zaufania',costFree:'Bezpłatne',costIns:'Ubezpieczenie',tmrw:'Jutro',daySfx:'dni',
-    dayTitle:'Dziś\nnie piję.',daySub:'Jutro zdecydujesz ponownie.',dayStruggle:'🔴  Walczę',
+    dayTitle:'not2day.',daySub:'Jutro zdecydujesz ponownie.',dayStruggle:'🔴  Walczę',
   },
 };
 
@@ -1490,7 +1491,6 @@ function renderHelplines() {
 // ═══════════════════════════════════════════════════
 //  NEARBY — GLOBAL MULTI-SOURCE ENGINE
 // ═══════════════════════════════════════════════════
-const GOOGLE_API_KEY = ''; // ← paste Google Maps API key here for live data
 
 const TYPE_I18N = {
   aa:'typeAA', therapy:'typeTherapy', crisis:'typeCrisis',
@@ -1613,122 +1613,65 @@ function fmtTravel(dMin,wMin,dist) {
 function fmtCost(c) { return c==='free'?t('costFree'):c==='insurance'?t('costIns'):(c||''); }
 function typeLabel(type) { return t(TYPE_I18N[type]||'')||type; }
 
-// ─── PIPELINE DATA LAYER ─────────────────────────────────────
-const PIPELINE_API_URL  = null; // ← set to 'https://api.yourapp.com' when backend is deployed
-const MEETING_GUIDE_URL = 'https://api.meetingguide.org/meetings';
-
-// Meeting Guide returns day as integer 0-6 (Sun-Sat) OR as a string name
-const MG_DAY_MAP = {
-  'Sunday':0,'Monday':1,'Tuesday':2,'Wednesday':3,
-  'Thursday':4,'Friday':5,'Saturday':6,
-  0:0,1:1,2:2,3:3,4:4,5:5,6:6,
-};
-
-const MG_TYPE_MAP = {
-  'O':'O','open':'O','C':'C','closed':'C',
-  'W':'W','women':'W','M':'M','men':'M',
-  'BB':'BB','SP':'SP','D':'D','ONL':'ONL','H':'H',
-  'Y':'Y','SS':'SS','BE':'BE','LC':'LC',
-};
-
-function normalizeMGTypes(raw) {
-  const arr = Array.isArray(raw) ? raw : String(raw||'').split(/[,\s]+/);
-  return [...new Set(arr.map(x => MG_TYPE_MAP[x?.trim()]||x?.trim()).filter(Boolean))];
-}
-
-function mgDayTimeToSlots(day, timeStr) {
-  if(day===undefined||day===null||!timeStr) return [];
-  const [h,mi]=(timeStr+':00').split(':').map(Number);
-  const endH=((h+1)%24).toString().padStart(2,'0');
-  const endM=mi.toString().padStart(2,'0');
-  return [{days:[day], start:timeStr, end:`${endH}:${endM}`}];
-}
-
-// Layer 1a: Your own pipeline API (fastest, most complete)
-async function fetchFromPipelineAPI(lat, lng, miles=25) {
-  if(!PIPELINE_API_URL) return [];
-  const k=`pipe_${lat.toFixed(2)}_${lng.toFixed(2)}`;
-  const cached=cacheRead(k); if(cached) return cached;
-  try {
-    const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),8000);
-    const url=`${PIPELINE_API_URL}/meetings/nearby?lat=${lat}&lng=${lng}&miles=${miles}&limit=30`;
-    const r=await fetch(url,{signal:ctrl.signal});
-    if(!r.ok) throw 0;
-    const data=await r.json();
-    // Pipeline API already returns isNow/isToday — convert to slot format for app engine
-    const meetings=(data.meetings||[]).map(m=>({
-      name:      m.name,
-      type:      m.types?.includes('W')?'aa': m.source?.includes('crisis')?'crisis':'aa',
-      lat:       m.lat,
-      lng:       m.lng,
-      phone:     m.phone||null,
-      address:   m.address||null,
-      city:      m.city||'',
-      country:   m.country||'',
-      cost:      'free',
-      source:    'pipeline-api',
-      dist:      m.distance_km||null,
-      slots:     mgDayTimeToSlots(m.day, m.time),
-    }));
-    cacheSet(k, meetings, 600);
-    return meetings;
-  } catch(e) { return []; }
-}
-
-// Layer 1b: Meeting Guide API via Netlify proxy (no CORS issues)
-// Proxy lives at /.netlify/functions/meetings — same domain as the app
-const PROXY_URL = '/.netlify/functions/meetings';
+// ─── DATA LAYER ───────────────────────────────────────────────
+const PROXY_URL           = '/.netlify/functions/meetings'; // Netlify proxy
+const GOOGLE_API_KEY      = ''; // ← paste Google Maps API key to enable Places
+const INTERGROUP_SOURCES  = 53; // number of state/city sources in Netlify function
 
 async function fetchAA(lat, lng) {
-  const k=`aa_${lat.toFixed(2)}_${lng.toFixed(2)}`;
-  const cached=cacheRead(k); if(cached) return cached;
+  const k = `aa_${lat.toFixed(2)}_${lng.toFixed(2)}`;
+  const cached = cacheRead(k); if(cached) return cached;
   try {
-    const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),8000);
-    // Use Netlify proxy — avoids CORS block from browser
-    const url=`${PROXY_URL}?lat=${lat}&lng=${lng}&miles=30`;
-    const r=await fetch(url,{signal:ctrl.signal});
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 10000);
+    const url  = `${PROXY_URL}?lat=${lat}&lng=${lng}&miles=30`;
+    const r    = await fetch(url, {signal: ctrl.signal});
     if(!r.ok) throw new Error(`Proxy ${r.status}`);
-    const data=await r.json();
-    const raw=Array.isArray(data)?data:(data.meetings||[]);
+    const data = await r.json();
 
-    const meetings=raw
-      .filter(m=>m.day!==undefined&&m.time&&(m.city||m.latitude||m.lat))
-      .slice(0,40)
-      .map(m=>{
-        // Day: Meeting Guide sends integer (0=Sun) OR string name
-        const dayRaw = m.day;
-        const day = typeof dayRaw==='number'
-          ? dayRaw
-          : (MG_DAY_MAP[dayRaw]??-1);
-        if(day<0) return null;
+    // Handle both formats: array OR {meetings:[], source:''}
+    const raw  = Array.isArray(data) ? data : (data.meetings || []);
+    if(!raw.length) return [];
 
-        const timeStr = (m.time||'00:00').substring(0,5); // trim seconds
-        const latVal  = parseFloat(m.latitude||m.lat)||null;
-        const lngVal  = parseFloat(m.longitude||m.lng)||null;
+    const source = data.source || 'meeting-guide-api';
+    console.log(`[fetchAA] ${source}: ${raw.length} raw records`);
 
+    const meetings = raw
+      .filter(m => m.day !== undefined && m.day !== null && m.day >= 0 && m.time)
+      .map(m => {
+        const day     = parseInt(m.day, 10);
+        const timeStr = (m.time || '').substring(0, 5);
+        if(day < 0 || day > 6 || !timeStr.includes(':')) return null;
+        const [h, mi] = timeStr.split(':').map(Number);
+        const end     = `${String((h+1)%24).padStart(2,'0')}:${String(mi).padStart(2,'0')}`;
         return {
-          name:      m.name||m.meeting_name||'AA Meeting',
-          type:      'aa',
-          lat:       latVal||lat,
-          lng:       lngVal||lng,
-          address:   m.address||null,
-          city:      m.city||'',
-          state:     m.state||null,
-          country:   m.country||'',
-          phone:     m.phone||null,
-          cost:      'free',
-          source:    'meeting-guide-api',
-          types:     normalizeMGTypes(m.types||m.type||[]),
-          notes:     m.notes||null,
-          // Convert to the slot format the time engine uses
-          slots:     mgDayTimeToSlots(day, timeStr),
+          id:            String(m.id || ''),
+          name:          String(m.name || m.meeting_name || 'AA Meeting').trim(),
+          type:          'aa',
+          lat:           parseFloat(m.lat || m.latitude)  || null,
+          lng:           parseFloat(m.lng || m.longitude) || null,
+          address:       m.address || '',
+          city:          m.city || '',
+          state:         m.state || '',
+          country:       m.country || 'US',
+          phone:         m.phone || null,
+          cost:          'free',
+          source,
+          types:         Array.isArray(m.types) ? m.types : [],
+          notes:         m.notes || '',
+          timezone:      m.timezone || '',
+          slots:         [{days:[day], start:timeStr, end}],
         };
       })
       .filter(Boolean);
 
     cacheSet(k, meetings, 600);
+    console.log(`[fetchAA] normalized: ${meetings.length} meetings`);
     return meetings;
-  } catch(e) { return []; }
+  } catch(e) {
+    console.warn('[fetchAA] failed:', e.message);
+    return [];
+  }
 }
 
 // Layer 2: Google Places (optional — requires API key)
@@ -1787,9 +1730,10 @@ const NEARBY = {
 
   loading(msg) {
     document.getElementById('nearby-body').innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 0">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:48px 0">
         <div class="spinner"></div>
-        <p style="font-size:.82rem;color:var(--dim)">${esc(msg)}</p>
+        <p style="font-size:.85rem;color:var(--mid);text-align:center;font-weight:500">${esc(msg)}</p>
+        <p style="font-size:.72rem;color:var(--dim);text-align:center">Checking ${INTERGROUP_SOURCES} sources…</p>
       </div>`;
   },
 
@@ -1839,16 +1783,10 @@ const NEARBY = {
 
     this.loading(t('loadMeet'));
 
-    // Layer 1a: Your deployed pipeline API (fastest, most complete)
-    let places = await fetchFromPipelineAPI(lat, lng);
+    // Layer 1: Netlify proxy → tries CORS proxies + state-specific intergroup feeds
+    let places = await fetchAA(lat, lng);
 
-    // Layer 1b: Meeting Guide API directly — real AA data globally, no key needed
-    if(places.length < 3) {
-      const aaPlaces = await fetchAA(lat, lng);
-      places = [...places, ...aaPlaces];
-    }
-
-    // Layer 2: Google Places enrichment (only if API key set)
+    // Layer 2: Google Places (optional — requires API key)
     if(GOOGLE_API_KEY && places.length < 5) {
       const gpPlaces = await fetchGoogle(lat, lng);
       places = [...places, ...gpPlaces];
@@ -1899,14 +1837,18 @@ const NEARBY = {
 
     if(this.panicMode) h += `<div class="panic-bar">${esc(t('panicBar'))}</div>`;
 
-    // Show data source note based on what actually returned data
+    // Source note — shows where data came from + count
     const hasPipeline = places.some(p => p.source === 'pipeline-api');
-    const hasMG       = places.some(p => p.source === 'meeting-guide-api');
+    const hasMG       = places.some(p => p.source === 'meeting-guide' || p.source === 'meeting-guide-api');
+    const hasTSML     = places.some(p => p.source === 'tsml-feed' || p.source === 'intergroup-feed');
     const hasSeed     = places.some(p => p.source === 'seed');
+    const liveCount   = places.filter(p => p.source !== 'seed').length;
+
     let srcNote;
-    if(hasPipeline || hasMG) srcNote = t('srcReal');
-    else if(hasSeed)          srcNote = t('srcFallback');
-    else                      srcNote = t('srcFallback');
+    if(hasMG)       srcNote = `${t('srcReal')} · ${liveCount} meetings`;
+    else if(hasTSML) srcNote = `${t('srcReal').replace('Meeting Guide','Intergroup')} · ${liveCount} meetings`;
+    else if(hasPipeline) srcNote = `${t('srcReal')} · ${liveCount} meetings`;
+    else             srcNote = t('srcFallback');
     h += `<div class="src-note">${esc(srcNote)}</div>`;
 
     if(places.length===0) {

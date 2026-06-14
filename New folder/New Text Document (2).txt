@@ -1,0 +1,39 @@
+
+Release Checklist
+Before submission:
+
+ Apple Developer Account ($99/year) — appleid.apple.com/account
+ Domain name purchased (not2day.app or not2day.lt) — namecheap.com
+ Privacy policy live at domain/privacy
+ Support email created (not2day.app@gmail.com)
+ App icon 1024x1024 PNG (no alpha, no rounded corners — Apple adds them)
+ Screenshots for iPhone 6.7" and iPad (if supporting)
+ TestFlight build tested on real device
+
+PWA release (right now — no Mac needed):
+
+ manifest.json with correct name and icons
+ Service worker for offline support
+ HTTPS (Netlify provides this)
+ Privacy policy page (/privacy.html)
+ Custom domain connected to Netlify
+ Share link with first users
+
+Capacitor (iOS native app — needs Mac):
+
+npm install @capacitor/core @capacitor/cli @capacitor/ios
+npx cap init not2day app.not2day.app
+npx cap add ios
+npx cap copy
+npx cap open ios
+Build + archive in Xcode
+Submit via App Store Connect
+
+
+Custom Domain Setup (Namecheap → Netlify)
+
+Buy not2day.app on namecheap.com (~$15/year)
+In Netlify: Site settings → Domain management → Add custom domain
+In Namecheap: DNS → Add Netlify nameservers
+Wait 10-30 minutes for propagation
+Netlify auto-provisions SSL certificate

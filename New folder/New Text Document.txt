@@ -1,0 +1,37 @@
+not2day — App Store Release Checklist & Listing Copy
+App Store Listing
+App Name
+not2day
+Subtitle (30 chars max)
+Sobriety support, one day
+Description (4000 chars max)
+not2day is a private, simple sobriety support app for people in AA and anyone choosing not to drink today.
+One tap. One day. That's all it asks.
+Core features:
+
+Confirm your decision not to drink today
+Panic mode — immediate help when you're struggling
+Find AA meetings near you, happening now or this week
+See exactly how long until the next meeting (in 2 hours, tomorrow at 7pm, etc.)
+Call a helpline instantly — local numbers for your country
+10-minute timer to ride out a craving
+Save your people — contacts you can call right now
+Write your reasons for not drinking
+Daily check-in and reflection
+Works in Lithuanian, English, German, Norwegian, Polish
+
+Privacy first:
+Everything stays on your phone. No accounts. No tracking. No data sent anywhere. Your sobriety journey is yours alone.
+For anyone, anywhere:
+Covers all 50 US states and major cities worldwide. Automatically shows local helplines for your country.
+not2day is not affiliated with Alcoholics Anonymous World Services, Inc.
+Keywords (100 chars)
+sobriety,AA,alcoholics anonymous,sober,recovery,meetings,alcohol,12 steps,quit drinking,sober app
+Category
+Health & Fitness
+Secondary Category
+Medical
+Age Rating
+17+ (Infrequent/Mild Alcohol, Tobacco, or Drug Use or References)
+Price
+Free
