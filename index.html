@@ -178,6 +178,8 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
 .place-travel{font-size:.7rem;color:var(--dim);white-space:nowrap;padding-top:2px;flex-shrink:0;text-align:right}
 .place-type{font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
 .place-cost{font-size:.7rem;color:var(--dim);margin:4px 0 8px}
+.day-group-header{font-size:.62rem;font-weight:700;letter-spacing:.1em;color:var(--dim);
+  padding:18px 0 8px;text-transform:uppercase;border-top:1px solid #1a1a1a;margin-top:4px}
 .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:6px;
   font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
 .badge.now  {background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
@@ -508,7 +510,7 @@ const LANGS = {
     callHelpline:'📞  Call a helpline',back:'Back',timerStart:'Start',timerMinutes:'minutes',
     waitMorning:'🌙  Wait until morning',timerDone:'You\'re still holding on.\nToday is still yours.',
     wait30:'⏱  Wait another 30 min',describe:'Describe what happened',goBack:'Go back',
-    nearbyTitle:'Help near you today',nearbyTitlePanic:'Help near you right now',
+    nearbyTitle:'AA Meetings near you',nearbyTitlePanic:'Help near you right now',
     nearbySub:'You are not alone.',nearbySubPanic:'Showing only what\'s happening now.',
     allowLoc:'Allow location access\nto find help near you?',allow:'📍  Allow',
     newMorning:'New morning',homeGreeting:'You chose\ntoday.',
@@ -553,7 +555,7 @@ const LANGS = {
     callHelpline:'📞  Skambinti pagalbos linijai',back:'Atgal',timerStart:'Pradėti',timerMinutes:'minutės',
     waitMorning:'🌙  Palaukti iki ryto',timerDone:'Tu vis dar laikaisi.\nŠiandien dar tavo.',
     wait30:'⏱  Palaukti dar 30 min',describe:'Aprašyti, kas įvyko',goBack:'Grįžti',
-    nearbyTitle:'Pagalba šiandien šalia tavęs',nearbyTitlePanic:'Pagalba dabar šalia tavęs',
+    nearbyTitle:'AA susirinkimai šalia tavęs',nearbyTitlePanic:'Pagalba dabar šalia tavęs',
     nearbySub:'Tu ne vienas šią akimirką.',nearbySubPanic:'Rodoma tik tai, kas vyksta dabar.',
     allowLoc:'Leisti naudoti tavo vietą,\nkad rastume pagalbą šalia?',allow:'📍  Leisti',
     newMorning:'Naujas rytas',homeGreeting:'Tu pasirinkai\nšiandien.',
@@ -598,7 +600,7 @@ const LANGS = {
     callHelpline:'📞  Hilfstelefon anrufen',back:'Zurück',timerStart:'Starten',timerMinutes:'Minuten',
     waitMorning:'🌙  Bis zum Morgen warten',timerDone:'Du hältst durch.\nHeute gehört dir noch.',
     wait30:'⏱  Noch 30 Min. warten',describe:'Beschreibe, was passiert ist',goBack:'Zurück',
-    nearbyTitle:'Hilfe in deiner Nähe heute',nearbyTitlePanic:'Hilfe in deiner Nähe jetzt',
+    nearbyTitle:'AA Treffen in deiner Nähe',nearbyTitlePanic:'Hilfe in deiner Nähe jetzt',
     nearbySub:'Du bist nicht allein.',nearbySubPanic:'Nur aktuell laufende Angebote.',
     allowLoc:'Standortzugriff erlauben,\num Hilfe in der Nähe zu finden?',allow:'📍  Erlauben',
     newMorning:'Neuer Morgen',homeGreeting:'Du hast dich\nheute entschieden.',
@@ -643,7 +645,7 @@ const LANGS = {
     callHelpline:'📞  Ring hjelpetelefon',back:'Tilbake',timerStart:'Start',timerMinutes:'minutter',
     waitMorning:'🌙  Vent til morgenen',timerDone:'Du holder ut.\nI dag er fortsatt din.',
     wait30:'⏱  Vent 30 min til',describe:'Beskriv hva som skjedde',goBack:'Gå tilbake',
-    nearbyTitle:'Hjelp nær deg i dag',nearbyTitlePanic:'Hjelp nær deg akkurat nå',
+    nearbyTitle:'AA møter nær deg',nearbyTitlePanic:'Hjelp nær deg akkurat nå',
     nearbySub:'Du er ikke alene.',nearbySubPanic:'Viser bare det som skjer akkurat nå.',
     allowLoc:'Tillat stedstilgang\nfor å finne hjelp i nærheten?',allow:'📍  Tillat',
     newMorning:'Ny morgen',homeGreeting:'Du valgte\ni dag.',
@@ -688,7 +690,7 @@ const LANGS = {
     callHelpline:'📞  Zadzwoń na telefon zaufania',back:'Wstecz',timerStart:'Zacznij',timerMinutes:'minut',
     waitMorning:'🌙  Poczekaj do rana',timerDone:'Nadal dajesz radę.\nTen dzień jest nadal twój.',
     wait30:'⏱  Poczekaj jeszcze 30 min',describe:'Opisz co się wydarzyło',goBack:'Wróć',
-    nearbyTitle:'Pomoc w pobliżu dziś',nearbyTitlePanic:'Pomoc w pobliżu teraz',
+    nearbyTitle:'Spotkania AA w pobliżu',nearbyTitlePanic:'Pomoc w pobliżu teraz',
     nearbySub:'Nie jesteś sam/a.',nearbySubPanic:'Pokazuję tylko to, co dzieje się teraz.',
     allowLoc:'Zezwól na dostęp do lokalizacji,\naby znaleźć pomoc w pobliżu?',allow:'📍  Zezwól',
     newMorning:'Nowy poranek',homeGreeting:'Wybrałeś/aś\ndziś.',
@@ -1825,11 +1827,11 @@ const NEARBY = {
     // Panic mode: only show meetings happening right now
     if(this.panicMode) places = places.filter(p => p.isNow);
 
-    // Sort: now → soonest today → tomorrow → rest of week → distance
+    // Sort: now → soonest today → tomorrow → this week → by distance
     places.sort((a,b) => sortScore(a) - sortScore(b));
 
-    // Show up to 20 results (was 8)
-    this.render(places.slice(0, 20), hasReal);
+    // Show ALL meetings — no cap (panic mode already filtered above)
+    this.render(places, hasReal);
   },
 
   render(places, hasReal) {
@@ -1873,17 +1875,34 @@ const NEARBY = {
         </div>
       </div>`;
 
-      // Other cards
-      places.slice(1,20).forEach((p,i)=>{
-        const badge=makeBadge(p._info);
-        const travel=fmtTravel(p.drivingMin,null,p.dist);
-        const cc=p.isNow?'now':p.isToday?'today':'';
-        const callBtn=p.phone?`<a class="bsm bsm-red" href="tel:${p.phone.replace(/\D/g,'')}">${esc(t('callBtn'))}</a>`:'';
-        const mapBtn=`<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng)}" target="_blank">${esc(t('goBtn'))}</a>`;
-        const timeRow = p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
+      // Other cards — grouped by day
+      let currentGroup = null;
+      places.slice(1).forEach((p,i)=>{
+        const badge  = makeBadge(p._info);
+        const travel = fmtTravel(p.drivingMin,null,p.dist);
+        const cc     = p.isNow?'now':p.isToday?'today':'';
+        const callBtn= p.phone?`<a class="bsm bsm-red" href="tel:${p.phone.replace(/\D/g,'')}">${esc(t('callBtn'))}</a>`:'';
+        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng)}" target="_blank">${esc(t('goBtn'))}</a>`;
+        const timeRow= p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
           ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
-        const costRow=p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
-        h += `<div class="place-card ${cc}" style="animation-delay:${(i+1)*.05}s">
+        const costRow= p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
+
+        // Day group header
+        const days    = p._info?.daysUntil ?? 99;
+        const groupKey= p.isNow ? 'now' : p.isToday ? 'today' : `day_${days}`;
+        if(groupKey !== currentGroup) {
+          currentGroup = groupKey;
+          let groupLabel;
+          if(groupKey === 'now')   groupLabel = '🔴 ' + t('statusNow').toUpperCase();
+          else if(groupKey === 'today') groupLabel = t('statusToday').toUpperCase();
+          else {
+            const dayName = BADGE_DAYS_EN[(new Date().getDay() + days) % 7];
+            groupLabel = `${dayName.toUpperCase()} · ${t('inMin')} ${days} ${t('daySfx')}`.toUpperCase();
+          }
+          h += `<div class="day-group-header">${esc(groupLabel)}</div>`;
+        }
+
+        h += `<div class="place-card ${cc}" style="animation-delay:${(i+1)*.03}s">
           <div class="place-top">
             <div class="place-name">${esc(p.name)}</div>
             ${travel?`<div class="place-travel">${esc(travel)}</div>`:''}
