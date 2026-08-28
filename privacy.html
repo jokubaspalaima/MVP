@@ -26,11 +26,11 @@
 <ul>
   <li>We do not collect your name, email, or any personal identity</li>
   <li>We do not create user accounts</li>
-  <li>We do not store your location on any server</li>
+  <li>We do not store your location — coordinates are processed in the moment and discarded (see "Location" below for exactly where they are sent)</li>
   <li>We do not track your usage or behavior</li>
-  <li>We do not share any data with third parties</li>
+  <li>We do not sell or share data with advertisers or data brokers</li>
   <li>We do not use analytics or advertising SDKs</li>
-  <li>We do not collect your sobriety data, check-ins, or reflections</li>
+  <li>We do not collect your sobriety data, check-ins, reasons, or reflections — these exist only on your device</li>
 </ul>
 
 <h2>What Stays on Your Device Only</h2>
@@ -45,13 +45,21 @@
 </ul>
 <p>You can delete all of this at any time by clearing your browser data.</p>
 
-<h2>Location</h2>
-<p>The app requests your location only when you tap "Find help nearby." This is used solely to find AA meetings close to you. Your location is:</p>
+<h2>Location — exactly what happens</h2>
+<p>The app never requests your location in the background. Location is used only when you tap "Find help nearby" and your browser asks for permission. If you tap Allow, your coordinates are sent to exactly two places:</p>
 <ul>
-  <li>Never stored on our servers</li>
-  <li>Never shared with any third party</li>
-  <li>Used only in the moment to search nearby meetings</li>
+  <li><strong>Our meeting-search function</strong> (hosted on Netlify) — to find AA meetings and help centers near you. Coordinates are used for the search and are not stored.</li>
+  <li><strong>BigDataCloud reverse-geocoding service</strong> — to detect which country you are in, so the app can show the correct local helplines and language. Only your coordinates are sent; no identity, no account, nothing else. Coordinates are not stored by us.</li>
 </ul>
+<p>If you deny location access, the app still works — it falls back to your browser's language and region settings, which never leave your device.</p>
+
+<h2>Technical services</h2>
+<p>Like almost every website and app, not2day relies on some infrastructure that technically sees your IP address when your device connects to it:</p>
+<ul>
+  <li><strong>Netlify</strong> hosts the app and keeps standard, short-lived server logs (as any web host does)</li>
+  <li><strong>Google Fonts</strong> serves the app's typeface; your browser requests the font file from Google's servers</li>
+</ul>
+<p>Neither receives your sobriety data, check-ins, contacts, or reasons — those never leave your device.</p>
 
 <h2>AA Meeting Data</h2>
 <p>The app uses publicly available AA meeting information to show meetings near you. This data includes meeting names, times, and general locations as published publicly by AA intergroups. No personal information about AA members is collected or displayed.</p>

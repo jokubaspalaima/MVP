@@ -125,7 +125,15 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
 
 /* panic screen */
 .panic-msg{font-size:clamp(1.3rem,5.5vw,1.9rem);font-weight:600;text-align:center;
-  line-height:1.25;letter-spacing:-.02em;margin:24px 0 40px;white-space:pre-line}
+  line-height:1.25;letter-spacing:-.02em;margin:24px 0 28px;white-space:pre-line}
+#panic-reasons{width:100%;max-width:340px;margin:0 auto 30px;text-align:center}
+.pr-lbl{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:10px}
+.pr-list{display:flex;flex-direction:column;gap:7px}
+.pr-item{font-size:clamp(.95rem,3.8vw,1.1rem);font-weight:500;color:var(--fg);
+  line-height:1.45;opacity:.92}
+.pr-item::before{content:'“'}
+.pr-item::after{content:'”'}
 .audio-wrap{width:100%;max-width:340px;background:var(--card);border:1px solid var(--card-bd);
   border-radius:var(--r);padding:15px 17px;margin-bottom:18px;display:flex;align-items:center;gap:13px}
 .aplay{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.09);
@@ -302,6 +310,12 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
       </div>
     </div>
     <p class="panic-msg" id="panic-msg"></p>
+    <!-- The user's own words — the strongest anchor in a hard moment.
+         Hidden entirely when no reasons are saved. -->
+    <div id="panic-reasons" style="display:none">
+      <div class="pr-lbl"  id="panic-reasons-lbl"></div>
+      <div class="pr-list" id="panic-reasons-list"></div>
+    </div>
     <div class="btn-stack">
       <button class="btn btn-ghost"   id="btn-wait10"  onclick="TIMER.start(10)"></button>
       <button class="btn btn-outline" id="btn-findhelp" onclick="APP.goNearbyPanic()"></button>
@@ -430,6 +444,22 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
     <button class="btn btn-white" id="ci-save" onclick="CI.save()"></button>
   </div>
 
+  <!-- 10b. RELAPSE — deliberately gentle. No red, no alarm, no shame.
+       Shame after a slip is one of the strongest predictors of the
+       next drink; this screen acknowledges what was built and moves
+       forward. -->
+  <div class="screen scroll" id="s-relapse">
+    <div style="height:20px"></div>
+    <div class="s-title" id="rel-title" style="text-align:center;width:100%"></div>
+    <div class="s-sub"   id="rel-sub"   style="text-align:center;margin-bottom:32px"></div>
+    <div class="ci-q"    id="rel-q"     style="text-align:center;width:100%"></div>
+    <div id="rel-chips" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:340px;margin:0 auto 36px"></div>
+    <button class="btn btn-white" id="rel-start" onclick="RELAPSE.restart()"></button>
+    <!-- Misclick insurance: restores the streak untouched if the
+         relapse was reported by accident. Quiet on purpose. -->
+    <button class="btn btn-ghost" id="rel-cancel" onclick="RELAPSE.cancel()" style="margin-top:10px"></button>
+  </div>
+
   <!-- 11. REFLECTION (phase 2) -->
   <div class="screen scroll" id="s-reflection">
     <button class="back-btn" onclick="APP.back()">
@@ -546,6 +576,11 @@ const LANGS = {
     typeAA:'AA Meeting',typeTherapy:'Therapy / Counselor',typeCrisis:'Crisis Center',
     typeRecovery:'Recovery Center',typeHelpline:'Helpline',costFree:'Free',costIns:'Insurance accepted',tmrw:'Tomorrow',daySfx:'days',
     dayTitle:'not2day.',daySub:'Tomorrow you decide again.',dayStruggle:'🔴  I\'m struggling',
+    panicWhy:'Why you chose today',
+    relSlip:'A slip. Not the end.',relBuilt1:'You still built 1 day.',relBuiltN:'You still built {n} days.',
+    relSub:'Those days don\'t disappear. They\'re yours.',relQ:'What happened? (optional)',
+    relT1:'Stress',relT2:'Loneliness',relT3:'Social situation',relT4:'At home',relT5:'Other',
+    relStart:'Start again — not2day',
   },
   lt:{
     appTitle:'not2day',appSub:'Tik šiandien. Tik dabar.',confirm:'Patvirtinu',
@@ -591,6 +626,11 @@ const LANGS = {
     typeAA:'AA susitikimas',typeTherapy:'Terapija / Psichologas',typeCrisis:'Pagalbos centras',
     typeRecovery:'Reabilitacijos centras',typeHelpline:'Pagalbos linija',costFree:'Nemokama',costIns:'Pagal draudimą',tmrw:'Rytoj',daySfx:'d.',
     dayTitle:'not2day.',daySub:'Rytoj vėl spręsi.',dayStruggle:'🔴  Man dabar sunku',
+    panicWhy:'Kodėl pasirinkai šiandien',
+    relSlip:'Suklupimas. Ne pabaiga.',relBuilt1:'Tu vis tiek sukūrei 1 dieną.',relBuiltN:'Tu vis tiek sukūrei {n} d.',
+    relSub:'Tos dienos niekur nedingsta. Jos tavo.',relQ:'Kas nutiko? (nebūtina)',
+    relT1:'Stresas',relT2:'Vienatvė',relT3:'Kompanija',relT4:'Namuose',relT5:'Kita',
+    relStart:'Pradėti iš naujo — not2day',
   },
   de:{
     appTitle:'not2day',appSub:'Nur heute. Nur jetzt.',confirm:'Ich bestätige',
@@ -636,6 +676,11 @@ const LANGS = {
     typeAA:'AA-Treffen',typeTherapy:'Therapie / Berater',typeCrisis:'Krisenzentrum',
     typeRecovery:'Rehabilitationszentrum',typeHelpline:'Hilfstelefon',costFree:'Kostenlos',costIns:'Krankenversicherung',tmrw:'Morgen',daySfx:'Tage',
     dayTitle:'not2day.',daySub:'Morgen entscheidest du wieder.',dayStruggle:'🔴  Ich kämpfe gerade',
+    panicWhy:'Warum du heute gewählt hast',
+    relSlip:'Ein Ausrutscher. Nicht das Ende.',relBuilt1:'Du hast trotzdem 1 Tag geschafft.',relBuiltN:'Du hast trotzdem {n} Tage geschafft.',
+    relSub:'Diese Tage verschwinden nicht. Sie gehören dir.',relQ:'Was ist passiert? (optional)',
+    relT1:'Stress',relT2:'Einsamkeit',relT3:'Gesellschaft',relT4:'Zuhause',relT5:'Anderes',
+    relStart:'Neu anfangen — not2day',
   },
   no:{
     appTitle:'not2day',appSub:'Bare i dag. Bare nå.',confirm:'Jeg bekrefter',
@@ -681,6 +726,11 @@ const LANGS = {
     typeAA:'AA-møte',typeTherapy:'Terapi / Rådgiver',typeCrisis:'Krisesenter',
     typeRecovery:'Rehabiliteringssenter',typeHelpline:'Hjelpetelefon',costFree:'Gratis',costIns:'Forsikring',tmrw:'I morgen',daySfx:'dager',
     dayTitle:'not2day.',daySub:'I morgen bestemmer du igjen.',dayStruggle:'🔴  Jeg sliter',
+    panicWhy:'Hvorfor du valgte i dag',
+    relSlip:'Et feiltrinn. Ikke slutten.',relBuilt1:'Du bygde likevel 1 dag.',relBuiltN:'Du bygde likevel {n} dager.',
+    relSub:'De dagene forsvinner ikke. De er dine.',relQ:'Hva skjedde? (valgfritt)',
+    relT1:'Stress',relT2:'Ensomhet',relT3:'Sosialt',relT4:'Hjemme',relT5:'Annet',
+    relStart:'Begynn på nytt — not2day',
   },
   pl:{
     appTitle:'not2day',appSub:'Tylko dziś. Tylko teraz.',confirm:'Potwierdzam',
@@ -726,6 +776,11 @@ const LANGS = {
     typeAA:'Spotkanie AA',typeTherapy:'Terapia / Doradca',typeCrisis:'Centrum Kryzysowe',
     typeRecovery:'Centrum Rehabilitacji',typeHelpline:'Telefon zaufania',costFree:'Bezpłatne',costIns:'Ubezpieczenie',tmrw:'Jutro',daySfx:'dni',
     dayTitle:'not2day.',daySub:'Jutro zdecydujesz ponownie.',dayStruggle:'🔴  Walczę',
+    panicWhy:'Dlaczego wybrałeś dzisiaj',
+    relSlip:'Potknięcie. Nie koniec.',relBuilt1:'Mimo to zbudowałeś 1 dzień.',relBuiltN:'Mimo to zbudowałeś {n} dni.',
+    relSub:'Te dni nie znikają. Są twoje.',relQ:'Co się stało? (opcjonalnie)',
+    relT1:'Stres',relT2:'Samotność',relT3:'Towarzystwo',relT4:'W domu',relT5:'Inne',
+    relStart:'Zacznij od nowa — not2day',
   },
 };
 
@@ -903,6 +958,78 @@ const STATE = {
   lastDate: LS.get('lastDate') || '',
   contacts: LS.json('contacts', []),
   reasons:  LS.json('reasons', []),
+  sessions: LS.json('sessions', []),
+};
+
+// ═══════════════════════════════════════════════════
+//  SOBRIETY SESSIONS
+//  Event-based history instead of a lone counter.
+//  A session: { start:'YYYY-MM-DD', end:null|'YYYY-MM-DD',
+//               relapse?:true, trigger?:string, days?:number }
+//  The open session (end===null) is the current attempt.
+//  A streak only ends when the user reports drinking —
+//  never because they skipped opening the app.
+// ═══════════════════════════════════════════════════
+const SESSIONS = {
+  // LOCAL date string — never toISOString(), which is UTC and would
+  // shift the date for anyone east of Greenwich after midnight.
+  dateStr(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  },
+  todayStr() { return this.dateStr(new Date()); },
+
+  current() {
+    const s = STATE.sessions;
+    const last = s[s.length - 1];
+    return (last && !last.end) ? last : null;
+  },
+
+  // Guarantee an open session exists (the act of commitment).
+  ensure() {
+    if(!this.current()) {
+      STATE.sessions.push({ start: this.todayStr(), end: null });
+      this.save();
+    }
+    return this.current();
+  },
+
+  // Whole days from session start to its end (or to today if open).
+  daysOf(s) {
+    const end = s.end ? new Date(s.end + 'T00:00:00') : new Date(this.todayStr() + 'T00:00:00');
+    const start = new Date(s.start + 'T00:00:00');
+    return Math.max(0, Math.round((end - start) / 86400000));
+  },
+
+  currentDays() {
+    const c = this.current();
+    return c ? this.daysOf(c) : 0;
+  },
+
+  // Close the open session as a relapse. Returns the days it held.
+  endCurrent() {
+    const c = this.current();
+    if(!c) return 0;
+    const days = this.daysOf(c);
+    c.end = this.todayStr();
+    c.relapse = true;
+    c.days = days;
+    this.save();
+    this.sync();
+    return days;
+  },
+
+  longest()  { return STATE.sessions.reduce((m,s) => Math.max(m, s.days ?? this.daysOf(s)), 0); },
+  attempts() { return STATE.sessions.length; },
+
+  save() { LS.set('sessions', STATE.sessions); },
+
+  // Keep legacy STATE.days (used across the UI) in sync.
+  sync() {
+    STATE.days = this.currentDays();
+    LS.set('days', String(STATE.days));
+  },
 };
 
 // ═══════════════════════════════════════════════════
@@ -931,6 +1058,12 @@ const ADMIN = {
 
 // ═══════════════════════════════════════════════════
 //  PHASE GATING
+//  Everything essential is available from day 1.
+//  A person in crisis on their first open gets every tool:
+//  contacts, helplines, nearby meetings, check-in, reflection.
+//  unlocked() is kept only as a hook for FUTURE analytics-type
+//  features (patterns, weekly review) — never for emergency
+//  or core functionality.
 // ═══════════════════════════════════════════════════
 const PHASE = {
   daysSinceFirstOpen() {
@@ -939,19 +1072,19 @@ const PHASE = {
     return Math.floor((Date.now() - parseInt(first)) / 86400000);
   },
   unlocked() {
-    return ADMIN.isOn() || this.daysSinceFirstOpen() >= 5;
+    return true;
   },
 };
 
 function updatePhaseBadge() {
+  // Dev-only info badge; invisible to normal users
   const badge = document.getElementById('phase-badge');
-  const d = PHASE.daysSinceFirstOpen();
   if(ADMIN.isOn()) {
-    badge.textContent = 'Admin';
+    badge.textContent = PHASE.daysSinceFirstOpen() + 'd · admin';
+    badge.classList.add('on');
   } else {
-    badge.textContent = d + 'd · Phase ' + (PHASE.unlocked() ? '2' : '1');
+    badge.classList.remove('on');
   }
-  badge.classList.add('on');
 }
 
 // ═══════════════════════════════════════════════════
@@ -962,7 +1095,8 @@ let history  = [];
 
 const NAV_SCREENS = ['s-home','s-contacts','s-reasons','s-checkin'];
 const NAV_IDS     = ['nb-home','nb-contacts','nb-reasons','nb-checkin'];
-const PHASE2_SCREENS = ['s-contacts','s-add-contact','s-reasons','s-checkin','s-reflection'];
+// Reserved for future analytics-only screens. Emergency/core screens must never be listed here.
+const PHASE2_SCREENS = [];
 
 const APP = {
   go(id) {
@@ -987,7 +1121,7 @@ const APP = {
   nav(id) { history = []; this.go(id); },
   back() {
     if(current === 's-nearby') NEARBY.panicMode = false;
-    const prev = history.pop() || (PHASE.unlocked() ? 's-home' : 's-day');
+    const prev = history.pop() || 's-home';
     const from = document.getElementById(current);
     const to   = document.getElementById(prev);
     if(!to) return;
@@ -1001,7 +1135,7 @@ const APP = {
       updateNav();
     }, 260);
   },
-  goHome() { PHASE.unlocked() ? this.nav('s-home') : this.nav('s-day'); },
+  goHome() { this.nav('s-home'); },
   goNearbyPanic() { NEARBY.panicMode = true; this.go('s-nearby'); },
   reset() {
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active','exit'));
@@ -1016,7 +1150,8 @@ const APP = {
     document.getElementById('unlock-banner').classList.remove('on');
   },
   _onEnter(id) {
-    if(id==='s-panic')    AUDIO.enterPanic();
+    if(id==='s-confirm')  { SESSIONS.ensure(); SESSIONS.sync(); }  // "I confirm" = commitment
+    if(id==='s-panic')    { AUDIO.enterPanic(); renderPanicReasons(); }
     if(id==='s-home')     { updateHomeDays(); ADMIN.apply(); }
     if(id==='s-day')      ADMIN.apply();
     if(id==='s-timer')    TIMER.reset();
@@ -1163,8 +1298,9 @@ const TIMER = {
       if(this.left <= 0) {
         clearInterval(this.interval);
         this.running = false;
-        STATE.days = Math.max(STATE.days, 1);
-        LS.set('days', String(STATE.days));
+        // Surviving the wait is a commitment — make sure a session is open.
+        SESSIONS.ensure();
+        SESSIONS.sync();
         LS.set('lastDate', new Date().toDateString());
         APP.go('s-timer-done');
       }
@@ -1312,8 +1448,105 @@ const CI = {
   },
   save() {
     LS.set('last_ci', JSON.stringify({...this.state, date:new Date().toDateString()}));
+    // Needing help overrides everything — straight to the panic flow.
     if(this.state.help==='yes'){ APP.go('s-panic'); return; }
-    if(this.state.drank==='no'){ STATE.days=Math.max(STATE.days,1); LS.set('days',String(STATE.days)); }
+    // Reported drinking → dignified relapse flow, never a silent zero.
+    if(this.state.drank==='yes'){ RELAPSE.open(); return; }
+    // A sober day is a commitment — session stays open / gets opened.
+    if(this.state.drank==='no'){ SESSIONS.ensure(); SESSIONS.sync(); }
+    APP.nav('s-home');
+  },
+};
+
+// ═══════════════════════════════════════════════════
+//  PANIC — PERSONAL REASONS
+//  In the hardest moment, show the person their own words.
+//  Nothing interactive: pure anchor. Hidden if empty.
+// ═══════════════════════════════════════════════════
+function renderPanicReasons() {
+  const wrap = document.getElementById('panic-reasons');
+  if(!wrap) return;
+  const reasons = (STATE.reasons || []).filter(r => r && r.trim());
+  if(!reasons.length) { wrap.style.display = 'none'; return; }
+  setText('panic-reasons-lbl', t('panicWhy'));
+  document.getElementById('panic-reasons-list').innerHTML =
+    reasons.slice(0, 3).map(r => `<div class="pr-item">${esc(r)}</div>`).join('');
+  wrap.style.display = '';
+}
+
+// ═══════════════════════════════════════════════════
+//  RELAPSE FLOW
+//  Triggered from check-in when the user reports drinking.
+//  Order matters: we capture the streak length BEFORE ending
+//  the session so we can honor it on screen.
+// ═══════════════════════════════════════════════════
+const RELAPSE = {
+  trigger: null,
+  _endedDays: 0,
+
+  open() {
+    this._endedDays = SESSIONS.currentDays();
+    this.trigger = null;
+    SESSIONS.endCurrent();        // trigger is attached later in restart()
+    this.render();
+    APP.go('s-relapse');
+  },
+
+  render() {
+    const d = this._endedDays;
+    const title = d >= 1
+      ? (d === 1 ? t('relBuilt1') : t('relBuiltN').replace('{n}', d))
+      : t('relSlip');
+    setText('rel-title', title);
+    setText('rel-sub',   t('relSub'));
+    setText('rel-q',     t('relQ'));
+    setText('rel-start', t('relStart'));
+    const chips = [
+      ['stress', t('relT1')], ['lonely', t('relT2')], ['social', t('relT3')],
+      ['home',   t('relT4')], ['other',  t('relT5')],
+    ];
+    document.getElementById('rel-chips').innerHTML = chips.map(([k, l]) =>
+      `<div class="chip" data-t="${k}" onclick="RELAPSE.pick(this)">${esc(l)}</div>`
+    ).join('');
+    setText('rel-cancel', t('cancel'));
+  },
+
+  // Misclick insurance. Only reverts a session that THIS flow ended
+  // today — never touches older history.
+  cancel() {
+    const s = STATE.sessions;
+    const last = s[s.length - 1];
+    if(last && last.relapse && last.end === SESSIONS.todayStr()) {
+      delete last.end;
+      delete last.relapse;
+      delete last.days;
+      delete last.trigger;
+      SESSIONS.save();
+      SESSIONS.sync();
+    }
+    updateHomeDays();
+    APP.nav('s-home');
+  },
+
+  pick(el) {
+    const v = el.dataset.t;
+    this.trigger = (this.trigger === v) ? null : v;   // tap again to deselect
+    document.querySelectorAll('#rel-chips .chip').forEach(c =>
+      c.classList.toggle('on', c.dataset.t === this.trigger));
+  },
+
+  restart() {
+    // Attach the chosen trigger (if any) to the session that just ended.
+    const s = STATE.sessions;
+    const last = s[s.length - 1];
+    if(last && last.relapse && this.trigger) {
+      last.trigger = this.trigger;
+      SESSIONS.save();
+    }
+    // A new attempt starts now. Today reads as "day one".
+    SESSIONS.ensure();
+    SESSIONS.sync();
+    updateHomeDays();
     APP.nav('s-home');
   },
 };
@@ -2043,41 +2276,39 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
   // First open timestamp
   if(!LS.get('first_open')) LS.set('first_open', String(Date.now()));
 
-  // Streak
-  const today = new Date().toDateString();
-  if(STATE.lastDate !== today) {
-    if(STATE.lastDate) {
-      const diff = Math.round((new Date(today)-new Date(STATE.lastDate))/86400000);
-      STATE.days  = diff===1 ? STATE.days+1 : 0;
-    }
-    STATE.lastDate = today;
-    LS.set('days',     String(STATE.days));
-    LS.set('lastDate', today);
+  // ── Sobriety sessions ─────────────────────────────────────
+  // One-time migration: fold the legacy day counter into a session
+  // so no one loses their streak on update.
+  if(!STATE.sessions.length && STATE.days > 0) {
+    const start = new Date();
+    start.setDate(start.getDate() - STATE.days);
+    STATE.sessions.push({ start: SESSIONS.dateStr(start), end: null });
+    SESSIONS.save();
   }
+  // Day count is now derived from the open session — a missed app
+  // open no longer wipes the streak. Only a self-reported relapse
+  // (check-in) ends a session.
+  SESSIONS.sync();
+  const today = new Date().toDateString();
+  STATE.lastDate = today;
+  LS.set('lastDate', today);
 
-  // Step 1: set language from browser immediately
+  // Step 1: language from browser locale (no network, no permission)
   setLang(detectBrowserLang());
 
-  // Step 2: admin + phase
+  // Step 2: country fallback from browser locale region — e.g. 'lt-LT' → LT.
+  // Gives correct local helplines instantly without any location request.
+  // Precise GPS-based refinement happens only when the user explicitly
+  // taps Allow on the nearby screen.
+  const region = (navigator.language || '').split('-')[1];
+  if(region && region.length === 2) _countryCode = region.toUpperCase();
+
+  // Step 3: admin + phase badge
   ADMIN.apply();
   updatePhaseBadge();
 
-  // Step 3: admin trigger
+  // Step 4: admin trigger
   initAdminTrigger();
-
-  // Step 4: show phase 2 unlock banner once
-  if(PHASE.unlocked() && !LS.get('unlock_shown')) {
-    setTimeout(()=>document.getElementById('unlock-banner').classList.add('on'), 800);
-  }
-
-  // Step 5: silently get real location to refine language
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      pos => detectLangFromLocation(pos.coords.latitude, pos.coords.longitude),
-      ()  => {},
-      {timeout:5000, maximumAge:3600000, enableHighAccuracy:false}
-    );
-  }
 // ── Service Worker Registration ──────────────────────────────
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
