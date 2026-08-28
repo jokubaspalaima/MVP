@@ -1603,7 +1603,18 @@ function haversine(a,b,c,d) {
   const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
-function mapsUrl(name,lat,lng) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&center=${lat},${lng}`; }
+function mapsUrl(name, lat, lng) {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(lat && lng) {
+    if(isIOS) {
+      // Apple Maps — opens directly into turn-by-turn on iPhone
+      return `maps://?daddr=${lat},${lng}&dirflg=d`;
+    }
+    // Google Maps direct directions — skips search results page
+    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+  }
+  return `https://www.google.com/maps/search/${encodeURIComponent(name)}`;
+}
 function fmtDist(d) { return d==null?'': d<1?Math.round(d*1000)+' m':d.toFixed(1)+' km'; }
 function fmtTravel(dMin,wMin,dist) {
   const parts=[];
@@ -1870,8 +1881,8 @@ const NEARBY = {
         ${hTravel?`<div class="nb-hero-travel">${esc(hTravel)}</div>`:''}
         <div style="display:flex;gap:8px">
           ${hHref ? `<a class="nb-hero-call" href="${hHref}" style="flex:2">${esc(t('callNow'))}</a>`
-                  : `<a class="nb-hero-call" href="${hMap}" target="_blank" style="flex:2">${esc(t('goBtn'))} →</a>`}
-          <a class="bsm bsm-ghost" href="${hMap}" target="_blank" style="flex:1;padding:17px 10px">${esc(t('goBtn'))}</a>
+                  : `<a class="nb-hero-call" href="${hMap}" style="flex:2">${esc(t('goBtn'))} →</a>`}
+          <a class="bsm bsm-ghost" href="${hMap}" style="flex:1;padding:17px 10px">${esc(t('goBtn'))}</a>
         </div>
       </div>`;
 
@@ -1882,7 +1893,7 @@ const NEARBY = {
         const travel = fmtTravel(p.drivingMin,null,p.dist);
         const cc     = p.isNow?'now':p.isToday?'today':'';
         const callBtn= p.phone?`<a class="bsm bsm-red" href="tel:${p.phone.replace(/\D/g,'')}">${esc(t('callBtn'))}</a>`:'';
-        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng)}" target="_blank">${esc(t('goBtn'))}</a>`;
+        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng)}">${esc(t('goBtn'))}</a>`;
         const timeRow= p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
           ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
         const costRow= p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
