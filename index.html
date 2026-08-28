@@ -371,6 +371,7 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
     <p id="home-greeting" style="font-size:clamp(1.1rem,4.5vw,1.5rem);font-weight:300;color:var(--mid);text-align:center;margin-bottom:48px;line-height:1.6;white-space:pre-line"></p>
     <div class="btn-stack">
       <button class="btn btn-danger" id="home-struggle" onclick="APP.go('s-panic')"></button>
+      <button class="btn btn-outline" id="home-meetings" onclick="APP.goNearby()"></button>
       <button class="btn btn-ghost"  id="home-reset"    onclick="APP.reset()"></button>
     </div>
   </div>
@@ -541,9 +542,9 @@ const LANGS = {
     waitMorning:'🌙  Wait until morning',timerDone:'You\'re still holding on.\nToday is still yours.',
     wait30:'⏱  Wait another 30 min',describe:'Describe what happened',goBack:'Go back',
     nearbyTitle:'AA Meetings near you',nearbyTitlePanic:'Help near you right now',
-    nearbySub:'You are not alone.',nearbySubPanic:'Showing only what\'s happening now.',
+    nearbySub:'You are not alone.',nearbySubPanic:'Happening now first — all meetings below.',
     allowLoc:'Allow location access\nto find help near you?',allow:'📍  Allow',
-    newMorning:'New morning',homeGreeting:'You chose\ntoday.',
+    newMorning:'New morning',findMeetings:'📍  Find a meeting',homeGreeting:'You chose\ntoday.',
     days0:'Today is day one.',days1:'1 day. Yesterday too.',daysN:' days. All started from today.',
     myPeople:'My people',myPeopleSub:'People you can call right now.',addPerson:'+ Add a person',
     addPersonTitle:'Add a person',fieldName:'Name',fieldPhone:'Phone',fieldType:'Type',
@@ -562,13 +563,13 @@ const LANGS = {
     unlockTitle:'🔓 New features unlocked',unlockSub:'5 days. You\'ve earned more tools.',ok:'OK',
     navHome:'Home',navPeople:'People',navReasons:'Reasons',navCheckin:'Check-in',
     callNow:'📞 CALL NOW',callBtn:'📞 Call',goBtn:'🗺 Go',heroLabel:'⚡ Closest',
-    panicBar:'⚡ Showing only what\'s happening now',
+    panicBar:'⚡ Happening now, first',
     offline:'No internet connection.',offlineSub:'But you can still call:',
     locFail:'Could not get location.',locFailSub:'Search manually or call:',searchAA:'🔍 Search AA meetings',
     loadLoc:'Getting your location…',loadSrc:'Connecting to sources…',loadMeet:'Searching for meetings…',loadTravel:'Calculating travel time…',
     statusNow:'Happening now',status247:'Today · 24/7',statusFuture:'Tomorrow or later',statusToday:'Today',
     inMin:'in',minSfx:'min',hourSfx:'hr',
-    srcReal:'Data: AA Meeting Guide',srcFallback:'Showing representative results',
+    srcReal:'Data: AA Meeting Guide',srcVerified:'Verified local services',srcFallback:'Showing representative results',
     noResultsPanic:'No live meetings found nearby.',noResults:'No meetings found nearby.',
     callAlso:'You can also call',callNowLbl:'Call now — no waiting',
     emptyContacts:'No saved contacts yet.\nAdd someone you can call.',
@@ -591,9 +592,9 @@ const LANGS = {
     waitMorning:'🌙  Palaukti iki ryto',timerDone:'Tu vis dar laikaisi.\nŠiandien dar tavo.',
     wait30:'⏱  Palaukti dar 30 min',describe:'Aprašyti, kas įvyko',goBack:'Grįžti',
     nearbyTitle:'AA susirinkimai šalia tavęs',nearbyTitlePanic:'Pagalba dabar šalia tavęs',
-    nearbySub:'Tu ne vienas šią akimirką.',nearbySubPanic:'Rodoma tik tai, kas vyksta dabar.',
+    nearbySub:'Tu ne vienas šią akimirką.',nearbySubPanic:'Pirmiausia tai, kas vyksta dabar.',
     allowLoc:'Leisti naudoti tavo vietą,\nkad rastume pagalbą šalia?',allow:'📍  Leisti',
-    newMorning:'Naujas rytas',homeGreeting:'Tu pasirinkai\nšiandien.',
+    newMorning:'Naujas rytas',findMeetings:'📍  Rasti susirinkimą',homeGreeting:'Tu pasirinkai\nšiandien.',
     days0:'Šiandien pirma diena.',days1:'1 diena. Vakar taip pat.',daysN:' dienos. Visos prasidėjo nuo šiandien.',
     myPeople:'Mano žmonės',myPeopleSub:'Žmonės, kuriems gali paskambinti dabar.',addPerson:'+ Pridėti žmogų',
     addPersonTitle:'Pridėti žmogų',fieldName:'Vardas',fieldPhone:'Telefonas',fieldType:'Tipas',
@@ -612,13 +613,13 @@ const LANGS = {
     unlockTitle:'🔓 Naujos funkcijos atrakintos',unlockSub:'5 dienos. Tu uždirbok daugiau įrankių.',ok:'Gerai',
     navHome:'Namai',navPeople:'Žmonės',navReasons:'Priežastys',navCheckin:'Patikra',
     callNow:'📞 SKAMBINTI DABAR',callBtn:'📞 Skambinti',goBtn:'🗺 Eiti',heroLabel:'⚡ Artimiausias',
-    panicBar:'⚡ Rodoma tik tai, kas vyksta dabar',
+    panicBar:'⚡ Pirmiausia — kas vyksta dabar',
     offline:'Ryšys nepasiekiamas.',offlineSub:'Bet gali susisiekti dabar:',
     locFail:'Vietos nustatyti nepavyko.',locFailSub:'Ieškokite rankiniu būdu arba skambinkite:',searchAA:'🔍 Ieškoti AA susitikimų',
     loadLoc:'Nustatoma vieta…',loadSrc:'Jungiamės prie šaltinių…',loadMeet:'Ieškome susitikimų…',loadTravel:'Skaičiuojame kelionės laiką…',
     statusNow:'Vyksta dabar',status247:'Šiandien · 24/7',statusFuture:'Rytoj arba vėliau',statusToday:'Šiandien',
     inMin:'už',minSfx:'min',hourSfx:'val.',
-    srcReal:'Duomenys: AA Meeting Guide',srcFallback:'Rodomi reprezentatyvūs rezultatai',
+    srcReal:'Duomenys: AA Meeting Guide',srcVerified:'Patikrintos vietos paslaugos',srcFallback:'Rodomi reprezentatyvūs rezultatai',
     noResultsPanic:'Šiuo metu nerasta gyvų susitikimų.',noResults:'Nerasta susitikimų netoliese.',
     callAlso:'Taip pat galima skambinti',callNowLbl:'Skambink dabar — nereikia laukti',
     emptyContacts:'Dar nėra išsaugotų žmonių.\nPridėk žmogų, kuriam gali paskambinti.',
@@ -641,9 +642,9 @@ const LANGS = {
     waitMorning:'🌙  Bis zum Morgen warten',timerDone:'Du hältst durch.\nHeute gehört dir noch.',
     wait30:'⏱  Noch 30 Min. warten',describe:'Beschreibe, was passiert ist',goBack:'Zurück',
     nearbyTitle:'AA Treffen in deiner Nähe',nearbyTitlePanic:'Hilfe in deiner Nähe jetzt',
-    nearbySub:'Du bist nicht allein.',nearbySubPanic:'Nur aktuell laufende Angebote.',
+    nearbySub:'Du bist nicht allein.',nearbySubPanic:'Jetzt Laufendes zuerst — alle unten.',
     allowLoc:'Standortzugriff erlauben,\num Hilfe in der Nähe zu finden?',allow:'📍  Erlauben',
-    newMorning:'Neuer Morgen',homeGreeting:'Du hast dich\nheute entschieden.',
+    newMorning:'Neuer Morgen',findMeetings:'📍  Treffen finden',homeGreeting:'Du hast dich\nheute entschieden.',
     days0:'Heute ist Tag eins.',days1:'1 Tag. Gestern auch.',daysN:' Tage. Alle haben heute begonnen.',
     myPeople:'Meine Menschen',myPeopleSub:'Menschen, die du jetzt anrufen kannst.',addPerson:'+ Person hinzufügen',
     addPersonTitle:'Person hinzufügen',fieldName:'Name',fieldPhone:'Telefon',fieldType:'Typ',
@@ -662,13 +663,13 @@ const LANGS = {
     unlockTitle:'🔓 Neue Funktionen freigeschaltet',unlockSub:'5 Tage. Du hast mehr Werkzeuge verdient.',ok:'OK',
     navHome:'Start',navPeople:'Menschen',navReasons:'Gründe',navCheckin:'Check-in',
     callNow:'📞 JETZT ANRUFEN',callBtn:'📞 Anrufen',goBtn:'🗺 Los',heroLabel:'⚡ Nächstgelegen',
-    panicBar:'⚡ Nur aktuell laufende Angebote',
+    panicBar:'⚡ Jetzt Laufendes zuerst',
     offline:'Keine Internetverbindung.',offlineSub:'Du kannst trotzdem anrufen:',
     locFail:'Standort konnte nicht ermittelt werden.',locFailSub:'Manuell suchen oder anrufen:',searchAA:'🔍 AA-Treffen suchen',
     loadLoc:'Standort wird ermittelt…',loadSrc:'Verbinde mit Quellen…',loadMeet:'Suche nach Treffen…',loadTravel:'Reisezeit wird berechnet…',
     statusNow:'Findet gerade statt',status247:'Heute · 24/7',statusFuture:'Morgen oder später',statusToday:'Heute',
     inMin:'in',minSfx:'Min.',hourSfx:'Std.',
-    srcReal:'Daten: AA Meeting Guide',srcFallback:'Repräsentative Ergebnisse',
+    srcReal:'Daten: AA Meeting Guide',srcVerified:'Geprüfte lokale Angebote',srcFallback:'Repräsentative Ergebnisse',
     noResultsPanic:'Gerade keine laufenden Treffen in der Nähe.',noResults:'Keine Treffen in der Nähe gefunden.',
     callAlso:'Du kannst auch anrufen',callNowLbl:'Jetzt anrufen — kein Warten',
     emptyContacts:'Noch keine Kontakte.\nFüge jemanden hinzu, den du anrufen kannst.',
@@ -691,9 +692,9 @@ const LANGS = {
     waitMorning:'🌙  Vent til morgenen',timerDone:'Du holder ut.\nI dag er fortsatt din.',
     wait30:'⏱  Vent 30 min til',describe:'Beskriv hva som skjedde',goBack:'Gå tilbake',
     nearbyTitle:'AA møter nær deg',nearbyTitlePanic:'Hjelp nær deg akkurat nå',
-    nearbySub:'Du er ikke alene.',nearbySubPanic:'Viser bare det som skjer akkurat nå.',
+    nearbySub:'Du er ikke alene.',nearbySubPanic:'Skjer nå først — alle møter under.',
     allowLoc:'Tillat stedstilgang\nfor å finne hjelp i nærheten?',allow:'📍  Tillat',
-    newMorning:'Ny morgen',homeGreeting:'Du valgte\ni dag.',
+    newMorning:'Ny morgen',findMeetings:'📍  Finn et møte',homeGreeting:'Du valgte\ni dag.',
     days0:'I dag er dag én.',days1:'1 dag. I går også.',daysN:' dager. Alle startet fra i dag.',
     myPeople:'Mine mennesker',myPeopleSub:'Folk du kan ringe akkurat nå.',addPerson:'+ Legg til en person',
     addPersonTitle:'Legg til en person',fieldName:'Navn',fieldPhone:'Telefon',fieldType:'Type',
@@ -712,13 +713,13 @@ const LANGS = {
     unlockTitle:'🔓 Nye funksjoner låst opp',unlockSub:'5 dager. Du har fortjent flere verktøy.',ok:'OK',
     navHome:'Hjem',navPeople:'Folk',navReasons:'Grunner',navCheckin:'Sjekk-inn',
     callNow:'📞 RING NÅ',callBtn:'📞 Ring',goBtn:'🗺 Gå',heroLabel:'⚡ Nærmest',
-    panicBar:'⚡ Viser bare det som skjer nå',
+    panicBar:'⚡ Skjer nå, først',
     offline:'Ingen internettforbindelse.',offlineSub:'Men du kan fortsatt ringe:',
     locFail:'Kunne ikke finne stedet ditt.',locFailSub:'Søk manuelt eller ring:',searchAA:'🔍 Søk etter AA-møter',
     loadLoc:'Finner plasseringen din…',loadSrc:'Kobler til kilder…',loadMeet:'Søker etter møter…',loadTravel:'Beregner reisetid…',
     statusNow:'Skjer akkurat nå',status247:'I dag · 24/7',statusFuture:'I morgen eller senere',statusToday:'I dag',
     inMin:'om',minSfx:'min',hourSfx:'t.',
-    srcReal:'Data: AA Meeting Guide',srcFallback:'Representative resultater',
+    srcReal:'Data: AA Meeting Guide',srcVerified:'Verifiserte lokale tjenester',srcFallback:'Representative resultater',
     noResultsPanic:'Ingen møter som skjer akkurat nå i nærheten.',noResults:'Ingen møter funnet i nærheten.',
     callAlso:'Du kan også ringe',callNowLbl:'Ring nå — ingen ventetid',
     emptyContacts:'Ingen lagrede kontakter ennå.\nLegg til noen du kan ringe.',
@@ -741,9 +742,9 @@ const LANGS = {
     waitMorning:'🌙  Poczekaj do rana',timerDone:'Nadal dajesz radę.\nTen dzień jest nadal twój.',
     wait30:'⏱  Poczekaj jeszcze 30 min',describe:'Opisz co się wydarzyło',goBack:'Wróć',
     nearbyTitle:'Spotkania AA w pobliżu',nearbyTitlePanic:'Pomoc w pobliżu teraz',
-    nearbySub:'Nie jesteś sam/a.',nearbySubPanic:'Pokazuję tylko to, co dzieje się teraz.',
+    nearbySub:'Nie jesteś sam/a.',nearbySubPanic:'Najpierw to, co teraz — reszta niżej.',
     allowLoc:'Zezwól na dostęp do lokalizacji,\naby znaleźć pomoc w pobliżu?',allow:'📍  Zezwól',
-    newMorning:'Nowy poranek',homeGreeting:'Wybrałeś/aś\ndziś.',
+    newMorning:'Nowy poranek',findMeetings:'📍  Znajdź spotkanie',homeGreeting:'Wybrałeś/aś\ndziś.',
     days0:'Dziś jest dzień pierwszy.',days1:'1 dzień. Wczoraj też.',daysN:' dni. Wszystkie zaczęły się dzisiaj.',
     myPeople:'Moje osoby',myPeopleSub:'Osoby, do których możesz zadzwonić teraz.',addPerson:'+ Dodaj osobę',
     addPersonTitle:'Dodaj osobę',fieldName:'Imię',fieldPhone:'Telefon',fieldType:'Typ',
@@ -762,13 +763,13 @@ const LANGS = {
     unlockTitle:'🔓 Nowe funkcje odblokowane',unlockSub:'5 dni. Zarobiłeś/aś więcej narzędzi.',ok:'OK',
     navHome:'Strona główna',navPeople:'Osoby',navReasons:'Powody',navCheckin:'Check-in',
     callNow:'📞 ZADZWOŃ TERAZ',callBtn:'📞 Zadzwoń',goBtn:'🗺 Idź',heroLabel:'⚡ Najbliżej',
-    panicBar:'⚡ Pokazuję tylko to, co dzieje się teraz',
+    panicBar:'⚡ Najpierw to, co teraz',
     offline:'Brak połączenia z internetem.',offlineSub:'Ale możesz nadal zadzwonić:',
     locFail:'Nie udało się ustalić lokalizacji.',locFailSub:'Możesz wyszukać ręcznie lub zadzwonić:',searchAA:'🔍 Szukaj spotkań AA',
     loadLoc:'Ustalanie lokalizacji…',loadSrc:'Łączenie ze źródłami…',loadMeet:'Szukanie spotkań…',loadTravel:'Obliczanie czasu podróży…',
     statusNow:'Trwa teraz',status247:'Dziś · 24/7',statusFuture:'Jutro lub później',statusToday:'Dziś',
     inMin:'za',minSfx:'min',hourSfx:'godz.',
-    srcReal:'Dane: AA Meeting Guide',srcFallback:'Przykładowe wyniki',
+    srcReal:'Dane: AA Meeting Guide',srcVerified:'Zweryfikowane usługi lokalne',srcFallback:'Przykładowe wyniki',
     noResultsPanic:'Brak bieżących spotkań w pobliżu.',noResults:'Brak spotkań w pobliżu.',
     callAlso:'Możesz też zadzwonić',callNowLbl:'Zadzwoń teraz — bez czekania',
     emptyContacts:'Brak zapisanych kontaktów.\nDodaj kogoś, do kogo możesz zadzwonić.',
@@ -869,6 +870,7 @@ function renderAllText() {
   // home
   setText('home-greeting', t('homeGreeting'));
   setText('home-struggle', t('struggle'));
+  setText('home-meetings', t('findMeetings'));
   setText('home-reset',    t('newMorning'));
   // day (phase1)
   setText('day-title',     t('dayTitle'));
@@ -1136,7 +1138,8 @@ const APP = {
     }, 260);
   },
   goHome() { this.nav('s-home'); },
-  goNearbyPanic() { NEARBY.panicMode = true; this.go('s-nearby'); },
+  goNearbyPanic() { NEARBY.panicMode = true;  this.go('s-nearby'); },
+  goNearby()      { NEARBY.panicMode = false; this.go('s-nearby'); },
   reset() {
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active','exit'));
     document.getElementById('s-open').classList.add('active');
@@ -1366,7 +1369,7 @@ const CONTACTS = {
         <div class="contact-name">${esc(c.name||'')}</div>
         <div class="contact-role">${esc(c.type||'')}</div>
         <div class="brow" style="max-width:none;margin-top:2px">
-          <a class="bsm bsm-red"   href="tel:${esc(c.phone||'')}">📞 ${esc(t('callBtn').replace('📞 ',''))}</a>
+          <a class="bsm bsm-red"   href="${telHref(c.phone)}">📞 ${esc(t('callBtn').replace('📞 ',''))}</a>
           <a class="bsm bsm-ghost" href="sms:${esc(c.phone||'')}">✉</a>
           <button class="bsm bsm-dim" onclick="CONTACTS.del(${id})">✕</button>
         </div>
@@ -1804,7 +1807,7 @@ function renderHelplines() {
       <div class="hl-badge">${esc(h.badge)}</div>
       <div class="hl-name">${esc(h.name)}</div>
       <div class="hl-desc">${esc(h.desc)}</div>
-      ${h.phone ? `<a class="hl-call" href="tel:${esc(h.phone)}">📞 &nbsp;${esc(h.display)}</a>`
+      ${h.phone ? `<a class="hl-call" href="${telHref(h.phone)}">📞 &nbsp;${esc(h.display)}</a>`
                 : `<div class="hl-call" style="background:rgba(255,255,255,.12);color:#fff">${esc(h.display)}</div>`}
     </div>`).join('');
 }
@@ -1834,8 +1837,10 @@ function getTimeInfo(place) {
   const nowM     = now.getHours()*60 + now.getMinutes();
   let best = null;
 
-  // Search across all 7 days (today first, then tomorrow, then rest of week)
-  for(let offset=0; offset<7; offset++) {
+  // Search up to 8 days ahead (today through the same weekday next week)
+  // so a weekly meeting whose only day is today — but already finished —
+  // is correctly found for next week instead of returning null.
+  for(let offset=0; offset<=7; offset++) {
     const checkDay = (todayDay + offset) % 7;
     for(const sl of place.slots) {
       if(!sl.days||!sl.days.includes(checkDay)) continue;
@@ -1858,6 +1863,8 @@ function getTimeInfo(place) {
             best = {isNow:false, isToday:true, slot:sl, minutesUntil:u, daysUntil:0};
           }
         }
+        // If it's today but already past, fall through — later offsets
+        // (including offset 7 = same weekday next week) will catch it.
       } else {
         // Future day — minutes = days*1440 + time from midnight
         const totalMins = offset*1440 + startM;
@@ -1866,7 +1873,7 @@ function getTimeInfo(place) {
         }
       }
     }
-    // If we already found something today, don't look further
+    // If we found a meeting still to come TODAY, that's the soonest possible — stop.
     if(best && best.daysUntil === 0) break;
   }
   return best;
@@ -1904,7 +1911,8 @@ function makeBadge(info) {
     return {cls:'future', text:`${t('tmrw')} · ${startTime}`};
   }
 
-  // 2–6 days away — show day name + time
+  // 2–7 days away — show weekday name + time.
+  // At days===7 this resolves to today's weekday (same day next week).
   const dayName = BADGE_DAYS_EN[(new Date().getDay() + days) % 7];
   return {cls:'future', text:`${dayName} · ${startTime} · ${t('inMin')} ${days} ${t('daySfx')}`};
 }
@@ -1921,6 +1929,16 @@ function haversine(a,b,c,d) {
   const R=6371,dL=(c-a)*Math.PI/180,dG=(d-b)*Math.PI/180;
   const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+
+// Build a dialable tel: href. Keeps a leading + (required for
+// international numbers) and strips only spaces, dashes, brackets.
+// Stripping the + with /\D/g would break every +370/+49/+47 number.
+function telHref(phone) {
+  if(!phone) return '';
+  const p = String(phone).trim();
+  const plus = p.startsWith('+') ? '+' : '';
+  return 'tel:' + plus + p.replace(/[^\d]/g, '');
 }
 function mapsUrl(name, lat, lng, address) {
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -1939,6 +1957,19 @@ function mapsUrl(name, lat, lng, address) {
       : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
   }
   return `https://www.google.com/maps/search/${encodeURIComponent(name)}`;
+}
+
+// A place is worth navigating to only if it's a physical location.
+// Helplines and crisis phone lines are call-only — a "Go" button on
+// them sends Maps to bare city-center coordinates and lands the user
+// at a random nearby business, which is worse than useless.
+function isNavigable(p) {
+  if(!p) return false;
+  if(p.type === 'helpline' || p.type === 'crisis') return false;  // call, don't drive
+  // Needs a real street address, or real (non-fallback) coordinates.
+  // Our INTL hel/crisis entries carry only approximate city-center
+  // coords and no address — those are correctly excluded above.
+  return !!(p.address || (p.lat && p.lng));
 }
 function fmtDist(d) { return d==null?'': d<1?Math.round(d*1000)+' m':d.toFixed(1)+' km'; }
 function fmtTravel(dMin,wMin,dist) {
@@ -2071,7 +2102,6 @@ const NEARBY = {
       <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:48px 0">
         <div class="spinner"></div>
         <p style="font-size:.85rem;color:var(--mid);text-align:center;font-weight:500">${esc(msg)}</p>
-        <p style="font-size:.72rem;color:var(--dim);text-align:center">Checking ${INTERGROUP_SOURCES} sources…</p>
       </div>`;
   },
 
@@ -2091,7 +2121,7 @@ const NEARBY = {
         <h3>${esc(t('offline'))}</h3>
         <p>${esc(t('offlineSub'))}</p>
       </div>
-      ${this._hlCards()}`;
+      ${this._callSection([])}`;
   },
 
   renderLocFail() {
@@ -2101,7 +2131,7 @@ const NEARBY = {
         <p>${esc(t('locFailSub'))}</p>
         <a class="btn btn-outline" href="https://www.aa.org/find-aa" target="_blank" style="margin-top:4px;padding:14px;text-align:center">${esc(t('searchAA'))}</a>
       </div>
-      ${this._hlCards()}`;
+      ${this._callSection([])}`;
   },
 
   async fetchAll(lat, lng) {
@@ -2160,68 +2190,92 @@ const NEARBY = {
       };
     });
 
-    // Panic mode: only show meetings happening right now
-    if(this.panicMode) places = places.filter(p => p.isNow);
+    // Panic mode does NOT hide meetings anymore.
+    // Someone about to relapse at 3pm needs to see the 7pm meeting
+    // they can still get to tonight. Sorting already floats
+    // "happening now" to the top; hiding everything else was wrong.
+    // The only panic-specific behaviour is the "closest happening now"
+    // hero treatment, handled in render().
 
     // Sort: now → soonest today → tomorrow → this week → by distance
     places.sort((a,b) => sortScore(a) - sortScore(b));
 
-    // Show ALL meetings — no cap (panic mode already filtered above)
+    // Show ALL meetings, always.
     this.render(places, hasReal);
   },
 
   render(places, hasReal) {
     let h = '';
 
-    if(this.panicMode) h += `<div class="panic-bar">${esc(t('panicBar'))}</div>`;
+    // ── Split: physical places (meetings, centers) vs call-only lines ──
+    // Crisis lines & helplines are 24/7, so they always read as
+    // "happening now" and would otherwise dominate the top of a
+    // meetings list. They belong in the "You can also call" section,
+    // not mixed in with places you travel to.
+    const callOnly = places.filter(p => p.type === 'crisis' || p.type === 'helpline');
+    const meetings = places.filter(p => p.type !== 'crisis' && p.type !== 'helpline');
 
-    // Source note — shows where data came from + count
-    const hasPipeline = places.some(p => p.source === 'pipeline-api');
-    const hasMG       = places.some(p => p.source === 'meeting-guide' || p.source === 'meeting-guide-api');
-    const hasTSML     = places.some(p => p.source === 'tsml-feed' || p.source === 'intergroup-feed');
-    const hasSeed     = places.some(p => p.source === 'seed');
-    const liveCount   = places.filter(p => p.source !== 'seed').length;
+    // Source note — describes the meetings list only.
+    const hasMG   = meetings.some(p => ['meeting-guide','meeting-guide-api','pipeline-api'].includes(p.source));
+    const hasTSML = meetings.some(p => ['tsml-feed','intergroup-feed'].includes(p.source));
+    // Regional entries (LT/DE/GB/…) carry real addresses and are
+    // verified — never label them "representative".
+    const hasRegional = meetings.some(p => p.address && p.source !== 'seed');
+    const liveCount   = meetings.filter(p => p.source !== 'seed').length;
 
-    let srcNote;
-    if(hasMG)       srcNote = `${t('srcReal')} · ${liveCount} meetings`;
-    else if(hasTSML) srcNote = `${t('srcReal').replace('Meeting Guide','Intergroup')} · ${liveCount} meetings`;
-    else if(hasPipeline) srcNote = `${t('srcReal')} · ${liveCount} meetings`;
-    else             srcNote = t('srcFallback');
-    h += `<div class="src-note">${esc(srcNote)}</div>`;
+    let srcNote = '';
+    if(hasMG)            srcNote = `${t('srcReal')} · ${liveCount}`;
+    else if(hasTSML)     srcNote = `${t('srcReal').replace('Meeting Guide','Intergroup')} · ${liveCount}`;
+    else if(hasRegional) srcNote = `${t('srcVerified')} · ${meetings.length}`;
+    else if(meetings.length) srcNote = t('srcFallback');
+    if(srcNote) h += `<div class="src-note">${esc(srcNote)}</div>`;
 
-    if(places.length===0) {
-      h += `<div class="offline-box"><h3>${esc(this.panicMode?t('noResultsPanic'):t('noResults'))}</h3></div>`;
-    } else {
-      // Hero card
-      const hero=places[0];
+    if(meetings.length === 0 && callOnly.length === 0) {
+      h += `<div class="offline-box"><h3>${esc(t('noResults'))}</h3></div>`;
+      document.getElementById('nearby-body').innerHTML = h;
+      return;
+    }
+
+    if(meetings.length > 0) {
+      // Hero — the closest / soonest meeting
+      const hero=meetings[0];
       const hBadge=makeBadge(hero._info);
-      const hTravel=fmtTravel(hero.drivingMin,null,hero.dist);
-      const hHref=hero.phone?`tel:${hero.phone.replace(/\D/g,'')}`:'';
-      const hMap=mapsUrl(hero.name,hero.lat,hero.lng,hero.address);
+      const hHref=telHref(hero.phone);
+      const hNav = isNavigable(hero);
+      const hTravel = hNav ? fmtTravel(hero.drivingMin,null,hero.dist) : '';
+      const hMap = hNav ? mapsUrl(hero.name,hero.lat,hero.lng,hero.address) : '';
+      let heroBtns;
+      if(hHref && hNav) {
+        heroBtns = `<a class="nb-hero-call" href="${hHref}" style="flex:2">${esc(t('callNow'))}</a>`
+                 + `<a class="bsm bsm-ghost" href="${hMap}" style="flex:1;padding:17px 10px">${esc(t('goBtn'))}</a>`;
+      } else if(hHref) {
+        heroBtns = `<a class="nb-hero-call" href="${hHref}" style="flex:1">${esc(t('callNow'))}</a>`;
+      } else {
+        heroBtns = `<a class="nb-hero-call" href="${hMap}" style="flex:1">${esc(t('goBtn'))} →</a>`;
+      }
       h += `<div class="nb-hero">
         <div class="nb-hero-lbl">${esc(t('heroLabel'))}</div>
         <div class="nb-hero-name">${esc(hero.name)}</div>
         <div class="nb-hero-type">${esc(typeLabel(hero.type))}</div>
         <div class="nb-hero-status"><span class="bdot" style="background:var(--red);animation:pulse 1.3s ease-in-out infinite"></span>${esc(hBadge.text)}</div>
+        ${hero.address?`<div class="nb-hero-travel">📍 ${esc(hero.address)}</div>`:''}
         ${hTravel?`<div class="nb-hero-travel">${esc(hTravel)}</div>`:''}
-        <div style="display:flex;gap:8px">
-          ${hHref ? `<a class="nb-hero-call" href="${hHref}" style="flex:2">${esc(t('callNow'))}</a>`
-                  : `<a class="nb-hero-call" href="${hMap}" style="flex:2">${esc(t('goBtn'))} →</a>`}
-          <a class="bsm bsm-ghost" href="${hMap}" style="flex:1;padding:17px 10px">${esc(t('goBtn'))}</a>
-        </div>
+        <div style="display:flex;gap:8px">${heroBtns}</div>
       </div>`;
 
-      // Other cards — grouped by day
+      // Remaining meetings — grouped by when they next happen
       let currentGroup = null;
-      places.slice(1).forEach((p,i)=>{
+      meetings.slice(1).forEach((p,i)=>{
         const badge  = makeBadge(p._info);
-        const travel = fmtTravel(p.drivingMin,null,p.dist);
+        const nav    = isNavigable(p);
+        const travel = nav ? fmtTravel(p.drivingMin,null,p.dist) : '';
         const cc     = p.isNow?'now':p.isToday?'today':'';
-        const callBtn= p.phone?`<a class="bsm bsm-red" href="tel:${p.phone.replace(/\D/g,'')}">${esc(t('callBtn'))}</a>`:'';
-        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng,p.address)}">${esc(t('goBtn'))}</a>`;
+        const callBtn= p.phone?`<a class="bsm bsm-red" href="${telHref(p.phone)}">${esc(t('callBtn'))}</a>`:'';
+        const mapBtn = nav?`<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng,p.address)}">${esc(t('goBtn'))}</a>`:'';
         const timeRow= p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
           ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
         const costRow= p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
+        const addrRow= p.address?`<div style="font-size:.7rem;color:var(--dim);margin-bottom:4px">📍 ${esc(p.address)}</div>`:'';
 
         // Day group header
         const days    = p._info?.daysUntil ?? 99;
@@ -2229,7 +2283,7 @@ const NEARBY = {
         if(groupKey !== currentGroup) {
           currentGroup = groupKey;
           let groupLabel;
-          if(groupKey === 'now')   groupLabel = '🔴 ' + t('statusNow').toUpperCase();
+          if(groupKey === 'now')        groupLabel = '🔴 ' + t('statusNow').toUpperCase();
           else if(groupKey === 'today') groupLabel = t('statusToday').toUpperCase();
           else {
             const dayName = BADGE_DAYS_EN[(new Date().getDay() + days) % 7];
@@ -2245,28 +2299,44 @@ const NEARBY = {
           </div>
           <div class="place-type">${esc(typeLabel(p.type))}</div>
           <div class="badge ${badge.cls}"><span class="bdot"></span>${esc(badge.text)}</div>
-          ${timeRow}${costRow}
-          <div class="brow" style="max-width:none;margin-top:10px">${callBtn}${mapBtn}</div>
+          ${addrRow}${timeRow}${costRow}
+          ${(callBtn||mapBtn)?`<div class="brow" style="max-width:none;margin-top:10px">${callBtn}${mapBtn}</div>`:''}
         </div>`;
       });
     }
 
-    h += `<div style="width:100%;max-width:340px;margin-top:12px">
-      <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;text-align:center">${esc(this.panicMode?t('callNowLbl'):t('callAlso'))}</div>
-      ${this._hlCards()}
-    </div>`;
+    // ── "You can also call" — crisis lines + regional helplines ──
+    h += this._callSection(callOnly);
 
     document.getElementById('nearby-body').innerHTML = h;
   },
 
-  _hlCards() {
-    return getHelplines().filter(h=>h.phone).map(h=>`
-      <div class="hl-card">
-        <div class="hl-badge">${esc(h.badge)}</div>
-        <div class="hl-name">${esc(h.name)}</div>
-        <div class="hl-desc">${esc(h.desc)}</div>
-        <a class="hl-call" href="tel:${esc(h.phone)}">📞 &nbsp;${esc(h.display)}</a>
-      </div>`).join('');
+  _callSection(callOnly) {
+    // Merge crisis lines from results with the regional helplines,
+    // de-duplicated by phone number. Always call-only.
+    const byPhone = new Map();
+    (callOnly||[]).forEach(p => {
+      if(p.phone) byPhone.set(p.phone.replace(/\D/g,''), {
+        name: p.name, badge: typeLabel(p.type),
+        desc: '', phone: p.phone, display: p.phone,
+      });
+    });
+    getHelplines().filter(h=>h.phone).forEach(h => {
+      const k = h.phone.replace(/\D/g,'');
+      if(!byPhone.has(k)) byPhone.set(k, h);
+    });
+    const cards = [...byPhone.values()];
+    if(!cards.length) return '';
+    return `<div style="width:100%;max-width:340px;margin-top:20px">
+      <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;text-align:center">${esc(t('callAlso'))}</div>
+      ${cards.map(h=>`
+        <div class="hl-card">
+          <div class="hl-badge">${esc(h.badge)}</div>
+          <div class="hl-name">${esc(h.name)}</div>
+          ${h.desc?`<div class="hl-desc">${esc(h.desc)}</div>`:''}
+          <a class="hl-call" href="${telHref(h.phone)}">📞 &nbsp;${esc(h.display)}</a>
+        </div>`).join('')}
+    </div>`;
   },
 };
 
