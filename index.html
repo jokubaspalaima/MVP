@@ -1922,15 +1922,21 @@ function haversine(a,b,c,d) {
   const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
-function mapsUrl(name, lat, lng) {
+function mapsUrl(name, lat, lng, address) {
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  // Prefer the real street address — Maps resolves it to the actual
+  // building. Raw coordinates in our data can be approximate and
+  // land people on a random street corner.
+  if(address) {
+    const q = encodeURIComponent(`${name}, ${address}`);
+    return isIOS
+      ? `maps://?daddr=${q}&dirflg=d`
+      : `https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=driving`;
+  }
   if(lat && lng) {
-    if(isIOS) {
-      // Apple Maps — opens directly into turn-by-turn on iPhone
-      return `maps://?daddr=${lat},${lng}&dirflg=d`;
-    }
-    // Google Maps direct directions — skips search results page
-    return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+    return isIOS
+      ? `maps://?daddr=${lat},${lng}&dirflg=d`
+      : `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
   }
   return `https://www.google.com/maps/search/${encodeURIComponent(name)}`;
 }
@@ -2191,7 +2197,7 @@ const NEARBY = {
       const hBadge=makeBadge(hero._info);
       const hTravel=fmtTravel(hero.drivingMin,null,hero.dist);
       const hHref=hero.phone?`tel:${hero.phone.replace(/\D/g,'')}`:'';
-      const hMap=mapsUrl(hero.name,hero.lat,hero.lng);
+      const hMap=mapsUrl(hero.name,hero.lat,hero.lng,hero.address);
       h += `<div class="nb-hero">
         <div class="nb-hero-lbl">${esc(t('heroLabel'))}</div>
         <div class="nb-hero-name">${esc(hero.name)}</div>
@@ -2212,7 +2218,7 @@ const NEARBY = {
         const travel = fmtTravel(p.drivingMin,null,p.dist);
         const cc     = p.isNow?'now':p.isToday?'today':'';
         const callBtn= p.phone?`<a class="bsm bsm-red" href="tel:${p.phone.replace(/\D/g,'')}">${esc(t('callBtn'))}</a>`:'';
-        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng)}">${esc(t('goBtn'))}</a>`;
+        const mapBtn = `<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng,p.address)}">${esc(t('goBtn'))}</a>`;
         const timeRow= p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
           ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
         const costRow= p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
