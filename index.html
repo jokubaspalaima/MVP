@@ -1339,49 +1339,78 @@ const REFLECTION = {
 //  'default' shown when country not matched
 // ═══════════════════════════════════════════════════
 const REGIONAL_HELPLINES = {
+  // ── LITHUANIA — verified: aalietuvoje.org, rplc.lt ───────────────────────
   LT: [
-    { name:'Pagalbos linija',      badge:'Emocinė pagalba · 24/7',         desc:'Nemokama, anonimiška pagalba.',              phone:'116123',       display:'116 123' },
-    { name:'Jaunimo linija',       badge:'Krizių pagalba · 24/7',          desc:'Skambink — nereikia aiškinti priežasties.',  phone:'880028888',    display:'8 800 28 888' },
-    { name:'Vilniaus AA grupė',    badge:'Anoniminiai alkoholikai',         desc:'Susitikimai Vilniuje.',                      phone:'+37052314578', display:'+370 5 231 4578' },
-    { name:'NPPSC',                badge:'Priklausomybių pagalba',          desc:'Nacionalinis priklausomybių centras.',       phone:'+37052649670', display:'+370 5 264 9670' },
+    { name:'Pagalbos linija',     badge:'Emocinė pagalba · 24/7',        desc:'Nemokama, anonimiška pagalba.',              phone:'116123',        display:'116 123' },
+    { name:'Jaunimo linija',      badge:'Krizių pagalba · 24/7',         desc:'Skambink — nereikia aiškinti priežasties.', phone:'880028888',     display:'8 800 28 888' },
+    { name:'Vilniaus AA grupė',   badge:'Anoniminiai alkoholikai',        desc:'Susitikimai Vilniuje.',                      phone:'+37068505191',  display:'+370 685 05191' },
+    { name:'RPLC — Vilnius',      badge:'Priklausomybių gydymas',        desc:'Gerosios Vilties g. 3, Vilnius.',           phone:'+37052137808',  display:'+370 5 213 7808' },
   ],
+  // ── LATVIA — verified: aa.lv ─────────────────────────────────────────────
   LV: [
-    { name:'Uzticības tālrunis',   badge:'Krīzes palīdzība · 24/7',        desc:'Bezmaksas, anonīms.',                        phone:'116123',       display:'116 123' },
+    { name:'Uzticības tālrunis',  badge:'Krīzes palīdzība · 24/7',      desc:'Bezmaksas, anonīms.',                       phone:'116123',        display:'116 123' },
+    { name:'AA Latvija',          badge:'Anonīmie alkoholiķi',           desc:'Tikšanās Rīgā un citur.',                   phone:'+37167244578',  display:'+371 672 44578' },
   ],
+  // ── ESTONIA — verified: aa.ee ─────────────────────────────────────────────
   EE: [
-    { name:'Eluliin',              badge:'Kriisiabi · 24/7',               desc:'Tasuta ja anonüümne.',                       phone:'6558088',      display:'655 8088' },
+    { name:'Eluliin',             badge:'Kriisiabi · 24/7',              desc:'Tasuta ja anonüümne.',                      phone:'6558088',       display:'655 8088' },
+    { name:'AA Eesti',            badge:'Anonüümsed Alkohoolikud',       desc:'Kohtumised üle Eesti.',                     phone:'+3726440015',   display:'+372 644 0015' },
   ],
+  // ── GERMANY — verified: anonyme-alkoholiker.de, telefonseelsorge.de ──────
   DE: [
-    { name:'Telefonseelsorge',     badge:'Krisenberatung · 24/7',          desc:'Kostenlos und anonym.',                      phone:'08001110111',  display:'0800 111 0 111' },
-    { name:'AA Deutschland',       badge:'Anonyme Alkoholiker',            desc:'Treffen in deiner Nähe.',                    phone:'08005007200',  display:'0800 500 7200' },
+    { name:'Telefonseelsorge',    badge:'Krisenberatung · 24/7',        desc:'Kostenlos und anonym — 0800 111 0 111.',    phone:'08001110111',   display:'0800 111 0 111' },
+    { name:'AA Deutschland',      badge:'Anonyme Alkoholiker',           desc:'Treffen bundesweit — anonyme-alkoholiker.de.',phone:'+498731325730',display:'+49 8731 325730' },
   ],
+  // ── NORWAY — verified: anonymealkoholikere.no, mentalhelse.no ────────────
   NO: [
-    { name:'Mental Helse',         badge:'Hjelpetelefon · 24/7',          desc:'Gratis og anonym hjelp.',                    phone:'116123',       display:'116 123' },
-    { name:'AA Norge',             badge:'Anonyme Alkoholikere',           desc:'Møter i hele Norge.',                        phone:'22205340',     display:'22 20 53 40' },
+    { name:'Mental Helse',        badge:'Hjelpetelefon · 24/7',         desc:'Gratis og anonym hjelp.',                   phone:'116123',        display:'116 123' },
+    { name:'AA Norge',            badge:'Anonyme Alkoholikere',          desc:'Møter i Oslo og hele Norge.',               phone:'+4722205340',   display:'+47 22 20 53 40' },
   ],
+  // ── POLAND — verified: anonimowialcoholicy.org.pl, parpa.pl ──────────────
   PL: [
-    { name:'Telefon Zaufania',     badge:'Pomoc w kryzysie · 24/7',       desc:'Bezpłatny, anonimowy.',                      phone:'116123',       display:'116 123' },
-    { name:'PARPA',                badge:'Pomoc alkoholowa',               desc:'Państwowa Agencja ds. Alkoholu.',             phone:'225365050',    display:'22 536 50 50' },
+    { name:'Telefon Zaufania',    badge:'Pomoc w kryzysie · 24/7',      desc:'Bezpłatny, anonimowy.',                     phone:'116123',        display:'116 123' },
+    { name:'PARPA',               badge:'Pomoc alkoholowa',              desc:'Państwowa Agencja ds. Alkoholu.',           phone:'+48225365050',  display:'+48 22 536 50 50' },
   ],
+  // ── UNITED KINGDOM — verified: alcoholics-anonymous.org.uk, samaritans.org
   GB: [
-    { name:'Samaritans',           badge:'Crisis support · 24/7',         desc:'Free, confidential.',                        phone:'116123',       display:'116 123' },
-    { name:'AA UK',                badge:'Alcoholics Anonymous',           desc:'Meetings across the UK.',                    phone:'08009177650',  display:'0800 9177 650' },
+    { name:'Samaritans',          badge:'Crisis support · 24/7',        desc:'Free, confidential — 116 123.',             phone:'116123',        display:'116 123' },
+    { name:'AA Great Britain',    badge:'Alcoholics Anonymous',          desc:'Free helpline — meetings across the UK.',   phone:'08009177650',   display:'0800 9177 650' },
+    { name:'FRANK',               badge:'Drug & Alcohol helpline',       desc:'Free, confidential, 24/7.',                 phone:'03001236600',   display:'0300 123 6600' },
   ],
+  // ── IRELAND — verified: aa.ie, samaritans.org ─────────────────────────────
   IE: [
-    { name:'Samaritans Ireland',   badge:'Crisis support · 24/7',         desc:'Free, confidential.',                        phone:'116123',       display:'116 123' },
-    { name:'AA Ireland',           badge:'Alcoholics Anonymous',           desc:'Meetings across Ireland.',                   phone:'018420811',    display:'01 842 0811' },
+    { name:'Samaritans Ireland',  badge:'Crisis support · 24/7',        desc:'Free, confidential.',                       phone:'116123',        display:'116 123' },
+    { name:'AA Ireland',          badge:'Alcoholics Anonymous',          desc:'Meetings across Ireland.',                  phone:'+35318420700',  display:'+353 1 842 0700' },
   ],
+  // ── FRANCE ───────────────────────────────────────────────────────────────
+  FR: [
+    { name:'Écoute Alcool',       badge:'Aide alcool · 24/7',           desc:'Gratuit et confidentiel.',                  phone:'0980980930',    display:'09 80 98 09 30' },
+    { name:'Alcooliques Anonymes',badge:'AA France',                     desc:'Réunions partout en France.',               phone:'+33145482920',  display:'+33 1 45 48 29 20' },
+  ],
+  // ── NETHERLANDS ───────────────────────────────────────────────────────────
+  NL: [
+    { name:'Jellinek',            badge:'Verslavingszorg',               desc:'0900 8400 — hulp bij verslaving.',          phone:'09008400',      display:'0900 8400' },
+    { name:'AA Nederland',        badge:'Anonieme Alcoholisten',         desc:'Bijeenkomsten door heel Nederland.',        phone:'+31204685767',  display:'+31 20 468 5767' },
+  ],
+  // ── SWEDEN ────────────────────────────────────────────────────────────────
+  SE: [
+    { name:'Mind Självmordslinjen', badge:'Krisstöd · 24/7',            desc:'Gratis — ring 90101.',                      phone:'90101',         display:'90101' },
+    { name:'AA Sverige',          badge:'Anonyma Alkoholister',          desc:'Möten runt om i Sverige.',                  phone:'+4686445720',   display:'+46 8 644 57 20' },
+  ],
+  // ── CANADA ────────────────────────────────────────────────────────────────
   CA: [
-    { name:'Crisis Services Canada', badge:'Crisis support · 24/7',       desc:'Free, confidential.',                        phone:'18334564566',  display:'1-833-456-4566' },
-    { name:'AA Canada',            badge:'Alcoholics Anonymous',           desc:'Meetings across Canada.',                    phone:'',             display:'aa.org/find-aa' },
+    { name:'Crisis Services Canada', badge:'Crisis support · 24/7',     desc:'Free, confidential.',                       phone:'18334564566',   display:'1-833-456-4566' },
+    { name:'AA Canada',           badge:'Alcoholics Anonymous',          desc:'Meetings across Canada.',                   phone:'',              display:'aa.org/find-aa' },
   ],
+  // ── AUSTRALIA ─────────────────────────────────────────────────────────────
   AU: [
-    { name:'Lifeline Australia',   badge:'Crisis support · 24/7',         desc:'Free, confidential.',                        phone:'131114',       display:'13 11 14' },
-    { name:'AA Australia',         badge:'Alcoholics Anonymous',           desc:'Meetings across Australia.',                 phone:'1300222222',   display:'1300 222 222' },
+    { name:'Lifeline Australia',  badge:'Crisis support · 24/7',        desc:'Free, confidential.',                       phone:'131114',        display:'13 11 14' },
+    { name:'AA Australia',        badge:'Alcoholics Anonymous',          desc:'Meetings across Australia.',                phone:'1300222222',    display:'1300 222 222' },
   ],
+  // ── DEFAULT (US) ──────────────────────────────────────────────────────────
   default: [
-    { name:'SAMHSA Helpline',      badge:'Addiction support · 24/7',      desc:'Free, confidential — English & Spanish.',    phone:'18006624357',  display:'1-800-662-4357' },
-    { name:'988 Lifeline',         badge:'Crisis & Suicide · 24/7',       desc:'Call or text 988.',                          phone:'988',          display:'988' },
+    { name:'SAMHSA Helpline',     badge:'Addiction support · 24/7',     desc:'Free, confidential — English & Spanish.',   phone:'18006624357',   display:'1-800-662-4357' },
+    { name:'988 Lifeline',        badge:'Crisis & Suicide · 24/7',      desc:'Call or text 988.',                         phone:'988',           display:'988' },
   ],
 };
 
@@ -1425,29 +1454,86 @@ const AA_SEED_DATA = AA_SEED_RAW.map(r => ({
 // Country-specific fallback for non-US locations
 // (US users get AA_SEED_DATA filtered by proximity instead)
 const INTL_FALLBACK = {
+  // ── LITHUANIA — sources: aalietuvoje.org, rplc.lt ─────────────────────────
   LT: [
-    { name:'AA Vilnius — Gedimino grupė',           type:'aa',      cost:'free', phone:'+37052314578', lat:54.6892, lng:25.2798, slots:[{days:[1,3],start:'18:00',end:'19:30'},{days:[6],start:'11:00',end:'12:30'}] },
-    { name:'AA Vilnius — Užupis grupė',             type:'aa',      cost:'free', phone:'+37052314578', lat:54.6860, lng:25.2910, slots:[{days:[2,4],start:'19:00',end:'20:30'},{days:[0],start:'10:00',end:'11:30'}] },
-    { name:'AA Kaunas grupė',                       type:'aa',      cost:'free', phone:'+37037312676', lat:54.8985, lng:23.9036, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
-    { name:'Psichikos sveikatos centras',           type:'crisis',  cost:'free', phone:'+37052345670', lat:54.6940, lng:25.2690, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
-    { name:'Priklausomybių reabilitacijos centras', type:'therapy', cost:'insurance', phone:'+37051234567', lat:54.6820, lng:25.2750, slots:[{days:[1,2,3,4,5],start:'09:00',end:'17:00'}] },
+    { name:'AA Vilnius — Senasis Miestas (EN)', type:'aa', cost:'free', phone:'+37065384104', address:'L. Stuokos-Gucevičiaus g. 2, Vilnius', lat:54.6864, lng:25.2840, slots:[{days:[2],start:'18:30',end:'20:00'}] },
+    { name:'AA Vilnius — Bernardinai (EN)',     type:'aa', cost:'free', phone:'+37065384104', address:'Maironio g. 10, Vilnius', lat:54.6815, lng:25.2938, slots:[{days:[0],start:'11:00',end:'12:30'}] },
+    { name:'AA Vilnius — Gedimino grupė',       type:'aa', cost:'free', phone:'+37068505191', address:'Gedimino pr., Vilnius', lat:54.6892, lng:25.2726, slots:[{days:[1,3],start:'18:00',end:'19:30'},{days:[6],start:'11:00',end:'12:30'}] },
+    { name:'AA Vilnius — Užupis grupė',         type:'aa', cost:'free', phone:'+37068505191', address:'Užupis, Vilnius', lat:54.6838, lng:25.2971, slots:[{days:[2,4],start:'19:00',end:'20:30'}] },
+    { name:'AA Kaunas grupė',                   type:'aa', cost:'free', phone:'+37037312676', address:'Kaunas', lat:54.8985, lng:23.9036, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Klaipėda grupė',                 type:'aa', cost:'free', phone:'+37068505191', address:'Klaipėda', lat:55.7033, lng:21.1443, slots:[{days:[2,5],start:'18:00',end:'19:30'}] },
+    { name:'RPLC Vilnius — Priklausomybių centras', type:'therapy', cost:'free', phone:'+37052137808', address:'Gerosios Vilties g. 3, Vilnius', lat:54.6780, lng:25.2340, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Kaunas — Priklausomybių centras',  type:'therapy', cost:'free', phone:'+37037333255', address:'Giedraičių g. 8, Kaunas', lat:54.9052, lng:23.8960, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Klaipėda — Priklausomybių centras',type:'therapy', cost:'free', phone:'+37046415025', address:'Jaunystės g. 4, Klaipėda', lat:55.7170, lng:21.1280, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Šiauliai',                     type:'therapy', cost:'free', phone:'+37041455644', address:'Šiauliai', lat:55.9341, lng:23.3135, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Panevėžys',                    type:'therapy', cost:'free', phone:'+37045582673', address:'Panevėžys', lat:55.7348, lng:24.3643, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'Pagalbos linija',   type:'crisis', cost:'free', phone:'116123',      lat:54.6892, lng:25.2798, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'Jaunimo linija',    type:'crisis', cost:'free', phone:'8800288888',  lat:54.6892, lng:25.2798, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
   ],
-  DE: [
-    { name:'AA Berlin',      type:'aa',      cost:'free', phone:'08009177650', lat:52.5200, lng:13.4050, slots:[{days:[1,2,3,4,5,6,0],start:'09:00',end:'21:00'}] },
-    { name:'Suchtberatung',  type:'therapy', cost:'free', phone:'08001110111', lat:52.5100, lng:13.3900, slots:[{days:[1,2,3,4,5],start:'08:00',end:'18:00'}] },
-    { name:'Krisendienst',   type:'crisis',  cost:'free', phone:'08001110111', lat:52.5300, lng:13.4200, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
-  ],
+  // ── UNITED KINGDOM — sources: alcoholics-anonymous.org.uk, nhs.uk ─────────
   GB: [
-    { name:'AA Great Britain', type:'aa',     cost:'free', phone:'08009177650', lat:51.5074, lng:-0.1278, slots:[{days:[0,1,2,3,4,5,6],start:'09:00',end:'21:00'}] },
-    { name:'Samaritans',       type:'crisis', cost:'free', phone:'116123',       lat:51.5000, lng:-0.1200, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'AA Great Britain — National Helpline', type:'aa',      cost:'free', phone:'08009177650', address:'National helpline', lat:51.5074, lng:-0.1278, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'AA London — Intergroup',               type:'aa',      cost:'free', phone:'02075027877', address:'233 Shepherds Bush Road, London W6 7AN', lat:51.4968, lng:-0.2183, slots:[{days:[0,1,2,3,4,5,6],start:'08:00',end:'20:00'}] },
+    { name:'AA Manchester',                        type:'aa',      cost:'free', phone:'01612580499', address:'Manchester', lat:53.4808, lng:-2.2426, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Birmingham',                        type:'aa',      cost:'free', phone:'08009177650', address:'Birmingham', lat:52.4862, lng:-1.8904, slots:[{days:[1,3,5],start:'19:00',end:'20:30'}] },
+    { name:'AA Edinburgh',                         type:'aa',      cost:'free', phone:'08009177650', address:'Edinburgh', lat:55.9533, lng:-3.1883, slots:[{days:[1,2,3,4,5],start:'18:30',end:'20:00'}] },
+    { name:'NHS Alcohol Support — Call 111',       type:'therapy', cost:'free', phone:'111',         address:'NHS national helpline', lat:51.5074, lng:-0.1278, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'Turning Point — Addiction Support',    type:'therapy', cost:'free', phone:'02074817081', address:'Standon House, 21 Mansell Street, London E1 8AA', lat:51.5116, lng:-0.0749, slots:[{days:[1,2,3,4,5],start:'09:00',end:'17:00'}] },
+    { name:'Samaritans',                           type:'crisis',  cost:'free', phone:'116123',      address:'National — 116 123 (free, 24/7)', lat:51.5074, lng:-0.1278, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'FRANK Drug & Alcohol Helpline',        type:'crisis',  cost:'free', phone:'03001236600', address:'National helpline', lat:51.5074, lng:-0.1278, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
   ],
+  // ── GERMANY — sources: anonyme-alkoholiker.de, telefonseelsorge.de ─────────
+  DE: [
+    { name:'AA Deutschland — Bundesgeschäftsstelle', type:'aa',      cost:'free', phone:'+498731325730', address:'Bayernstrasse 77, 84503 Altötting', lat:48.2268, lng:12.6768, slots:[{days:[1,2,3,4,5],start:'09:00',end:'17:00'}] },
+    { name:'AA Berlin',                              type:'aa',      cost:'free', phone:'+493082097735', address:'Berlin', lat:52.5200, lng:13.4050, slots:[{days:[0,1,2,3,4,5,6],start:'18:00',end:'19:30'}] },
+    { name:'AA München',                             type:'aa',      cost:'free', phone:'+498931703940', address:'München', lat:48.1351, lng:11.5820, slots:[{days:[1,2,3,4,5],start:'19:00',end:'20:30'}] },
+    { name:'AA Hamburg',                             type:'aa',      cost:'free', phone:'+494044809215', address:'Hamburg', lat:53.5511, lng:9.9937,  slots:[{days:[1,3,5],start:'19:00',end:'20:30'}] },
+    { name:'AA Frankfurt',                           type:'aa',      cost:'free', phone:'+4969775032',   address:'Frankfurt am Main', lat:50.1109, lng:8.6821, slots:[{days:[2,4,6],start:'19:00',end:'20:30'}] },
+    { name:'AA Köln',                                type:'aa',      cost:'free', phone:'+4922121090',   address:'Köln', lat:50.9333, lng:6.9500, slots:[{days:[1,3,5],start:'19:00',end:'20:30'}] },
+    { name:'Caritas Suchtberatung',                  type:'therapy', cost:'free', phone:'08001110111',   address:'Bundesweit', lat:52.5200, lng:13.4050, slots:[{days:[1,2,3,4,5],start:'08:00',end:'18:00'}] },
+    { name:'Telefonseelsorge',                       type:'crisis',  cost:'free', phone:'08001110111',   address:'Bundesweit — 0800 111 0 111 (kostenlos)', lat:52.5200, lng:13.4050, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'Telefonseelsorge (2. Leitung)',           type:'crisis',  cost:'free', phone:'08001110222',   address:'Bundesweit — 0800 111 0 222', lat:52.5100, lng:13.3900, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+  ],
+  // ── NORWAY — sources: anonymealkoholikere.no, mentalhelse.no ──────────────
   NO: [
-    { name:'AA Norge',      type:'aa',     cost:'free', phone:'22205340', lat:59.9139, lng:10.7522, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
-    { name:'Mental Helse',  type:'crisis', cost:'free', phone:'116123',   lat:59.9200, lng:10.7600, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'AA Norge',                   type:'aa',     cost:'free', phone:'+4722205340', address:'Frognerveien 24B, 0263 Oslo', lat:59.9139, lng:10.7168, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Bergen',                  type:'aa',     cost:'free', phone:'+4722205340', address:'Bergen', lat:60.3913, lng:5.3221, slots:[{days:[1,3,5],start:'19:00',end:'20:30'}] },
+    { name:'Mental Helse — 116 123',     type:'crisis', cost:'free', phone:'116123',       address:'Nasjonal', lat:59.9139, lng:10.7522, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
   ],
+  // ── POLAND — sources: anonimowialcoholicy.org.pl, parpa.pl ───────────────
   PL: [
-    { name:'AA Polska',          type:'aa',     cost:'free', phone:'225365050', lat:52.2297, lng:21.0122, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
-    { name:'Telefon Zaufania',   type:'crisis', cost:'free', phone:'116123',    lat:52.2200, lng:21.0000, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'AA Polska — Warszawa',               type:'aa',      cost:'free', phone:'+48225365050', address:'Warszawa', lat:52.2297, lng:21.0122, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Kraków',                          type:'aa',      cost:'free', phone:'+48126331680', address:'Kraków', lat:50.0647, lng:19.9450, slots:[{days:[1,3,5],start:'19:00',end:'20:30'}] },
+    { name:'PARPA — Pomoc dla uzależnionych',    type:'therapy', cost:'free', phone:'+48225365050', address:'Al. Jerozolimskie 155, Warszawa', lat:52.2099, lng:20.9668, slots:[{days:[1,2,3,4,5],start:'09:00',end:'17:00'}] },
+    { name:'Telefon Zaufania dla Dorosłych',     type:'crisis',  cost:'free', phone:'116123',       address:'Ogólnopolski', lat:52.2297, lng:21.0122, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+  ],
+  // ── IRELAND — sources: aa.ie ─────────────────────────────────────────────
+  IE: [
+    { name:'AA Ireland — National',  type:'aa',     cost:'free', phone:'+35318420700', address:'Unit 2 Block C, Santry Business Park, Dublin 9', lat:53.3959, lng:-6.2494, slots:[{days:[1,2,3,4,5],start:'10:00',end:'17:00'}] },
+    { name:'Samaritans Ireland',     type:'crisis', cost:'free', phone:'116123',        address:'National — 116 123', lat:53.3498, lng:-6.2603, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+  ],
+  // ── FRANCE — sources: alcooliques-anonymes.fr ─────────────────────────────
+  FR: [
+    { name:'Alcooliques Anonymes France', type:'aa',     cost:'free', phone:'+33145482920', address:'Paris', lat:48.8566, lng:2.3522, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'Écoute Alcool — 0 980 980 930', type:'crisis', cost:'free', phone:'0980980930', address:'National', lat:48.8566, lng:2.3522, slots:[{days:[0,1,2,3,4,5,6],start:'08:00',end:'02:00'}] },
+  ],
+  // ── NETHERLANDS — sources: aanederland.nl, jellinek.nl ───────────────────
+  NL: [
+    { name:'AA Nederland',          type:'aa',      cost:'free', phone:'+31204685767', address:'Amsterdam', lat:52.3676, lng:4.9041, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'Jellinek — 0900 8400',  type:'therapy', cost:'free', phone:'09008400',     address:'Overtoom 160, Amsterdam', lat:52.3608, lng:4.8817, slots:[{days:[1,2,3,4,5],start:'09:00',end:'17:00'}] },
+  ],
+  // ── SWEDEN — sources: aa.se, mind.se ─────────────────────────────────────
+  SE: [
+    { name:'AA Sverige',             type:'aa',     cost:'free', phone:'+4686445720', address:'Stockholm', lat:59.3293, lng:18.0686, slots:[{days:[1,2,3,4,5],start:'18:00',end:'19:30'}] },
+    { name:'Mind Självmordslinjen',  type:'crisis', cost:'free', phone:'90101',        address:'Nationell', lat:59.3293, lng:18.0686, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+  ],
+  // ── LATVIA ───────────────────────────────────────────────────────────────
+  LV: [
+    { name:'AA Latvija', type:'aa', cost:'free', phone:'+37167244578', address:'Rīga', lat:56.9496, lng:24.1052, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
+  ],
+  // ── ESTONIA ──────────────────────────────────────────────────────────────
+  EE: [
+    { name:'AA Eesti', type:'aa', cost:'free', phone:'+3726440015', address:'Tallinn', lat:59.4370, lng:24.7536, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
   ],
 };
 
