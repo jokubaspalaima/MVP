@@ -36,6 +36,19 @@
     Cache-Control = "public, max-age=604800"
 
 # Redirect all routes to index for SPA
+# Serve the static legal/info pages directly (before the SPA catch-all)
+[[redirects]]
+  from = "/privacy.html"
+  to = "/privacy.html"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms.html"
+  status = 200
+  force = false
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
