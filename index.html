@@ -1997,11 +1997,11 @@ const STRUGGLE_UI = {
     LS.set('struggles_seen', '1');
     const dest = this._dest();
     this.fromNearby = false; this.welcome = false;
-    // Offer the matching assessment only if exactly one testable struggle
-    // was chosen. On first launch we skip straight to the app rather than
-    // pushing an assessment on someone before they've even seen it.
+    // If exactly one testable struggle was chosen, run its assessment now —
+    // this is the natural moment, right after picking. Afterwards continue
+    // to wherever we were headed (the opening flow on first launch).
     const withTest = STATE.struggles.filter(k => STRUGGLES[k] && STRUGGLES[k].assess);
-    if(withTest.length === 1 && dest !== 's-open') {
+    if(withTest.length === 1) {
       ASSESS.afterExit = dest;
       ASSESS.open(STRUGGLES[withTest[0]].assess);
     } else if(dest === 's-nearby') {
