@@ -248,6 +248,18 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
   font-size:.78rem;font-weight:600;color:var(--dim);cursor:pointer;
   display:flex;align-items:center;justify-content:center}
 .scale-n.on{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+/* assessment answer options */
+.as-opt{width:100%;padding:15px 16px;border-radius:11px;font-size:.9rem;font-weight:500;
+  background:var(--card);border:1px solid var(--card-bd);color:var(--fg);cursor:pointer;
+  text-align:left;transition:border-color .15s,background .15s}
+.as-opt:active{background:var(--red-bg);border-color:var(--red-bd)}
+/* struggle picker options */
+.str-opt{width:100%;padding:17px 18px;border-radius:12px;font-size:1rem;font-weight:600;
+  background:var(--card);border:1px solid var(--card-bd);color:var(--fg);cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;transition:border-color .15s,background .15s}
+.str-opt.on{background:var(--red-bg);border-color:var(--red-bd);color:var(--red)}
+.str-check{opacity:0;font-weight:700}
+.str-opt.on .str-check{opacity:1}
 
 /* reasons */
 .chip-wrap{display:flex;flex-wrap:wrap;gap:8px;width:100%;max-width:340px;margin-bottom:18px}
@@ -374,6 +386,8 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
       <button class="btn btn-outline" id="home-meetings" onclick="APP.goNearby()"></button>
       <button class="btn btn-ghost"  id="home-reset"    onclick="APP.reset()"></button>
     </div>
+    <button id="home-personalize" onclick="APP.nav('s-struggles')"
+      style="background:none;border:none;color:var(--dim);font-size:.75rem;margin-top:22px;cursor:pointer;text-decoration:underline;text-underline-offset:3px"></button>
   </div>
 
   <!-- 7. DAY (phase 1 home) -->
@@ -490,6 +504,52 @@ body::after{content:'';position:fixed;inset:-50%;width:200%;height:200%;
     <p id="hl-anon" style="font-size:.72rem;color:var(--dim);text-align:center;width:100%;max-width:340px;margin-top:8px;line-height:1.6;white-space:pre-line"></p>
   </div>
 
+  <!-- 13. STRUGGLES — optional, skippable. Never gates emergency help. -->
+  <div class="screen scroll" id="s-struggles">
+    <button class="back-btn" onclick="APP.back()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span id="str-back-lbl"></span>
+    </button>
+    <div class="s-title" id="str-title" style="padding-top:4px"></div>
+    <div class="s-sub"   id="str-sub" style="margin-bottom:26px"></div>
+    <div id="str-options" style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px"></div>
+    <button class="btn btn-white"  id="str-save" onclick="STRUGGLE_UI.save()" style="margin-top:24px"></button>
+    <button class="btn btn-ghost"  id="str-skip" onclick="STRUGGLE_UI.skip()" style="margin-top:8px"></button>
+    <p id="str-assess-hint" style="font-size:.72rem;color:var(--dim);text-align:center;width:100%;max-width:340px;margin-top:16px;line-height:1.6"></p>
+  </div>
+
+  <!-- 14. ASSESSMENT — one generic screen renders any questionnaire
+       (AUDIT / DAST-10 / GA-20). Data-driven, so there is exactly one
+       code path to maintain. Framed as self-understanding, never a
+       diagnosis; every result ends by pointing at help. -->
+  <div class="screen scroll" id="s-assess">
+    <button class="back-btn" onclick="ASSESS.exit()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span id="as-back-lbl"></span>
+    </button>
+    <!-- intro -->
+    <div id="as-intro" style="width:100%;max-width:360px">
+      <div class="s-title" id="as-intro-title" style="padding-top:4px"></div>
+      <div class="s-sub"   id="as-intro-sub" style="margin-bottom:24px"></div>
+      <button class="btn btn-white" id="as-start" onclick="ASSESS.begin()"></button>
+      <p id="as-intro-note" style="font-size:.72rem;color:var(--dim);text-align:center;margin-top:16px;line-height:1.6"></p>
+    </div>
+    <!-- question -->
+    <div id="as-question" style="width:100%;max-width:360px;display:none">
+      <div id="as-progress" style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:14px"></div>
+      <div class="ci-q" id="as-q" style="margin-bottom:20px"></div>
+      <div id="as-options" style="display:flex;flex-direction:column;gap:9px"></div>
+    </div>
+    <!-- result -->
+    <div id="as-result" style="width:100%;max-width:360px;display:none">
+      <div class="s-title" id="as-result-title" style="padding-top:4px"></div>
+      <div id="as-result-body" style="font-size:.95rem;color:var(--mid);line-height:1.6;margin:14px 0 24px"></div>
+      <button class="btn btn-white"   id="as-find"  onclick="APP.goNearby()" style="margin-bottom:8px"></button>
+      <button class="btn btn-ghost"   id="as-done"  onclick="ASSESS.exit()"></button>
+      <p id="as-disclaimer" style="font-size:.68rem;color:var(--dim);text-align:center;margin-top:18px;line-height:1.6"></p>
+    </div>
+  </div>
+
 </div><!-- #app -->
 
 <nav id="nav">
@@ -541,7 +601,9 @@ const LANGS = {
     callHelpline:'📞  Call a helpline',back:'Back',timerStart:'Start',timerMinutes:'minutes',
     waitMorning:'🌙  Wait until morning',timerDone:'You\'re still holding on.\nToday is still yours.',
     wait30:'⏱  Wait another 30 min',describe:'Describe what happened',goBack:'Go back',
-    nearbyTitle:'AA Meetings near you',nearbyTitlePanic:'Help near you right now',
+    nearbyTitle:'Meetings near you',nearbyTitleFor:'{x} near you',nearbyTitlePanic:'Help near you right now',
+    lfSupport:'Support',lf_alcohol:'AA meetings',lf_drugs:'NA meetings',lf_gambling:'GA meetings',
+    findAlcohol:'🔍 Find AA meetings',findDrugs:'🔍 Find NA meetings',findGambling:'🔍 Find GA meetings',
     nearbySub:'You are not alone.',nearbySubPanic:'Happening now first — all meetings below.',
     allowLoc:'Allow location access\nto find help near you?',allow:'📍  Allow',
     newMorning:'New morning',findMeetings:'📍  Find a meeting',homeGreeting:'You chose\ntoday.',
@@ -574,10 +636,18 @@ const LANGS = {
     callAlso:'You can also call',callNowLbl:'Call now — no waiting',
     emptyContacts:'No saved contacts yet.\nAdd someone you can call.',
     toastLocked:'Unlocks after 5 days',toastFill:'Enter name and phone',
-    typeAA:'AA Meeting',typeTherapy:'Therapy / Counselor',typeCrisis:'Crisis Center',
+    typeAA:'AA Meeting',typeNA:'NA Meeting',typeGA:'GA Meeting',typeTherapy:'Therapy / Counselor',typeCrisis:'Crisis Center',
     typeRecovery:'Recovery Center',typeHelpline:'Helpline',costFree:'Free',costIns:'Insurance accepted',tmrw:'Tomorrow',daySfx:'days',
     dayTitle:'not2day.',daySub:'Tomorrow you decide again.',dayStruggle:'🔴  I\'m struggling',
     panicWhy:'Why you chose today',
+    callToConfirm:'Call to confirm times',otherMeetings:'Other meetings nearby',daily:'Daily',
+    personalize:'Personalize my help',
+    strTitle:'What are you working through?',strSub:'Pick what fits. This stays on your device and only shapes what help we show you — you can skip it.',
+    strAlcohol:'Alcohol',strDrugs:'Drugs',strGambling:'Gambling',strOther:'Something else',
+    strSave:'Save',strSkip:'Skip for now',strAssessHint:'You can change this anytime in settings.',
+    asStart:'Start',asQuestion:'Question',asPrivate:'Private and stored only on your device.',asFindHelp:'Find help near me',asDone:'Done',
+    asDisclaimer:'This is a screening tool, not a diagnosis. If you\'re worried, talk to a doctor or counselor.',
+    dSun:'Sun',dMon:'Mon',dTue:'Tue',dWed:'Wed',dThu:'Thu',dFri:'Fri',dSat:'Sat',
     relSlip:'A slip. Not the end.',relBuilt1:'You still built 1 day.',relBuiltN:'You still built {n} days.',
     relSub:'Those days don\'t disappear. They\'re yours.',relQ:'What happened? (optional)',
     relT1:'Stress',relT2:'Loneliness',relT3:'Social situation',relT4:'At home',relT5:'Other',
@@ -591,7 +661,9 @@ const LANGS = {
     callHelpline:'📞  Skambinti pagalbos linijai',back:'Atgal',timerStart:'Pradėti',timerMinutes:'minutės',
     waitMorning:'🌙  Palaukti iki ryto',timerDone:'Tu vis dar laikaisi.\nŠiandien dar tavo.',
     wait30:'⏱  Palaukti dar 30 min',describe:'Aprašyti, kas įvyko',goBack:'Grįžti',
-    nearbyTitle:'AA susirinkimai šalia tavęs',nearbyTitlePanic:'Pagalba dabar šalia tavęs',
+    nearbyTitle:'Susirinkimai šalia tavęs',nearbyTitleFor:'{x} šalia tavęs',nearbyTitlePanic:'Pagalba dabar šalia tavęs',
+    lfSupport:'Pagalba',lf_alcohol:'AA susirinkimai',lf_drugs:'NA susirinkimai',lf_gambling:'AL susirinkimai',
+    findAlcohol:'🔍 Rasti AA susitikimus',findDrugs:'🔍 Rasti NA susitikimus',findGambling:'🔍 Rasti AL susitikimus',
     nearbySub:'Tu ne vienas šią akimirką.',nearbySubPanic:'Pirmiausia tai, kas vyksta dabar.',
     allowLoc:'Leisti naudoti tavo vietą,\nkad rastume pagalbą šalia?',allow:'📍  Leisti',
     newMorning:'Naujas rytas',findMeetings:'📍  Rasti susirinkimą',homeGreeting:'Tu pasirinkai\nšiandien.',
@@ -624,10 +696,18 @@ const LANGS = {
     callAlso:'Taip pat galima skambinti',callNowLbl:'Skambink dabar — nereikia laukti',
     emptyContacts:'Dar nėra išsaugotų žmonių.\nPridėk žmogų, kuriam gali paskambinti.',
     toastLocked:'Atsirakina po 5 dienų',toastFill:'Įvesk vardą ir telefoną',
-    typeAA:'AA susitikimas',typeTherapy:'Terapija / Psichologas',typeCrisis:'Pagalbos centras',
+    typeAA:'AA susitikimas',typeNA:'NA susitikimas',typeGA:'AL susitikimas',typeTherapy:'Terapija / Psichologas',typeCrisis:'Pagalbos centras',
     typeRecovery:'Reabilitacijos centras',typeHelpline:'Pagalbos linija',costFree:'Nemokama',costIns:'Pagal draudimą',tmrw:'Rytoj',daySfx:'d.',
     dayTitle:'not2day.',daySub:'Rytoj vėl spręsi.',dayStruggle:'🔴  Man dabar sunku',
     panicWhy:'Kodėl pasirinkai šiandien',
+    callToConfirm:'Paskambink laikui patikslinti',otherMeetings:'Kiti susirinkimai netoliese',daily:'Kasdien',
+    personalize:'Pritaikyti pagalbą man',
+    strTitle:'Su kuo tu kovoji?',strSub:'Pažymėk, kas tinka. Tai lieka tavo įrenginyje ir tik pritaiko rodomą pagalbą — gali praleisti.',
+    strAlcohol:'Alkoholis',strDrugs:'Narkotikai',strGambling:'Lošimas',strOther:'Kita',
+    strSave:'Išsaugoti',strSkip:'Praleisti',strAssessHint:'Gali pakeisti bet kada nustatymuose.',
+    asStart:'Pradėti',asQuestion:'Klausimas',asPrivate:'Privatu, saugoma tik tavo įrenginyje.',asFindHelp:'Rasti pagalbą šalia',asDone:'Baigta',
+    asDisclaimer:'Tai atrankos priemonė, ne diagnozė. Jei nerimauji, pasitark su gydytoju ar specialistu.',
+    dSun:'Sk',dMon:'Pr',dTue:'An',dWed:'Tr',dThu:'Kt',dFri:'Pn',dSat:'Št',
     relSlip:'Suklupimas. Ne pabaiga.',relBuilt1:'Tu vis tiek sukūrei 1 dieną.',relBuiltN:'Tu vis tiek sukūrei {n} d.',
     relSub:'Tos dienos niekur nedingsta. Jos tavo.',relQ:'Kas nutiko? (nebūtina)',
     relT1:'Stresas',relT2:'Vienatvė',relT3:'Kompanija',relT4:'Namuose',relT5:'Kita',
@@ -641,7 +721,9 @@ const LANGS = {
     callHelpline:'📞  Hilfstelefon anrufen',back:'Zurück',timerStart:'Starten',timerMinutes:'Minuten',
     waitMorning:'🌙  Bis zum Morgen warten',timerDone:'Du hältst durch.\nHeute gehört dir noch.',
     wait30:'⏱  Noch 30 Min. warten',describe:'Beschreibe, was passiert ist',goBack:'Zurück',
-    nearbyTitle:'AA Treffen in deiner Nähe',nearbyTitlePanic:'Hilfe in deiner Nähe jetzt',
+    nearbyTitle:'Treffen in deiner Nähe',nearbyTitleFor:'{x} in deiner Nähe',nearbyTitlePanic:'Hilfe in deiner Nähe jetzt',
+    lfSupport:'Unterstützung',lf_alcohol:'AA-Treffen',lf_drugs:'NA-Treffen',lf_gambling:'GA-Treffen',
+    findAlcohol:'🔍 AA-Treffen finden',findDrugs:'🔍 NA-Treffen finden',findGambling:'🔍 GA-Treffen finden',
     nearbySub:'Du bist nicht allein.',nearbySubPanic:'Jetzt Laufendes zuerst — alle unten.',
     allowLoc:'Standortzugriff erlauben,\num Hilfe in der Nähe zu finden?',allow:'📍  Erlauben',
     newMorning:'Neuer Morgen',findMeetings:'📍  Treffen finden',homeGreeting:'Du hast dich\nheute entschieden.',
@@ -674,10 +756,18 @@ const LANGS = {
     callAlso:'Du kannst auch anrufen',callNowLbl:'Jetzt anrufen — kein Warten',
     emptyContacts:'Noch keine Kontakte.\nFüge jemanden hinzu, den du anrufen kannst.',
     toastLocked:'Wird nach 5 Tagen freigeschaltet',toastFill:'Name und Telefon eingeben',
-    typeAA:'AA-Treffen',typeTherapy:'Therapie / Berater',typeCrisis:'Krisenzentrum',
+    typeAA:'AA-Treffen',typeNA:'NA-Treffen',typeGA:'GA-Treffen',typeTherapy:'Therapie / Berater',typeCrisis:'Krisenzentrum',
     typeRecovery:'Rehabilitationszentrum',typeHelpline:'Hilfstelefon',costFree:'Kostenlos',costIns:'Krankenversicherung',tmrw:'Morgen',daySfx:'Tage',
     dayTitle:'not2day.',daySub:'Morgen entscheidest du wieder.',dayStruggle:'🔴  Ich kämpfe gerade',
     panicWhy:'Warum du heute gewählt hast',
+    callToConfirm:'Zeiten telefonisch bestätigen',otherMeetings:'Weitere Treffen in der Nähe',daily:'Täglich',
+    personalize:'Hilfe personalisieren',
+    strTitle:'Womit kämpfst du?',strSub:'Wähle, was passt. Bleibt auf deinem Gerät und beeinflusst nur die angezeigte Hilfe — du kannst es überspringen.',
+    strAlcohol:'Alkohol',strDrugs:'Drogen',strGambling:'Glücksspiel',strOther:'Etwas anderes',
+    strSave:'Speichern',strSkip:'Überspringen',strAssessHint:'Du kannst das jederzeit in den Einstellungen ändern.',
+    asStart:'Starten',asQuestion:'Frage',asPrivate:'Privat, nur auf deinem Gerät gespeichert.',asFindHelp:'Hilfe in der Nähe finden',asDone:'Fertig',
+    asDisclaimer:'Dies ist ein Screening, keine Diagnose. Bei Sorgen sprich mit einem Arzt oder Berater.',
+    dSun:'So',dMon:'Mo',dTue:'Di',dWed:'Mi',dThu:'Do',dFri:'Fr',dSat:'Sa',
     relSlip:'Ein Ausrutscher. Nicht das Ende.',relBuilt1:'Du hast trotzdem 1 Tag geschafft.',relBuiltN:'Du hast trotzdem {n} Tage geschafft.',
     relSub:'Diese Tage verschwinden nicht. Sie gehören dir.',relQ:'Was ist passiert? (optional)',
     relT1:'Stress',relT2:'Einsamkeit',relT3:'Gesellschaft',relT4:'Zuhause',relT5:'Anderes',
@@ -691,7 +781,9 @@ const LANGS = {
     callHelpline:'📞  Ring hjelpetelefon',back:'Tilbake',timerStart:'Start',timerMinutes:'minutter',
     waitMorning:'🌙  Vent til morgenen',timerDone:'Du holder ut.\nI dag er fortsatt din.',
     wait30:'⏱  Vent 30 min til',describe:'Beskriv hva som skjedde',goBack:'Gå tilbake',
-    nearbyTitle:'AA møter nær deg',nearbyTitlePanic:'Hjelp nær deg akkurat nå',
+    nearbyTitle:'Møter nær deg',nearbyTitleFor:'{x} nær deg',nearbyTitlePanic:'Hjelp nær deg akkurat nå',
+    lfSupport:'Støtte',lf_alcohol:'AA-møter',lf_drugs:'NA-møter',lf_gambling:'GA-møter',
+    findAlcohol:'🔍 Finn AA-møter',findDrugs:'🔍 Finn NA-møter',findGambling:'🔍 Finn GA-møter',
     nearbySub:'Du er ikke alene.',nearbySubPanic:'Skjer nå først — alle møter under.',
     allowLoc:'Tillat stedstilgang\nfor å finne hjelp i nærheten?',allow:'📍  Tillat',
     newMorning:'Ny morgen',findMeetings:'📍  Finn et møte',homeGreeting:'Du valgte\ni dag.',
@@ -724,10 +816,18 @@ const LANGS = {
     callAlso:'Du kan også ringe',callNowLbl:'Ring nå — ingen ventetid',
     emptyContacts:'Ingen lagrede kontakter ennå.\nLegg til noen du kan ringe.',
     toastLocked:'Låses opp etter 5 dager',toastFill:'Skriv inn navn og telefon',
-    typeAA:'AA-møte',typeTherapy:'Terapi / Rådgiver',typeCrisis:'Krisesenter',
+    typeAA:'AA-møte',typeNA:'NA-møte',typeGA:'GA-møte',typeTherapy:'Terapi / Rådgiver',typeCrisis:'Krisesenter',
     typeRecovery:'Rehabiliteringssenter',typeHelpline:'Hjelpetelefon',costFree:'Gratis',costIns:'Forsikring',tmrw:'I morgen',daySfx:'dager',
     dayTitle:'not2day.',daySub:'I morgen bestemmer du igjen.',dayStruggle:'🔴  Jeg sliter',
     panicWhy:'Hvorfor du valgte i dag',
+    callToConfirm:'Ring for å bekrefte tider',otherMeetings:'Andre møter i nærheten',daily:'Daglig',
+    personalize:'Tilpass hjelpen min',
+    strTitle:'Hva sliter du med?',strSub:'Velg det som passer. Dette blir på enheten din og former bare hjelpen vi viser — du kan hoppe over.',
+    strAlcohol:'Alkohol',strDrugs:'Rusmidler',strGambling:'Pengespill',strOther:'Noe annet',
+    strSave:'Lagre',strSkip:'Hopp over',strAssessHint:'Du kan endre dette når som helst i innstillinger.',
+    asStart:'Start',asQuestion:'Spørsmål',asPrivate:'Privat, lagret kun på enheten din.',asFindHelp:'Finn hjelp i nærheten',asDone:'Ferdig',
+    asDisclaimer:'Dette er et kartleggingsverktøy, ikke en diagnose. Er du bekymret, snakk med lege eller rådgiver.',
+    dSun:'Søn',dMon:'Man',dTue:'Tir',dWed:'Ons',dThu:'Tor',dFri:'Fre',dSat:'Lør',
     relSlip:'Et feiltrinn. Ikke slutten.',relBuilt1:'Du bygde likevel 1 dag.',relBuiltN:'Du bygde likevel {n} dager.',
     relSub:'De dagene forsvinner ikke. De er dine.',relQ:'Hva skjedde? (valgfritt)',
     relT1:'Stress',relT2:'Ensomhet',relT3:'Sosialt',relT4:'Hjemme',relT5:'Annet',
@@ -741,7 +841,9 @@ const LANGS = {
     callHelpline:'📞  Zadzwoń na telefon zaufania',back:'Wstecz',timerStart:'Zacznij',timerMinutes:'minut',
     waitMorning:'🌙  Poczekaj do rana',timerDone:'Nadal dajesz radę.\nTen dzień jest nadal twój.',
     wait30:'⏱  Poczekaj jeszcze 30 min',describe:'Opisz co się wydarzyło',goBack:'Wróć',
-    nearbyTitle:'Spotkania AA w pobliżu',nearbyTitlePanic:'Pomoc w pobliżu teraz',
+    nearbyTitle:'Spotkania w pobliżu',nearbyTitleFor:'{x} w pobliżu',nearbyTitlePanic:'Pomoc w pobliżu teraz',
+    lfSupport:'Wsparcie',lf_alcohol:'Spotkania AA',lf_drugs:'Spotkania NA',lf_gambling:'Spotkania AH',
+    findAlcohol:'🔍 Znajdź spotkania AA',findDrugs:'🔍 Znajdź spotkania NA',findGambling:'🔍 Znajdź spotkania AH',
     nearbySub:'Nie jesteś sam/a.',nearbySubPanic:'Najpierw to, co teraz — reszta niżej.',
     allowLoc:'Zezwól na dostęp do lokalizacji,\naby znaleźć pomoc w pobliżu?',allow:'📍  Zezwól',
     newMorning:'Nowy poranek',findMeetings:'📍  Znajdź spotkanie',homeGreeting:'Wybrałeś/aś\ndziś.',
@@ -774,10 +876,18 @@ const LANGS = {
     callAlso:'Możesz też zadzwonić',callNowLbl:'Zadzwoń teraz — bez czekania',
     emptyContacts:'Brak zapisanych kontaktów.\nDodaj kogoś, do kogo możesz zadzwonić.',
     toastLocked:'Odblokowanie po 5 dniach',toastFill:'Wpisz imię i telefon',
-    typeAA:'Spotkanie AA',typeTherapy:'Terapia / Doradca',typeCrisis:'Centrum Kryzysowe',
+    typeAA:'Spotkanie AA',typeNA:'Spotkanie NA',typeGA:'Spotkanie AH',typeTherapy:'Terapia / Doradca',typeCrisis:'Centrum Kryzysowe',
     typeRecovery:'Centrum Rehabilitacji',typeHelpline:'Telefon zaufania',costFree:'Bezpłatne',costIns:'Ubezpieczenie',tmrw:'Jutro',daySfx:'dni',
     dayTitle:'not2day.',daySub:'Jutro zdecydujesz ponownie.',dayStruggle:'🔴  Walczę',
     panicWhy:'Dlaczego wybrałeś dzisiaj',
+    callToConfirm:'Zadzwoń, aby potwierdzić godziny',otherMeetings:'Inne spotkania w pobliżu',daily:'Codziennie',
+    personalize:'Dostosuj pomoc',
+    strTitle:'Z czym się zmagasz?',strSub:'Wybierz, co pasuje. Zostaje na Twoim urządzeniu i wpływa tylko na pokazywaną pomoc — możesz pominąć.',
+    strAlcohol:'Alkohol',strDrugs:'Narkotyki',strGambling:'Hazard',strOther:'Coś innego',
+    strSave:'Zapisz',strSkip:'Pomiń',strAssessHint:'Możesz to zmienić w każdej chwili w ustawieniach.',
+    asStart:'Zacznij',asQuestion:'Pytanie',asPrivate:'Prywatne, przechowywane tylko na Twoim urządzeniu.',asFindHelp:'Znajdź pomoc w pobliżu',asDone:'Gotowe',
+    asDisclaimer:'To narzędzie przesiewowe, nie diagnoza. Jeśli się martwisz, porozmawiaj z lekarzem lub doradcą.',
+    dSun:'Nd',dMon:'Pn',dTue:'Wt',dWed:'Śr',dThu:'Cz',dFri:'Pt',dSat:'So',
     relSlip:'Potknięcie. Nie koniec.',relBuilt1:'Mimo to zbudowałeś 1 dzień.',relBuiltN:'Mimo to zbudowałeś {n} dni.',
     relSub:'Te dni nie znikają. Są twoje.',relQ:'Co się stało? (opcjonalnie)',
     relT1:'Stres',relT2:'Samotność',relT3:'Towarzystwo',relT4:'W domu',relT5:'Inne',
@@ -872,6 +982,7 @@ function renderAllText() {
   setText('home-struggle', t('struggle'));
   setText('home-meetings', t('findMeetings'));
   setText('home-reset',    t('newMorning'));
+  setText('home-personalize', t('personalize'));
   // day (phase1)
   setText('day-title',     t('dayTitle'));
   setText('day-sub',       t('daySub'));
@@ -961,7 +1072,28 @@ const STATE = {
   contacts: LS.json('contacts', []),
   reasons:  LS.json('reasons', []),
   sessions: LS.json('sessions', []),
+  struggles: LS.json('struggles', []),   // e.g. ['alcohol','gambling'] — [] = show everything
 };
+
+// What a person is working through → which fellowship's meetings to surface.
+// The panic button never reads this; it only shapes "Find help nearby".
+// Empty struggles = show all fellowships (nothing hidden, ever).
+const STRUGGLES = {
+  alcohol:  { fellowship:'aa', assess:'audit' },
+  drugs:    { fellowship:'na', assess:'dast'  },
+  gambling: { fellowship:'ga', assess:'gaq'   },
+  other:    { fellowship:'all', assess:null   },
+};
+
+// Which fellowships to show, given the user's struggles.
+// Always includes 'all' (treatment + crisis apply to everyone).
+function activeFellowships() {
+  const s = STATE.struggles || [];
+  if(!s.length) return null;              // null = no filter, show everything
+  const set = new Set(['all']);
+  s.forEach(k => { if(STRUGGLES[k]) set.add(STRUGGLES[k].fellowship); });
+  return set;
+}
 
 // ═══════════════════════════════════════════════════
 //  SOBRIETY SESSIONS
@@ -1138,8 +1270,20 @@ const APP = {
     }, 260);
   },
   goHome() { this.nav('s-home'); },
+  // Panic ALWAYS goes straight to help — never interrupted by the picker.
   goNearbyPanic() { NEARBY.panicMode = true;  this.go('s-nearby'); },
-  goNearby()      { NEARBY.panicMode = false; this.go('s-nearby'); },
+  // Non-panic: if the person has never set their struggles, show the
+  // optional picker first (once). After that, straight to meetings.
+  // Skipping the picker sets a flag so they're never nagged again.
+  goNearby() {
+    NEARBY.panicMode = false;
+    if(!LS.get('struggles_seen') && !(STATE.struggles||[]).length) {
+      STRUGGLE_UI.fromNearby = true;
+      this.nav('s-struggles');
+      return;
+    }
+    this.go('s-nearby');
+  },
   reset() {
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active','exit'));
     document.getElementById('s-open').classList.add('active');
@@ -1163,6 +1307,7 @@ const APP = {
     if(id==='s-checkin')  CI.reset();
     if(id==='s-nearby')   NEARBY.resetUI();
     if(id==='s-helplines')renderHelplines();
+    if(id==='s-struggles')STRUGGLE_UI.render();
     ADMIN.apply();
   },
 };
@@ -1571,6 +1716,242 @@ const REFLECTION = {
 };
 
 // ═══════════════════════════════════════════════════
+//  SELF-ASSESSMENTS
+//  Three validated, public-domain screening instruments, verbatim:
+//   • AUDIT   (WHO)                — alcohol, 10 Q, score 0-40
+//   • DAST-10 (Skinner, 1982)      — drugs,   10 Q, score 0-10
+//   • GA-20   (Gamblers Anonymous) — gambling,20 Q, score 0-20
+//  These are SCREENING tools, not diagnoses. Every result frames
+//  toward help. Results are stored locally only (never sent anywhere).
+//  Questions are kept in English (the instruments' validated wording);
+//  UI chrome is translated. Localised question text can be added later
+//  once wording is verified per language.
+// ═══════════════════════════════════════════════════
+const SCALE_AUDIT_FREQ = [
+  ['Never',0],['Monthly or less',1],['2–4 times a month',2],['2–3 times a week',3],['4+ times a week',4]
+];
+const SCALE_AUDIT_HOWMANY = [
+  ['1 or 2',0],['3 or 4',1],['5 or 6',2],['7 to 9',3],['10 or more',4]
+];
+const SCALE_AUDIT_FREQ2 = [
+  ['Never',0],['Less than monthly',1],['Monthly',2],['Weekly',3],['Daily or almost daily',4]
+];
+const SCALE_AUDIT_YNP = [
+  ['No',0],['Yes, but not in the last year',2],['Yes, during the last year',4]
+];
+const SCALE_YESNO = [['Yes',1],['No',0]];
+const SCALE_NOYES = [['Yes',0],['No',1]];   // reverse-scored (DAST Q3)
+
+const ASSESSMENTS = {
+  audit: {
+    title: 'Alcohol check-in',
+    intro: 'Ten questions about your drinking over the past year, from the World Health Organization. There are no wrong answers — this is just to help you see where things are.',
+    scale: null, // per-question
+    questions: [
+      { q:'How often do you have a drink containing alcohol?', s:SCALE_AUDIT_FREQ },
+      { q:'How many drinks containing alcohol do you have on a typical day when you are drinking?', s:SCALE_AUDIT_HOWMANY },
+      { q:'How often do you have six or more drinks on one occasion?', s:SCALE_AUDIT_FREQ2 },
+      { q:'How often during the last year have you found that you were not able to stop drinking once you had started?', s:SCALE_AUDIT_FREQ2 },
+      { q:'How often during the last year have you failed to do what was normally expected of you because of drinking?', s:SCALE_AUDIT_FREQ2 },
+      { q:'How often during the last year have you needed a first drink in the morning to get yourself going after a heavy drinking session?', s:SCALE_AUDIT_FREQ2 },
+      { q:'How often during the last year have you had a feeling of guilt or remorse after drinking?', s:SCALE_AUDIT_FREQ2 },
+      { q:'How often during the last year have you been unable to remember what happened the night before because you had been drinking?', s:SCALE_AUDIT_FREQ2 },
+      { q:'Have you or someone else been injured as a result of your drinking?', s:SCALE_AUDIT_YNP },
+      { q:'Has a relative, friend, doctor, or other health worker been concerned about your drinking or suggested you cut down?', s:SCALE_AUDIT_YNP },
+    ],
+    bands: [
+      { max:7,  title:'Lower risk',        body:'The AUDIT suggests your drinking is currently in a lower-risk range — but this is a screening tool, and only you can decide what your relationship with alcohol really is. If you\u2019re here because something feels off, trust that. You know yourself best.' },
+      { max:14, title:'Worth paying attention', body:'The AUDIT points to drinking that may be affecting your life in ways worth taking seriously — though a screening score is a signal, not the whole story, and only you can decide what it means for you. This is exactly the moment support helps most, before things get harder.' },
+      { max:40, title:'Strong signs of dependence', body:'The AUDIT points to strong signs that alcohol has a real hold right now. A screening tool can\u2019t diagnose you and only you can decide what\u2019s true — but scores like this are why people reach out, and recovery from exactly this is possible. You don\u2019t have to do it alone.' },
+    ],
+  },
+  dast: {
+    title: 'Drug use check-in',
+    intro: 'Ten yes-or-no questions about drug use over the past year (not counting alcohol), from a standard screening tool. Answer honestly — it\u2019s only for you.',
+    questions: [
+      { q:'Have you used drugs other than those required for medical reasons?', s:SCALE_YESNO },
+      { q:'Do you use more than one drug at a time?', s:SCALE_YESNO },
+      { q:'Are you always able to stop using drugs when you want to?', s:SCALE_NOYES },
+      { q:'Have you ever had blackouts or flashbacks as a result of drug use?', s:SCALE_YESNO },
+      { q:'Do you ever feel bad or guilty about your drug use?', s:SCALE_YESNO },
+      { q:'Does your spouse (or parents) ever complain about your involvement with drugs?', s:SCALE_YESNO },
+      { q:'Have you neglected your family because of your use of drugs?', s:SCALE_YESNO },
+      { q:'Have you engaged in illegal activities in order to obtain drugs?', s:SCALE_YESNO },
+      { q:'Have you ever experienced withdrawal symptoms (felt sick) when you stopped taking drugs?', s:SCALE_YESNO },
+      { q:'Have you had medical problems as a result of your drug use (e.g. memory loss, hepatitis, convulsions, bleeding)?', s:SCALE_YESNO },
+    ],
+    bands: [
+      { max:0,  title:'No problems reported', body:'The DAST-10 doesn\u2019t point to drug-related problems right now. It\u2019s only a screening tool, though, and only you can decide what your situation really is — so if you\u2019re here anyway, that instinct matters. Keep listening to it.' },
+      { max:2,  title:'Low level',           body:'The DAST-10 suggests a low level of drug-related risk. A screening score is a signal, not a verdict, and only you can decide what it means — but now is a good time to pay attention, before patterns settle in.' },
+      { max:5,  title:'Moderate level',      body:'The DAST-10 points to a moderate level of drug-related problems. It can\u2019t diagnose you and only you can decide what\u2019s true for you — but talking to someone who understands could make a real difference right now.' },
+      { max:10, title:'Substantial to severe', body:'The DAST-10 points to drugs causing substantial problems. A screening tool can\u2019t diagnose you and only you can decide what\u2019s true — but that\u2019s not who you are, it\u2019s where you are right now, and it can change. Reaching out is the first step.' },
+    ],
+  },
+  gaq: {
+    title: 'Gambling check-in',
+    intro: 'Twenty yes-or-no questions used by Gamblers Anonymous. Be truthful with yourself — think in terms of yes or no.',
+    questions: [
+      'Did you ever lose time from work or school due to gambling?',
+      'Has gambling ever made your home life unhappy?',
+      'Did gambling affect your reputation?',
+      'Have you ever felt remorse after gambling?',
+      'Did you ever gamble to get money with which to pay debts or otherwise solve financial difficulties?',
+      'Did gambling cause a decrease in your ambition or efficiency?',
+      'After losing did you feel you must return as soon as possible and win back your losses?',
+      'After a win did you have a strong urge to return and win more?',
+      'Did you often gamble until your last dollar was gone?',
+      'Did you ever borrow to finance your gambling?',
+      'Have you ever sold anything to finance gambling?',
+      'Were you reluctant to use "gambling money" for normal expenditures?',
+      'Did gambling make you careless of the welfare of yourself or your family?',
+      'Did you ever gamble longer than you had planned?',
+      'Have you ever gambled to escape worry, trouble, boredom or loneliness?',
+      'Have you ever committed, or considered committing, an illegal act to finance gambling?',
+      'Did gambling cause you to have difficulty in sleeping?',
+      'Do arguments, disappointments or frustrations create within you an urge to gamble?',
+      'Did you ever have an urge to celebrate any good fortune by a few hours of gambling?',
+      'Have you ever considered self-destruction or suicide as a result of your gambling?',
+    ].map(q => ({ q, s:SCALE_YESNO })),
+    bands: [
+      { max:6,  title:'Fewer signs',        body:'You answered yes to fewer than seven. Gamblers Anonymous says most compulsive gamblers answer yes to at least seven of these questions — but only you can decide whether you\u2019re a compulsive gambler. A lower number doesn\u2019t mean everything is fine, and you know your own situation best.' },
+      { max:20, title:'Worth taking seriously', body:'You answered yes to seven or more. Gamblers Anonymous says most compulsive gamblers answer yes to at least seven — but only you can decide whether you\u2019re a compulsive gambler. If this rings true, you don\u2019t have to face it alone; people who\u2019ve been exactly here are ready to help.' },
+    ],
+  },
+};
+
+const ASSESS = {
+  key: null, i: 0, score: 0,
+
+  // Entry: show the intro for a given assessment key.
+  open(key) {
+    if(!ASSESSMENTS[key]) return;
+    this.key = key; this.i = 0; this.score = 0;
+    const a = ASSESSMENTS[key];
+    setText('as-intro-title', a.title);
+    setText('as-intro-sub',   a.intro);
+    setText('as-start',       t('asStart'));
+    setText('as-intro-note',  t('asPrivate'));
+    setText('as-back-lbl',    t('back'));
+    document.getElementById('as-intro').style.display    = '';
+    document.getElementById('as-question').style.display = 'none';
+    document.getElementById('as-result').style.display   = 'none';
+    APP.go('s-assess');
+  },
+
+  begin() {
+    this.i = 0; this.score = 0;
+    document.getElementById('as-intro').style.display    = 'none';
+    document.getElementById('as-result').style.display   = 'none';
+    document.getElementById('as-question').style.display = '';
+    this.renderQuestion();
+  },
+
+  renderQuestion() {
+    const a = ASSESSMENTS[this.key];
+    const item = a.questions[this.i];
+    setText('as-progress', `${t('asQuestion')} ${this.i+1} / ${a.questions.length}`);
+    setText('as-q', item.q);
+    document.getElementById('as-options').innerHTML = item.s.map((opt, idx) =>
+      `<button class="as-opt" onclick="ASSESS.answer(${opt[1]})">${esc(opt[0])}</button>`
+    ).join('');
+  },
+
+  answer(points) {
+    this.score += points;
+    this.i++;
+    if(this.i >= ASSESSMENTS[this.key].questions.length) return this.finish();
+    this.renderQuestion();
+  },
+
+  finish() {
+    const a = ASSESSMENTS[this.key];
+    const band = a.bands.find(b => this.score <= b.max) || a.bands[a.bands.length-1];
+    // Store result locally only (private), for baseline / re-take comparison.
+    const rec = { key:this.key, score:this.score, band:band.title, date:new Date().toISOString().slice(0,10) };
+    const hist = LS.json('assess_'+this.key, []);
+    hist.push(rec);
+    LS.set('assess_'+this.key, hist);
+
+    setText('as-result-title', band.title);
+    document.getElementById('as-result-body').textContent = band.body;
+    setText('as-find', t('asFindHelp'));
+    setText('as-done', t('asDone'));
+    setText('as-disclaimer', t('asDisclaimer'));
+    document.getElementById('as-question').style.display = 'none';
+    document.getElementById('as-result').style.display   = '';
+  },
+
+  exit() {
+    const dest = this.afterExit || 's-home';
+    this.afterExit = null;
+    if(dest === 's-nearby') APP.goNearby();
+    else APP.nav(dest);
+  },
+};
+
+// ═══════════════════════════════════════════════════
+//  STRUGGLE PICKER  (writes STATE.struggles; offers assessments)
+// ═══════════════════════════════════════════════════
+const STRUGGLE_UI = {
+  _sel: new Set(),
+  fromNearby: false,
+
+  render() {
+    this._sel = new Set(STATE.struggles || []);
+    setText('str-title', t('strTitle'));
+    setText('str-sub',   t('strSub'));
+    setText('str-save',  t('strSave'));
+    setText('str-skip',  t('strSkip'));
+    setText('str-back-lbl', t('back'));
+    setText('str-assess-hint', t('strAssessHint'));
+    const opts = [
+      ['alcohol', t('strAlcohol')],
+      ['drugs',   t('strDrugs')],
+      ['gambling',t('strGambling')],
+      ['other',   t('strOther')],
+    ];
+    document.getElementById('str-options').innerHTML = opts.map(([k,l]) =>
+      `<button class="str-opt${this._sel.has(k)?' on':''}" data-k="${k}" onclick="STRUGGLE_UI.toggle('${k}')">
+         <span>${esc(l)}</span><span class="str-check">✓</span>
+       </button>`
+    ).join('');
+  },
+
+  toggle(k) {
+    if(this._sel.has(k)) this._sel.delete(k); else this._sel.add(k);
+    document.querySelectorAll('#str-options .str-opt').forEach(el =>
+      el.classList.toggle('on', this._sel.has(el.dataset.k)));
+  },
+
+  save() {
+    STATE.struggles = [...this._sel];
+    LS.set('struggles', STATE.struggles);
+    LS.set('struggles_seen', '1');
+    const cameFromNearby = this.fromNearby;
+    this.fromNearby = false;
+    // Offer the matching assessment if exactly one testable struggle was
+    // chosen. Otherwise continue to meetings (if we came from there) or home.
+    const withTest = STATE.struggles.filter(k => STRUGGLES[k] && STRUGGLES[k].assess);
+    if(withTest.length === 1) {
+      ASSESS.afterExit = cameFromNearby ? 's-nearby' : 's-home';
+      ASSESS.open(STRUGGLES[withTest[0]].assess);
+    } else if(cameFromNearby) {
+      APP.goNearby();
+    } else {
+      APP.nav('s-home');
+    }
+  },
+
+  skip() {
+    LS.set('struggles_seen', '1');   // never nag again
+    const cameFromNearby = this.fromNearby;
+    this.fromNearby = false;
+    if(cameFromNearby) { APP.go('s-nearby'); }  // straight to (unfiltered) meetings
+    else APP.nav('s-home');
+  },
+};
+
+// ═══════════════════════════════════════════════════
 //  REGIONAL HELPLINES — keyed by country code
 //  'default' shown when country not matched
 // ═══════════════════════════════════════════════════
@@ -1690,21 +2071,48 @@ const AA_SEED_DATA = AA_SEED_RAW.map(r => ({
 // Country-specific fallback for non-US locations
 // (US users get AA_SEED_DATA filtered by proximity instead)
 const INTL_FALLBACK = {
-  // ── LITHUANIA — sources: aalietuvoje.org, rplc.lt ─────────────────────────
+  // ══ LITHUANIA ══ Verified multi-fellowship data.
+  //   Sources: aalietuvoje.org, lietuvos-na.lt, anoniminiailosejai.lt, rplc.lt
+  //   Each meeting carries `fellowship` (aa|na|ga) for the struggle filter.
+  //   Times reflect the best current published schedules — a card marked
+  //   verified:false is shown WITHOUT a live "happening now" claim.
   LT: [
-    { name:'AA Vilnius — Senasis Miestas (EN)', type:'aa', cost:'free', phone:'+37065384104', address:'L. Stuokos-Gucevičiaus g. 2, Vilnius', lat:54.6864, lng:25.2840, slots:[{days:[2],start:'18:30',end:'20:00'}] },
-    { name:'AA Vilnius — Bernardinai (EN)',     type:'aa', cost:'free', phone:'+37065384104', address:'Maironio g. 10, Vilnius', lat:54.6815, lng:25.2938, slots:[{days:[0],start:'11:00',end:'12:30'}] },
-    { name:'AA Vilnius — Gedimino grupė',       type:'aa', cost:'free', phone:'+37068505191', address:'Gedimino pr., Vilnius', lat:54.6892, lng:25.2726, slots:[{days:[1,3],start:'18:00',end:'19:30'},{days:[6],start:'11:00',end:'12:30'}] },
-    { name:'AA Vilnius — Užupis grupė',         type:'aa', cost:'free', phone:'+37068505191', address:'Užupis, Vilnius', lat:54.6838, lng:25.2971, slots:[{days:[2,4],start:'19:00',end:'20:30'}] },
-    { name:'AA Kaunas grupė',                   type:'aa', cost:'free', phone:'+37037312676', address:'Kaunas', lat:54.8985, lng:23.9036, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
-    { name:'AA Klaipėda grupė',                 type:'aa', cost:'free', phone:'+37068505191', address:'Klaipėda', lat:55.7033, lng:21.1443, slots:[{days:[2,5],start:'18:00',end:'19:30'}] },
-    { name:'RPLC Vilnius — Priklausomybių centras', type:'therapy', cost:'free', phone:'+37052137808', address:'Gerosios Vilties g. 3, Vilnius', lat:54.6780, lng:25.2340, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
-    { name:'RPLC Kaunas — Priklausomybių centras',  type:'therapy', cost:'free', phone:'+37037333255', address:'Giedraičių g. 8, Kaunas', lat:54.9052, lng:23.8960, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
-    { name:'RPLC Klaipėda — Priklausomybių centras',type:'therapy', cost:'free', phone:'+37046415025', address:'Jaunystės g. 4, Klaipėda', lat:55.7170, lng:21.1280, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
-    { name:'RPLC Šiauliai',                     type:'therapy', cost:'free', phone:'+37041455644', address:'Šiauliai', lat:55.9341, lng:23.3135, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
-    { name:'RPLC Panevėžys',                    type:'therapy', cost:'free', phone:'+37045582673', address:'Panevėžys', lat:55.7348, lng:24.3643, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
-    { name:'Pagalbos linija',   type:'crisis', cost:'free', phone:'116123',      lat:54.6892, lng:25.2798, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
-    { name:'Jaunimo linija',    type:'crisis', cost:'free', phone:'8800288888',  lat:54.6892, lng:25.2798, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    // ── AA · Alcoholics Anonymous (Anoniminiai alkoholikai) ──────────────
+    { name:'AA „Senasis Miestas" (EN)', fellowship:'aa', type:'aa', cost:'free', phone:'+37065384104', address:'L. Stuokos-Gucevičiaus g. 2, Vilnius', lat:54.6864, lng:25.2840, verified:true,  slots:[{days:[2],start:'18:30',end:'20:00'}] },
+    { name:'AA „Bernardinai" (EN)',     fellowship:'aa', type:'aa', cost:'free', phone:'+37065384104', address:'Maironio g. 10, Vilnius',            lat:54.6815, lng:25.2938, verified:true,  slots:[{days:[0],start:'11:00',end:'12:30'}] },
+    { name:'AA Vilnius — Gynėjų g.',    fellowship:'aa', type:'aa', cost:'free', phone:'+37068505191', address:'Gynėjų g. 4, Vilnius',              lat:54.6870, lng:25.2680, verified:false, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Vilnius — Rasų g.',      fellowship:'aa', type:'aa', cost:'free', phone:'+37068505191', address:'Rasų g. 8, Vilnius',                lat:54.6763, lng:25.3010, verified:false, slots:[{days:[2,4],start:'19:00',end:'20:30'}] },
+    { name:'AA Kaunas — Žeimenos g.',   fellowship:'aa', type:'aa', cost:'free', phone:'+37037312676', address:'Žeimenos g. 6, Kaunas',            lat:54.8985, lng:23.9036, verified:false, slots:[{days:[1,3,5],start:'18:00',end:'19:30'}] },
+    { name:'AA Kaunas — Savanorių pr.', fellowship:'aa', type:'aa', cost:'free', phone:'+37037312676', address:'Savanorių pr. 190, Kaunas',        lat:54.9110, lng:23.9280, verified:false, slots:[{days:[2,4],start:'18:30',end:'20:00'}] },
+    { name:'AA Panevėžys',              fellowship:'aa', type:'aa', cost:'free', phone:'+37068505191', address:'Puzino g. 12, Panevėžys',          lat:55.7290, lng:24.3550, verified:false, slots:[{days:[1,4],start:'18:00',end:'19:30'}] },
+
+    // ── NA · Narcotics Anonymous (Narkomanai anonimai) · lietuvos-na.lt ──
+    // National info line +370 633 222 72
+    { name:'NA „Naujas kelias" (atvira)',   fellowship:'na', type:'na', cost:'free', phone:'+37065310901', address:'Rūdninkų g. 20/1, Vilnius',   lat:54.6760, lng:25.2830, verified:true,  slots:[{days:[1,2,3,4,5,6,0],start:'19:00',end:'20:15'}] },
+    { name:'NA „Čia ir dabar"',             fellowship:'na', type:'na', cost:'free', phone:'+37064188530', address:'Maironio g. 10, Vilnius',      lat:54.6815, lng:25.2938, verified:true,  slots:[{days:[1,2,3,4,5,6,0],start:'19:00',end:'20:15'}] },
+    { name:'NA „Laisvė" (rusų k.)',         fellowship:'na', type:'na', cost:'free', phone:'+37060601692', address:'Pal. J. Matulaičio a. 3, Vilnius', lat:54.6980, lng:25.2200, verified:true, slots:[{days:[1,2,3,4,5,6,0],start:'19:00',end:'20:15'}] },
+    { name:'NA „Erdvė" (rusų k.)',          fellowship:'na', type:'na', cost:'free', phone:'+37068370497', address:'Lukiškių g. 10, Vilnius',      lat:54.6890, lng:25.2650, verified:false, slots:[{days:[1,2,3,4,5,6,0],start:'20:00',end:'21:15'}] },
+    { name:'NA „Santaka"',                  fellowship:'na', type:'na', cost:'free', phone:'+37060677097', address:'Giedraičių g. 8, Kaunas',      lat:54.9052, lng:23.8960, verified:true,  slots:[{days:[1,2,3,4,5,6,0],start:'19:00',end:'20:15'}] },
+    { name:'NA „Mano kelias"',              fellowship:'na', type:'na', cost:'free', phone:'+37064756606', address:'Vilniaus g. 247, Šiauliai',    lat:55.9200, lng:23.3200, verified:false, slots:[{days:[1,3,5],start:'19:00',end:'20:15'}] },
+    { name:'NA „Prisikėlimas"',             fellowship:'na', type:'na', cost:'free', phone:'+37064725716', address:'Katedros a. 1, Panevėžys',     lat:55.7300, lng:24.3600, verified:false, slots:[{days:[2,4,6],start:'19:00',end:'20:15'}] },
+
+    // ── GA · Gamblers Anonymous (Anoniminiai lošėjai) · anoniminiailosejai.lt
+    { name:'GA „AL Vilnius"',    fellowship:'ga', type:'ga', cost:'free', phone:'+37066915410', address:'Antakalnio g. 27, Vilnius', lat:54.7040, lng:25.3060, verified:true,  slots:[{days:[1],start:'18:30',end:'20:00'}] },
+    { name:'GA „Vienybė"',       fellowship:'ga', type:'ga', cost:'free', phone:'+37066915410', address:'Pal. J. Matulaičio a. 3, Vilnius', lat:54.6980, lng:25.2200, verified:true, slots:[{days:[3],start:'19:00',end:'20:30'}] },
+    { name:'GA „Laisvė" Kaunas', fellowship:'ga', type:'ga', cost:'free', phone:'+37060992911', address:'Gedimino g. 5A, Kaunas',    lat:54.8970, lng:23.8860, verified:true,  slots:[{days:[1,4],start:'18:30',end:'20:00'}] },
+    { name:'GA „AL Klaipėda"',   fellowship:'ga', type:'ga', cost:'free', phone:'+37067178781', address:'Rumpiškės g. 6, Klaipėda',  lat:55.6980, lng:21.1400, verified:true,  slots:[{days:[1,3],start:'19:00',end:'21:00'}] },
+    { name:'GA „AL Druskininkai"', fellowship:'ga', type:'ga', cost:'free', phone:'+37067573875', address:'V. Kudirkos g. 41, Druskininkai', lat:54.0160, lng:23.9800, verified:false, slots:[{days:[5],start:'19:00',end:'20:30'}] },
+
+    // ── Treatment centres (RPLC) — apply to all struggles ────────────────
+    { name:'RPLC Vilnius — Priklausomybių centras', fellowship:'all', type:'therapy', cost:'free', phone:'+37052137808', address:'Gerosios Vilties g. 3, Vilnius', lat:54.6780, lng:25.2340, verified:true, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Kaunas — Priklausomybių centras',  fellowship:'all', type:'therapy', cost:'free', phone:'+37037333255', address:'Giedraičių g. 8, Kaunas',       lat:54.9052, lng:23.8960, verified:true, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Klaipėda — Priklausomybių centras',fellowship:'all', type:'therapy', cost:'free', phone:'+37046415025', address:'Jaunystės g. 4, Klaipėda',      lat:55.7170, lng:21.1280, verified:true, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Šiauliai',                         fellowship:'all', type:'therapy', cost:'free', phone:'+37041455644', address:'Šiauliai',                     lat:55.9341, lng:23.3135, verified:true, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+    { name:'RPLC Panevėžys',                        fellowship:'all', type:'therapy', cost:'free', phone:'+37045582673', address:'Panevėžys',                    lat:55.7348, lng:24.3643, verified:true, slots:[{days:[1,2,3,4,5],start:'08:00',end:'17:00'}] },
+
+    // ── Crisis lines — always shown, call-only ───────────────────────────
+    { name:'Pagalbos linija', fellowship:'all', type:'crisis', cost:'free', phone:'116123',     lat:54.6892, lng:25.2798, verified:true, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
+    { name:'Jaunimo linija',  fellowship:'all', type:'crisis', cost:'free', phone:'8800288888', lat:54.6892, lng:25.2798, verified:true, slots:[{days:[0,1,2,3,4,5,6],start:'00:00',end:'23:59'}] },
   ],
   // ── UNITED KINGDOM — sources: alcoholics-anonymous.org.uk, nhs.uk ─────────
   GB: [
@@ -1817,7 +2225,7 @@ function renderHelplines() {
 // ═══════════════════════════════════════════════════
 
 const TYPE_I18N = {
-  aa:'typeAA', therapy:'typeTherapy', crisis:'typeCrisis',
+  aa:'typeAA', na:'typeNA', ga:'typeGA', therapy:'typeTherapy', crisis:'typeCrisis',
   recovery:'typeRecovery', helpline:'typeHelpline',
 };
 
@@ -1919,10 +2327,26 @@ function makeBadge(info) {
 
 function sortScore(p) {
   const info = p._info;
+  // Unverified meetings sink below everything with a known live status,
+  // but stay ordered by distance among themselves.
+  if(p._unverified) return 5000000 + (p.dist || 0);
   if(!info) return 9999999;
   if(info.isNow)   return p.dist || 0;                         // now: sort by distance
   const mins = info.minutesUntil || 9999;
   return mins * 100 + (p.dist || 0);                           // future: sort by time then distance
+}
+
+// Human-readable recurring schedule, e.g. "Mon, Wed, Fri · 19:00".
+// Used for meetings whose exact next-occurrence we won't assert.
+function scheduleSummary(p) {
+  const sl = p.slots && p.slots[0];
+  if(!sl || !sl.start) return '';
+  const dayNames = [t('dSun'),t('dMon'),t('dTue'),t('dWed'),t('dThu'),t('dFri'),t('dSat')];
+  const days = (sl.days||[]).slice().sort((a,b)=>a-b);
+  // Everyday?
+  if(days.length === 7) return `${t('daily')} · ${sl.start}`;
+  const label = days.map(d=>dayNames[d]).join(', ');
+  return label ? `${label} · ${sl.start}` : sl.start;
 }
 
 function haversine(a,b,c,d) {
@@ -2084,8 +2508,21 @@ async function fetchGoogle(lat, lng) {
 const NEARBY = {
   panicMode: false,
 
+  // What the person is looking for, in words — adapts to their struggles.
+  // No struggle picked, or 'other' → the neutral "support" wording.
+  lookingForLabel() {
+    const s = (STATE.struggles||[]).filter(k => k!=='other');
+    if(!s.length) return t('lfSupport');            // "support" / "help"
+    const names = s.map(k => t('lf_'+k));           // "AA", "NA", "GA" style short labels
+    if(names.length === 1) return names[0];
+    if(names.length === 2) return `${names[0]} & ${names[1]}`;
+    return names.slice(0,-1).join(', ') + ' & ' + names.slice(-1);
+  },
+
   resetUI() {
-    const title = this.panicMode ? t('nearbyTitlePanic') : t('nearbyTitle');
+    const lf = this.lookingForLabel();
+    // Title: "<X> meetings near you" / panic: "Help near you right now"
+    const title = this.panicMode ? t('nearbyTitlePanic') : t('nearbyTitleFor').replace('{x}', lf);
     const sub   = this.panicMode ? t('nearbySubPanic')  : t('nearbySub');
     setText('nearby-title', title);
     setText('nearby-sub',   sub);
@@ -2124,12 +2561,25 @@ const NEARBY = {
       ${this._callSection([])}`;
   },
 
+  // Official meeting-finder link + label for the person's primary struggle.
+  finderLink() {
+    const s = (STATE.struggles||[]).filter(k => k!=='other');
+    const map = {
+      alcohol:  { url:'https://www.aa.org/find-aa',            key:'findAlcohol' },
+      drugs:    { url:'https://www.na.org/meetingsearch/',     key:'findDrugs'   },
+      gambling: { url:'https://www.gamblersanonymous.org/ga/locations', key:'findGambling' },
+    };
+    const primary = s.find(k => map[k]) || 'alcohol';
+    return map[primary] || map.alcohol;
+  },
+
   renderLocFail() {
+    const f = this.finderLink();
     document.getElementById('nearby-body').innerHTML = `
       <div class="offline-box">
         <h3>${esc(t('locFail'))}</h3>
         <p>${esc(t('locFailSub'))}</p>
-        <a class="btn btn-outline" href="https://www.aa.org/find-aa" target="_blank" style="margin-top:4px;padding:14px;text-align:center">${esc(t('searchAA'))}</a>
+        <a class="btn btn-outline" href="${f.url}" target="_blank" rel="noopener" style="margin-top:4px;padding:14px;text-align:center">${esc(t(f.key))}</a>
       </div>
       ${this._callSection([])}`;
   },
@@ -2172,10 +2622,24 @@ const NEARBY = {
       seen.add(k); return true;
     });
 
+    // ── Struggle filter ──────────────────────────────────────────
+    // If the user picked what they're working through, surface those
+    // fellowships (plus treatment + crisis, tagged 'all'). Meetings
+    // with no fellowship tag (e.g. US seed) are always kept — we don't
+    // hide help just because it isn't tagged. Empty struggles = show all.
+    const fset = activeFellowships();
+    if(fset) {
+      places = places.filter(p => !p.fellowship || fset.has(p.fellowship));
+    }
+
     // Annotate with distance and time info
     places = places.map(p => {
       const dist = haversine(lat, lng, p.lat||lat, p.lng||lng);
-      const info = p.slots?.length
+      // Honesty rule: a meeting whose schedule we haven't verified
+      // never claims "happening now" / a live countdown. It still shows,
+      // still sorts by day, but with a "call to confirm" note instead.
+      const unverified = p.verified === false;
+      const info = (p.slots?.length && !unverified)
         ? getTimeInfo(p)
         : (p.isNow ? {isNow:true,isToday:true,slot:{start:'',end:''},minutesUntil:0,daysUntil:0} : null);
       const drivingMin = dist<1 ? 1 : Math.round((dist/48.28)*60);
@@ -2186,6 +2650,7 @@ const NEARBY = {
         minutesUntil:info?.minutesUntil || null,
         daysUntil:   info?.daysUntil ?? null,
         _info:       info,
+        _unverified: unverified,
         drivingMin,
       };
     });
@@ -2266,24 +2731,37 @@ const NEARBY = {
       // Remaining meetings — grouped by when they next happen
       let currentGroup = null;
       meetings.slice(1).forEach((p,i)=>{
-        const badge  = makeBadge(p._info);
         const nav    = isNavigable(p);
         const travel = nav ? fmtTravel(p.drivingMin,null,p.dist) : '';
         const cc     = p.isNow?'now':p.isToday?'today':'';
         const callBtn= p.phone?`<a class="bsm bsm-red" href="${telHref(p.phone)}">${esc(t('callBtn'))}</a>`:'';
         const mapBtn = nav?`<a class="bsm bsm-ghost" href="${mapsUrl(p.name,p.lat,p.lng,p.address)}">${esc(t('goBtn'))}</a>`:'';
-        const timeRow= p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
-          ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
         const costRow= p.cost?`<div class="place-cost">💰 ${esc(fmtCost(p.cost))}</div>`:'';
         const addrRow= p.address?`<div style="font-size:.7rem;color:var(--dim);margin-bottom:4px">📍 ${esc(p.address)}</div>`:'';
 
+        // Badge + schedule line. Unverified meetings show their usual
+        // schedule but with an honest "call to confirm" note — never a
+        // live "happening now".
+        let badgeHtml, timeRow;
+        if(p._unverified) {
+          const sched = scheduleSummary(p);
+          badgeHtml = `<div class="badge future"><span class="bdot"></span>${esc(t('callToConfirm'))}</div>`;
+          timeRow = sched ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${esc(sched)}</div>` : '';
+        } else {
+          const badge = makeBadge(p._info);
+          badgeHtml = `<div class="badge ${badge.cls}"><span class="bdot"></span>${esc(badge.text)}</div>`;
+          timeRow = p._info && p._info.slot && p._info.slot.start && !is247(p._info.slot)
+            ? `<div style="font-size:.7rem;color:var(--dim);margin:4px 0 7px">🕐 ${p._info.slot.start}–${p._info.slot.end}</div>` : '';
+        }
+
         // Day group header
         const days    = p._info?.daysUntil ?? 99;
-        const groupKey= p.isNow ? 'now' : p.isToday ? 'today' : `day_${days}`;
+        const groupKey= p._unverified ? 'unverified' : p.isNow ? 'now' : p.isToday ? 'today' : `day_${days}`;
         if(groupKey !== currentGroup) {
           currentGroup = groupKey;
           let groupLabel;
-          if(groupKey === 'now')        groupLabel = '🔴 ' + t('statusNow').toUpperCase();
+          if(groupKey === 'unverified') groupLabel = t('otherMeetings').toUpperCase();
+          else if(groupKey === 'now')   groupLabel = '🔴 ' + t('statusNow').toUpperCase();
           else if(groupKey === 'today') groupLabel = t('statusToday').toUpperCase();
           else {
             const dayName = BADGE_DAYS_EN[(new Date().getDay() + days) % 7];
@@ -2298,7 +2776,7 @@ const NEARBY = {
             ${travel?`<div class="place-travel">${esc(travel)}</div>`:''}
           </div>
           <div class="place-type">${esc(typeLabel(p.type))}</div>
-          <div class="badge ${badge.cls}"><span class="bdot"></span>${esc(badge.text)}</div>
+          ${badgeHtml}
           ${addrRow}${timeRow}${costRow}
           ${(callBtn||mapBtn)?`<div class="brow" style="max-width:none;margin-top:10px">${callBtn}${mapBtn}</div>`:''}
         </div>`;
