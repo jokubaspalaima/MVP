@@ -538,6 +538,12 @@ body.hide-gear #settings-gear{display:none}
     <button class="btn btn-white"  id="str-save" onclick="STRUGGLE_UI.save()" style="margin-top:24px"></button>
     <button class="btn btn-ghost"  id="str-skip" onclick="STRUGGLE_UI.skip()" style="margin-top:8px"></button>
     <p id="str-assess-hint" style="font-size:.72rem;color:var(--dim);text-align:center;width:100%;max-width:340px;margin-top:16px;line-height:1.6"></p>
+    <!-- retake assessment (shown only when a testable struggle is selected) -->
+    <button id="str-retake" onclick="STRUGGLE_UI.retake()"
+      style="display:none;background:none;border:none;color:var(--dim);font-size:.8rem;margin-top:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px"></button>
+    <!-- reset onboarding — clean slate, also handy for testing first-launch -->
+    <button id="str-reset" onclick="STRUGGLE_UI.resetOnboarding()"
+      style="background:none;border:none;color:rgba(255,255,255,.25);font-size:.72rem;margin-top:26px;cursor:pointer;text-decoration:underline;text-underline-offset:3px"></button>
   </div>
 
   <!-- 14. ASSESSMENT — one generic screen renders any questionnaire
@@ -664,7 +670,7 @@ const LANGS = {
     panicWhy:'Why you chose today',
     callToConfirm:'Call to confirm times',otherMeetings:'Other meetings nearby',daily:'Daily',
     personalize:'Personalize my help',
-    strWelcomeTitle:'Welcome to not2day',strWelcomeSub:'Before you start — what are you working through? This shapes the help we show you. It stays private on your device, and you can change it anytime.',strSkipWelcome:'Not now — take me in',
+    strWelcomeTitle:'Welcome to not2day',strWelcomeSub:'Before you start — what are you working through? This shapes the help we show you. It stays private on your device, and you can change it anytime.',strSkipWelcome:'Not now — take me in',strRetake:'Retake my check-in',strReset:'Reset onboarding',
     strTitle:'What are you working through?',strSub:'Pick what fits. This stays on your device and only shapes what help we show you — you can skip it.',
     strAlcohol:'Alcohol',strDrugs:'Drugs',strGambling:'Gambling',strOther:'Something else',
     strSave:'Save',strSkip:'Skip for now',strAssessHint:'You can change this anytime in settings.',
@@ -725,7 +731,7 @@ const LANGS = {
     panicWhy:'Kodėl pasirinkai šiandien',
     callToConfirm:'Paskambink laikui patikslinti',otherMeetings:'Kiti susirinkimai netoliese',daily:'Kasdien',
     personalize:'Pritaikyti pagalbą man',
-    strWelcomeTitle:'Sveikas atvykęs į not2day',strWelcomeSub:'Prieš pradedant — su kuo tu kovoji? Tai pritaiko rodomą pagalbą. Lieka privatu tavo įrenginyje, gali pakeisti bet kada.',strSkipWelcome:'Ne dabar — įleisk mane',
+    strWelcomeTitle:'Sveikas atvykęs į not2day',strWelcomeSub:'Prieš pradedant — su kuo tu kovoji? Tai pritaiko rodomą pagalbą. Lieka privatu tavo įrenginyje, gali pakeisti bet kada.',strSkipWelcome:'Ne dabar — įleisk mane',strRetake:'Kartoti įsivertinimą',strReset:'Atstatyti pradžią',
     strTitle:'Su kuo tu kovoji?',strSub:'Pažymėk, kas tinka. Tai lieka tavo įrenginyje ir tik pritaiko rodomą pagalbą — gali praleisti.',
     strAlcohol:'Alkoholis',strDrugs:'Narkotikai',strGambling:'Lošimas',strOther:'Kita',
     strSave:'Išsaugoti',strSkip:'Praleisti',strAssessHint:'Gali pakeisti bet kada nustatymuose.',
@@ -786,7 +792,7 @@ const LANGS = {
     panicWhy:'Warum du heute gewählt hast',
     callToConfirm:'Zeiten telefonisch bestätigen',otherMeetings:'Weitere Treffen in der Nähe',daily:'Täglich',
     personalize:'Hilfe personalisieren',
-    strWelcomeTitle:'Willkommen bei not2day',strWelcomeSub:'Bevor du startest — womit kämpfst du? Das prägt die angezeigte Hilfe. Es bleibt privat auf deinem Gerät und du kannst es jederzeit ändern.',strSkipWelcome:'Nicht jetzt — rein damit',
+    strWelcomeTitle:'Willkommen bei not2day',strWelcomeSub:'Bevor du startest — womit kämpfst du? Das prägt die angezeigte Hilfe. Es bleibt privat auf deinem Gerät und du kannst es jederzeit ändern.',strSkipWelcome:'Nicht jetzt — rein damit',strRetake:'Check-in wiederholen',strReset:'Onboarding zurücksetzen',
     strTitle:'Womit kämpfst du?',strSub:'Wähle, was passt. Bleibt auf deinem Gerät und beeinflusst nur die angezeigte Hilfe — du kannst es überspringen.',
     strAlcohol:'Alkohol',strDrugs:'Drogen',strGambling:'Glücksspiel',strOther:'Etwas anderes',
     strSave:'Speichern',strSkip:'Überspringen',strAssessHint:'Du kannst das jederzeit in den Einstellungen ändern.',
@@ -847,7 +853,7 @@ const LANGS = {
     panicWhy:'Hvorfor du valgte i dag',
     callToConfirm:'Ring for å bekrefte tider',otherMeetings:'Andre møter i nærheten',daily:'Daglig',
     personalize:'Tilpass hjelpen min',
-    strWelcomeTitle:'Velkommen til not2day',strWelcomeSub:'Før du starter — hva sliter du med? Dette former hjelpen vi viser. Det er privat på enheten din, og du kan endre det når som helst.',strSkipWelcome:'Ikke nå — slipp meg inn',
+    strWelcomeTitle:'Velkommen til not2day',strWelcomeSub:'Før du starter — hva sliter du med? Dette former hjelpen vi viser. Det er privat på enheten din, og du kan endre det når som helst.',strSkipWelcome:'Ikke nå — slipp meg inn',strRetake:'Ta kartleggingen på nytt',strReset:'Tilbakestill oppstart',
     strTitle:'Hva sliter du med?',strSub:'Velg det som passer. Dette blir på enheten din og former bare hjelpen vi viser — du kan hoppe over.',
     strAlcohol:'Alkohol',strDrugs:'Rusmidler',strGambling:'Pengespill',strOther:'Noe annet',
     strSave:'Lagre',strSkip:'Hopp over',strAssessHint:'Du kan endre dette når som helst i innstillinger.',
@@ -908,7 +914,7 @@ const LANGS = {
     panicWhy:'Dlaczego wybrałeś dzisiaj',
     callToConfirm:'Zadzwoń, aby potwierdzić godziny',otherMeetings:'Inne spotkania w pobliżu',daily:'Codziennie',
     personalize:'Dostosuj pomoc',
-    strWelcomeTitle:'Witaj w not2day',strWelcomeSub:'Zanim zaczniesz — z czym się zmagasz? To kształtuje pokazywaną pomoc. Zostaje prywatne na Twoim urządzeniu, możesz zmienić w każdej chwili.',strSkipWelcome:'Nie teraz — wpuść mnie',
+    strWelcomeTitle:'Witaj w not2day',strWelcomeSub:'Zanim zaczniesz — z czym się zmagasz? To kształtuje pokazywaną pomoc. Zostaje prywatne na Twoim urządzeniu, możesz zmienić w każdej chwili.',strSkipWelcome:'Nie teraz — wpuść mnie',strRetake:'Powtórz ocenę',strReset:'Zresetuj wprowadzenie',
     strTitle:'Z czym się zmagasz?',strSub:'Wybierz, co pasuje. Zostaje na Twoim urządzeniu i wpływa tylko na pokazywaną pomoc — możesz pominąć.',
     strAlcohol:'Alkohol',strDrugs:'Narkotyki',strGambling:'Hazard',strOther:'Coś innego',
     strSave:'Zapisz',strSkip:'Pomiń',strAssessHint:'Możesz to zmienić w każdej chwili w ustawieniach.',
@@ -1951,6 +1957,25 @@ const STRUGGLE_UI = {
          <span>${esc(l)}</span><span class="str-check">✓</span>
        </button>`
     ).join('');
+
+    // Retake link: only when a saved, testable struggle exists and we're
+    // not in the first-launch welcome step.
+    const retake = document.getElementById('str-retake');
+    const testable = (STATE.struggles||[]).filter(k => STRUGGLES[k] && STRUGGLES[k].assess);
+    if(retake) {
+      if(!this.welcome && testable.length) {
+        retake.style.display = '';
+        setText('str-retake', t('strRetake'));
+      } else {
+        retake.style.display = 'none';
+      }
+    }
+    // Reset link: hidden on the welcome step (nothing to reset yet).
+    const reset = document.getElementById('str-reset');
+    if(reset) {
+      reset.style.display = this.welcome ? 'none' : '';
+      setText('str-reset', t('strReset'));
+    }
   },
 
   toggle(k) {
@@ -1992,6 +2017,27 @@ const STRUGGLE_UI = {
     this.fromNearby = false; this.welcome = false;
     if(dest === 's-nearby') APP.go('s-nearby');   // unfiltered meetings
     else APP.nav(dest);
+  },
+
+  // Retake the assessment for the (first) saved testable struggle.
+  retake() {
+    const testable = (STATE.struggles||[]).filter(k => STRUGGLES[k] && STRUGGLES[k].assess);
+    if(!testable.length) return;
+    ASSESS.afterExit = 's-home';
+    ASSESS.open(STRUGGLES[testable[0]].assess);
+  },
+
+  // Clean slate: clears struggle selection, assessment history, and the
+  // onboarding flag, then relaunches the first-time welcome flow.
+  resetOnboarding() {
+    STATE.struggles = [];
+    LS.set('struggles', []);
+    ['struggles_seen'].forEach(k => localStorage.removeItem('snd_'+k));
+    ['audit','dast','gaq'].forEach(k => localStorage.removeItem('snd_assess_'+k));
+    this.welcome = true;
+    this.render();
+    // Jump to the welcome step immediately.
+    if(current !== 's-struggles') APP.nav('s-struggles');
   },
 };
 
