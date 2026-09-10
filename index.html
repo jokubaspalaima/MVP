@@ -2989,12 +2989,34 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
     document.body.classList.remove('hide-gear');
   }
 
-// ── Service Worker Registration ──────────────────────────────
+// ── Service Worker Registration + auto-update ────────────────
+// When a new worker takes control, reload ONCE so the fresh code shows
+// immediately. The `refreshing` guard prevents any reload loop.
 if('serviceWorker' in navigator) {
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW registered'))
-      .catch(e => console.log('SW failed:', e));
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // If an update is found, ask it to activate as soon as it's installed.
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        if(!nw) return;
+        nw.addEventListener('statechange', () => {
+          // Only nudge when there's already a controller (i.e. this is an
+          // update, not the very first install) and the new worker is ready.
+          if(nw.state === 'installed' && navigator.serviceWorker.controller) {
+            nw.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+      // Proactively check for a new version each time the app loads.
+      reg.update().catch(() => {});
+    }).catch(e => console.log('SW failed:', e));
   });
 }
 })();
